@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九九遊戲</title>
+    <style>
+        /* 简单的CSS样式 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #game {
+            text-align: center;
+        }
+        .hand {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <h1>九九遊戲</h1>
+        <div id="current-value">目前總值: {{ game_state.current_value }}</div>
+        <div id="players">
+            玩家:
+            <ul>
+                {% for player in game_state.players %}
+                    <li>{{ player }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="hand">
+            <button onclick="getHand()">我的手牌</button>
+            <div id="hand-cards"></div>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function getHand() {
+            fetch('/get_hand')
+                .then(response => response.json())
+                .then(data => {
+                    const handDiv = document.getElementById('hand-cards');
+                    handDiv.innerHTML = '';
+                    data.hand.forEach(card => {
+                        const cardDiv = document.createElement('div');
+                        cardDiv.className = 'hand';
+                        cardDiv.textContent = card;
+                        cardDiv.onclick = () => playCard(card);
+                        handDiv.appendChild(cardDiv);
+                    });
+                });
+        }
+
+        function playCard(card) {
+            fetch('/play_card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ card: card })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').textContent = data.message;
+                document.getElementById('current-value').textContent = '目前總值: ' + data.game_state.current_value;
+                getHand();
+            });
+        }
+    </script>
+</body>
+</html>
