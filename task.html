@@ -136,6 +136,8 @@
                     <div class="answer" id="answer6"></div>
                 </details>
             `;
+            questionsContainer.appendChild(expectationQuestion);
+
             // 題目7：二項次分佈
             const n7 = generateRandomNumber(10, 20);
             const p7 = generateRandomNumber(1, 9) / 10;
@@ -150,7 +152,7 @@
                     <div class="answer" id="answer7"></div>
                 </details>
             `;
-            questionsContainer.appendChild(expectationQuestion);
+            questionsContainer.appendChild(binomialExpansionQuestion);
 
             // 計算答案
             document.getElementById('answer1').innerHTML = generatePoissonExplanation(lambda1, k1);
