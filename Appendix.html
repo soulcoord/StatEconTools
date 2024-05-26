@@ -191,6 +191,11 @@
             return 0.5 * (1 + erf(z / Math.sqrt(2)));
         }
 
+        // 新增檢測裝置類型的函數
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
         // 動態生成標準差表數據
         function generateData() {
             for (let z = -4.00; z <= 4.00; z += 0.01) {
@@ -198,6 +203,7 @@
             }
         }
 
+        // 動態生成標準差表
         function renderTable(page) {
             const tableBody = document.getElementById('zTableBody');
             tableBody.innerHTML = '';
@@ -210,21 +216,22 @@
                 const tdProbability = document.createElement('td');
                 tdZ.textContent = item.z;
                 tdProbability.textContent = item.probability;
-                
-                // 為 Z 值和累積機率添加點擊事件處理程序
-                tdZ.onclick = () => {
-                    drawChart(item.z);
-                };
-                tdProbability.onclick = () => {
-                    drawChart(item.z);
-                };
+
+                // 根據裝置類型決定是否添加點擊事件處理程序
+                if (!isMobile()) {
+                    tdZ.onclick = () => {
+                        drawChart(item.z);
+                    };
+                    tdProbability.onclick = () => {
+                        drawChart(item.z);
+                    };
+                }
 
                 tr.appendChild(tdZ);
                 tr.appendChild(tdProbability);
                 tableBody.appendChild(tr);
             });
         }
-
 
         // 動態生成分頁按鈕
         function renderPagination() {
