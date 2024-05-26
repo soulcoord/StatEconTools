@@ -177,13 +177,17 @@
         }
 
         function generateNormalExplanation(mean, stddev, value) {
-            const z = (value - mean) / stddev;
-            const probability = 0.5 * (1 + erf(z / Math.sqrt(2)));
+            const variance = Math.pow(stddev, 2);
+            const exponent = -Math.pow(value - mean, 2) / (2 * variance);
+            const probabilityDensity = (1 / (stddev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
             return `
-                <p>計算Z值：</p>
-                <p>Z = ( ${value} - ${mean} ) / ${stddev} = ${z.toFixed(2)}</p>
-                <p>查標準常態分佈表，當 Z = ${z.toFixed(2)} 時，累積機率為${probability.toFixed(4)}</p>
-                <p>所以，日平均氣溫低於${value}°C的天數比例為${probability.toFixed(4)}</p>
+                <p>計算概率密度函數：</p>
+                <p>\\( f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}} \\)</p>
+                <p>其中，\\( \\mu = ${mean} \\)，\\( \\sigma = ${stddev} \\)</p>
+                <p>計算步驟：</p>
+                <p>\\( f(${value}) = \\frac{1}{${stddev} \\sqrt{2\\pi}} e^{-\\frac{(${value} - ${mean})^2}{2 \\times ${variance}}} \\)</p>
+                <p>\\( f(${value}) = \\frac{1}{${stddev} \\sqrt{2\\pi}} e^{${exponent.toFixed(4)}} \\)</p>
+                <p>\\( f(${value}) \\approx ${probabilityDensity.toFixed(4)} \\)</p>
             `;
         }
 
