@@ -136,6 +136,20 @@
                     <div class="answer" id="answer6"></div>
                 </details>
             `;
+            // 題目7：二項次分佈
+            const n7 = generateRandomNumber(10, 20);
+            const p7 = generateRandomNumber(1, 9) / 10;
+            const k7 = generateRandomNumber(0, n7);
+            const binomialExpansionQuestion = document.createElement('div');
+            binomialExpansionQuestion.className = 'question';
+            binomialExpansionQuestion.innerHTML = `
+                <h2>題目7</h2>
+                <p>某件商品的合格率為${(p7 * 100).toFixed(0)}%。某廠商從中隨機抽取${n7}件商品，求其中恰有${k7}件商品合格的概率。</p>
+                <details>
+                    <summary>顯示答案</summary>
+                    <div class="answer" id="answer7"></div>
+                </details>
+            `;
             questionsContainer.appendChild(expectationQuestion);
 
             // 計算答案
@@ -145,6 +159,7 @@
             document.getElementById('answer4').innerHTML = generateBinomialExplanation(n4, p4);
             document.getElementById('answer5').innerHTML = generateExponentialExplanation(lambda5, time5);
             document.getElementById('answer6').innerHTML = generateExpectationAndVarianceExplanation(values, probabilities);
+            document.getElementById('answer7').innerHTML = generateBinomialExpansionExplanation(n7, p7, k7);
         }
 
         function generatePoissonExplanation(lambda, k) {
@@ -216,6 +231,19 @@
                 <p>計算步驟：</p>
                 <p>期望值 E(X) = ${values.map((x, i) => `${x} &times; ${probabilities[i]}`).join(' + ')} = ${mean.toFixed(2)}</p>
                 <p>變異數 Var(X) = ${values.map((x, i) => `(${x} - ${mean.toFixed(2)})<sup>2</sup> &times; ${probabilities[i]}`).join(' + ')} = ${variance.toFixed(2)}</p>
+            `;
+        }
+        function generateBinomialExpansionExplanation(n, p, k) {
+            const factorial = (n) => (n === 0 ? 1 : n * factorial(n - 1));
+            const combination = factorial(n) / (factorial(k) * factorial(n - k));
+            const probability = combination * Math.pow(p, k) * Math.pow(1 - p, n - k);
+            return `
+                <p>使用二項次分佈的公式計算：</p>
+                <p>P(X = k) = C(n, k) p<sup>k</sup> (1-p)<sup>n-k</sup></p>
+                <p>其中，n = ${n} ，p = ${p.toFixed(2)} ，k = ${k}</p>
+                <p>計算步驟：</p>
+                <p>C(n, k) = ${n}! / (${k}! (${n} - ${k})!) = ${combination.toFixed(0)}</p>
+                <p>P(X = ${k}) = ${combination.toFixed(0)} &times; ${p.toFixed(2)}<sup>${k}</sup> &times; (1 - ${p.toFixed(2)})<sup>${n - k}</sup> &approx; ${probability.toFixed(4)}</p>
             `;
         }
 
