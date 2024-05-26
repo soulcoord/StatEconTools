@@ -31,6 +31,7 @@
             border: 1px solid #424242;
             padding: 12px;
             text-align: center;
+            cursor: pointer;
         }
         th {
             background-color: #1f1f1f;
@@ -98,7 +99,37 @@
             background-color: #ff9800;
             color: #212121;
         }
+        #chartContainer {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background-color: #1f1f1f;
+            padding: 20px;
+            border: 1px solid #555555;
+            z-index: 1000;
+        }
+        #closeChart {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff9800;
+            color: #212121;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #closeChart:hover {
+            background-color: #e68900;
+        }
+        canvas {
+            background-color: #ffffff;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
 </head>
 <body>
     <nav>
@@ -126,11 +157,16 @@
         <!-- 分頁按鈕將在此生成 -->
     </ul>
     <div id="result"></div>
+    <div id="chartContainer">
+        <button id="closeChart" onclick="closeChart()">關閉</button>
+        <canvas id="zChart"></canvas>
+    </div>
 
     <script>
         const data = [];
         const rowsPerPage = 100;
         let currentPage = 1;
+        let chart;
 
         // 使用高斯誤差函數來計算常態分配的累積分佈函數
         function erf(x) {
@@ -162,7 +198,6 @@
             }
         }
 
-        // 動態生成標準差表
         function renderTable(page) {
             const tableBody = document.getElementById('zTableBody');
             tableBody.innerHTML = '';
@@ -175,11 +210,21 @@
                 const tdProbability = document.createElement('td');
                 tdZ.textContent = item.z;
                 tdProbability.textContent = item.probability;
+                
+                // 為 Z 值和累積機率添加點擊事件處理程序
+                tdZ.onclick = () => {
+                    drawChart(item.z);
+                };
+                tdProbability.onclick = () => {
+                    drawChart(item.z);
+                };
+
                 tr.appendChild(tdZ);
                 tr.appendChild(tdProbability);
                 tableBody.appendChild(tr);
             });
         }
+
 
         // 動態生成分頁按鈕
         function renderPagination() {
@@ -226,6 +271,87 @@
                 rows[rowIndex % rowsPerPage].classList.add('highlight');
                 rows[rowIndex % rowsPerPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
+        }
+
+        // 繪製常態分配圖表
+        function drawChart(zValue) {
+            const ctx = document.getElementById('zChart').getContext('2d');
+            if (chart) {
+                chart.destroy();
+            }
+
+            const labels = [];
+            const data = [];
+            const fillData = [];
+            for (let x = -4; x <= 4; x += 0.01) {
+                labels.push(x.toFixed(2));
+                const y = Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+                data.push(y);
+                fillData.push(x <= zValue ? y : null);
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '常態分配曲線',
+                            data: data,
+                            borderColor: '#ff9800',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: '累積機率區域',
+                            data: fillData,
+                            backgroundColor: 'rgba(255, 152, 0, 0.5)',
+                            borderColor: 'rgba(255, 152, 0, 0.5)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Z 值'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '機率密度'
+                            }
+                        }
+                    },
+                    plugins: {
+                        annotation: {
+                            annotations: [{
+                                type: 'line',
+                                mode: 'vertical',
+                                scaleID: 'x',
+                                value: zValue,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                label: {
+                                    content: 'Z = ' + zValue,
+                                    enabled: true,
+                                    position: 'top'
+                                }
+                            }]
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('chartContainer').style.display = 'block';
+        }
+
+        // 關閉圖表
+        function closeChart() {
+            document.getElementById('chartContainer').style.display = 'none';
         }
 
         // 初始生成標準差表數據和分頁
