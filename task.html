@@ -182,12 +182,12 @@
             const probabilityDensity = (1 / (stddev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
             return `
                 <p>計算概率密度函數：</p>
-                <p>\\( f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}} \\)</p>
-                <p>其中，\\( \\mu = ${mean} \\)，\\( \\sigma = ${stddev} \\)</p>
+                <p>f(x) = 1 / (σ√(2π)) * e^(-(x - μ)^2 / (2σ^2))</p>
+                <p>其中，μ = ${mean} ，σ = ${stddev}</p>
                 <p>計算步驟：</p>
-                <p>\\( f(${value}) = \\frac{1}{${stddev} \\sqrt{2\\pi}} e^{-\\frac{(${value} - ${mean})^2}{2 \\times ${variance}}} \\)</p>
-                <p>\\( f(${value}) = \\frac{1}{${stddev} \\sqrt{2\\pi}} e^{${exponent.toFixed(4)}} \\)</p>
-                <p>\\( f(${value}) \\approx ${probabilityDensity.toFixed(4)} \\)</p>
+                <p>f(${value}) = 1 / (${stddev} * √(2π)) * e^(-(${value} - ${mean})^2 / (2 * ${variance}))</p>
+                <p>f(${value}) = 1 / (${stddev} * √(2π)) * e^(${exponent.toFixed(4)})</p>
+                <p>f(${value}) ≈ ${probabilityDensity.toFixed(4)}</p>
             `;
         }
 
