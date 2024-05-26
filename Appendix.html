@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常態分配標準差表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 15px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-size: 16px;
+        }
+        th, td {
+            border: 1px solid #424242;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #2c2c2c;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #1e1e1e;
+        }
+        .highlight {
+            background-color: #ff9800 !important;
+            color: #212121 ;
+        }
+        .form-container {
+            margin: 20px;
+        }
+        .form-container input {
+            padding: 5px;
+            font-size: 16px;
+            background-color: #333333;
+            color: #FFFFFF;
+            border: 1px solid #555555;
+        }
+        .form-container button {
+            padding: 5px 10px;
+            font-size: 16px;
+            margin-left: 10px;
+            background-color: #555555;
+            color: #FFFFFF;
+            border: 1px solid #777777;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #777777;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .pagination {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #333333;
+            color: #FFFFFF;
+            border: 1px solid #555555;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background-color: #555555;
+        }
+        .pagination .active button {
+            background-color: #ff9800;
+            color: #212121;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="Appendix.html">常態分配標準差表</a>
+        <a href="index.html">經濟學因子表</a>
+    </nav>
+    <h1>常態分配標準差表</h1>
+    <div class="form-container">
+        <label for="searchValue">搜尋標準差 (例如 1.05):</label>
+        <input type="number" id="searchValue" name="searchValue" step="0.01" placeholder="輸入 Z 值">
+        <button onclick="searchZValue()">搜尋</button>
+    </div>
+    <table id="zTable">
+        <thead>
+            <tr>
+                <th>Z 值</th>
+                <th>累積機率</th>
+            </tr>
+        </thead>
+        <tbody id="zTableBody">
+            <!-- 這裡將由 JavaScript 動態生成內容 -->
+        </tbody>
+    </table>
+    <ul class="pagination" id="pagination">
+        <!-- 分頁按鈕將在此生成 -->
+    </ul>
+    <div id="result"></div>
+
+    <script>
+        const data = [];
+        const rowsPerPage = 100;
+        let currentPage = 1;
+
+        // 使用高斯誤差函數來計算常態分配的累積分佈函數
+        function erf(x) {
+            const a1 =  0.254829592;
+            const a2 = -0.284496736;
+            const a3 =  1.421413741;
+            const a4 = -1.453152027;
+            const a5 =  1.061405429;
+            const p  =  0.3275911;
+
+            const sign = (x >= 0) ? 1 : -1;
+            x = Math.abs(x);
+
+            const t = 1.0 / (1.0 + p*x);
+            const y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+
+            return sign*y;
+        }
+
+        // 常態分配的累積分佈函數
+        function cumulativeDistribution(z) {
+            return 0.5 * (1 + erf(z / Math.sqrt(2)));
+        }
+
+        // 動態生成標準差表數據
+        function generateData() {
+            for (let z = -4.00; z <= 4.00; z += 0.01) {
+                data.push({ z: z.toFixed(2), probability: cumulativeDistribution(z).toFixed(4) });
+            }
+        }
+
+        // 動態生成標準差表
+        function renderTable(page) {
+            const tableBody = document.getElementById('zTableBody');
+            tableBody.innerHTML = '';
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageData = data.slice(start, end);
+            pageData.forEach(item => {
+                const tr = document.createElement('tr');
+                const tdZ = document.createElement('td');
+                const tdProbability = document.createElement('td');
+                tdZ.textContent = item.z;
+                tdProbability.textContent = item.probability;
+                tr.appendChild(tdZ);
+                tr.appendChild(tdProbability);
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // 動態生成分頁按鈕
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            const pageCount = Math.ceil(data.length / rowsPerPage);
+            for (let i = 1; i <= pageCount; i++) {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.onclick = () => {
+                    currentPage = i;
+                    renderTable(currentPage);
+                    updatePagination();
+                };
+                if (i === currentPage) {
+                    li.classList.add('active');
+                }
+                li.appendChild(button);
+                pagination.appendChild(li);
+            }
+        }
+
+        function updatePagination() {
+            const paginationButtons = document.querySelectorAll('.pagination li');
+            paginationButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            paginationButtons[currentPage - 1].classList.add('active');
+        }
+
+        // 搜尋 Z 值並高亮顯示
+        function searchZValue() {
+            const searchValue = parseFloat(document.getElementById('searchValue').value).toFixed(2);
+            const rowIndex = data.findIndex(item => item.z === searchValue);
+            if (rowIndex !== -1) {
+                currentPage = Math.ceil((rowIndex + 1) / rowsPerPage);
+                renderTable(currentPage);
+                updatePagination();
+                const rows = document.querySelectorAll('#zTableBody tr');
+                rows.forEach(row => {
+                    row.classList.remove('highlight');
+                });
+                rows[rowIndex % rowsPerPage].classList.add('highlight');
+                rows[rowIndex % rowsPerPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 初始生成標準差表數據和分頁
+        generateData();
+        renderTable(currentPage);
+        renderPagination();
+    </script>
+</body>
+</html>
