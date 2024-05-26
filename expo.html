@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二項分配表</title>
+    <title>指數分配表</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -139,22 +139,20 @@
         <a href="two.html">二項式分配表</a>
         <a href="expo.html">指數分配表</a>
     </nav>
-    <h1>二項分配表</h1>
+    <h1>指數分配表</h1>
     <div class="form-container">
-        <label for="nValue">n 值 (試驗次數):</label>
-        <input type="number" id="nValue" name="nValue" step="1" placeholder="輸入 n 值">
-        <label for="pValue">p 值 (成功機率):</label>
-        <input type="number" id="pValue" name="pValue" step="0.01" placeholder="輸入 p 值">
+        <label for="lambdaValue">λ 值 (例如 0.5):</label>
+        <input type="number" id="lambdaValue" name="lambdaValue" step="0.1" placeholder="輸入 λ 值">
         <button onclick="generateTable()">生成表格</button>
     </div>
-    <table id="binomialTable">
+    <table id="exponentialTable">
         <thead>
             <tr>
-                <th>k 值</th>
-                <th>機率</th>
+                <th>x 值</th>
+                <th>機率密度</th>
             </tr>
         </thead>
-        <tbody id="binomialTableBody">
+        <tbody id="exponentialTableBody">
             <!-- 這裡將由 JavaScript 動態生成內容 -->
         </tbody>
     </table>
@@ -164,7 +162,7 @@
     <div id="result"></div>
     <div id="chartContainer">
         <button id="closeChart" onclick="closeChart()">關閉</button>
-        <canvas id="binomialChart"></canvas>
+        <canvas id="exponentialChart"></canvas>
     </div>
 
     <script>
@@ -177,61 +175,46 @@
             return /Mobi|Android/i.test(navigator.userAgent);
         }
 
-        // 計算二項分配的機率質量函數
-        function binomialProbability(n, k, p) {
-            return combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+        // 計算指數分配的機率密度函數
+        function exponentialDensity(lambda, x) {
+            return lambda * Math.exp(-lambda * x);
         }
 
-        // 計算組合數
-        function combination(n, k) {
-            return factorial(n) / (factorial(k) * factorial(n - k));
-        }
-
-        // 計算階乘
-        function factorial(n) {
-            if (n === 0) return 1;
-            let result = 1;
-            for (let i = 1; i <= n; i++) {
-                result *= i;
-            }
-            return result;
-        }
-
-        // 動態生成二項分配表數據
-        function generateData(n, p) {
+        // 動態生成指數分配表數據
+        function generateData(lambda) {
             const data = [];
-            for (let k = 0; k <= n; k++) {
-                data.push({ k: k, probability: binomialProbability(n, k, p).toFixed(4) });
+            for (let x = 0; x <= 20; x += 0.5) {
+                data.push({ x: x, density: exponentialDensity(lambda, x).toFixed(4) });
             }
             return data;
         }
 
-        // 動態生成二項分配表
+        // 動態生成指數分配表
         function renderTable(data, page) {
-            const tableBody = document.getElementById('binomialTableBody');
+            const tableBody = document.getElementById('exponentialTableBody');
             tableBody.innerHTML = '';
             const start = (page - 1) * rowsPerPage;
             const end = start + rowsPerPage;
             const pageData = data.slice(start, end);
             pageData.forEach(item => {
                 const tr = document.createElement('tr');
-                const tdK = document.createElement('td');
-                const tdProbability = document.createElement('td');
-                tdK.textContent = item.k;
-                tdProbability.textContent = item.probability;
+                const tdX = document.createElement('td');
+                const tdDensity = document.createElement('td');
+                tdX.textContent = item.x;
+                tdDensity.textContent = item.density;
 
                 // 根據裝置類型決定是否添加點擊事件處理程序
                 if (!isMobile()) {
-                    tdK.onclick = () => {
-                        drawChart(data, item.k);
+                    tdX.onclick = () => {
+                        drawChart(data, item.x);
                     };
-                    tdProbability.onclick = () => {
-                        drawChart(data, item.k);
+                    tdDensity.onclick = () => {
+                        drawChart(data, item.x);
                     };
                 }
 
-                tr.appendChild(tdK);
-                tr.appendChild(tdProbability);
+                tr.appendChild(tdX);
+                tr.appendChild(tdDensity);
                 tableBody.appendChild(tr);
             });
         }
@@ -268,27 +251,26 @@
 
         // 生成表格
         function generateTable() {
-            const n = parseInt(document.getElementById('nValue').value);
-            const p = parseFloat(document.getElementById('pValue').value);
-            if (isNaN(n) || isNaN(p)) {
-                alert("請輸入有效的 n 值和 p 值");
+            const lambda = parseFloat(document.getElementById('lambdaValue').value);
+            if (isNaN(lambda)) {
+                alert("請輸入有效的 λ 值");
                 return;
             }
-            const data = generateData(n, p);
+            const data = generateData(lambda);
             renderTable(data, currentPage);
             renderPagination(data);
         }
 
-        // 繪製二項分配圖表
-        function drawChart(data, kValue) {
-            const ctx = document.getElementById('binomialChart').getContext('2d');
+        // 繪製指數分配圖表
+        function drawChart(data, xValue) {
+            const ctx = document.getElementById('exponentialChart').getContext('2d');
             if (chart) {
                 chart.destroy();
             }
 
-            const labels = data.map(item => item.k);
-            const probabilities = data.map(item => item.probability);
-            const highlightData = labels.map((label, index) => index === kValue ? probabilities[index] : null);
+            const labels = data.map(item => item.x);
+            const densities = data.map(item => item.density);
+            const highlightData = labels.map((label, index) => index === Math.floor(xValue * 2) ? densities[index] : null);
 
             chart = new Chart(ctx, {
                 type: 'line',
@@ -296,14 +278,14 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: '二項分配',
-                            data: probabilities,
+                            label: '指數分配',
+                            data: densities,
                             borderColor: '#ff9800',
                             borderWidth: 2,
                             fill: false
                         },
                         {
-                            label: '選擇的機率',
+                            label: '選擇的機率密度',
                             data: highlightData,
                             borderColor: '#ff0000',
                             borderWidth: 2,
@@ -319,13 +301,13 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'k 值'
+                                text: 'x 值'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: '機率'
+                                text: '機率密度'
                             }
                         }
                     },
