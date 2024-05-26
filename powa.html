@@ -281,19 +281,26 @@
             const highlightData = labels.map((label, index) => index === kValue ? probabilities[index] : null);
 
             chart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
                         {
                             label: '普瓦松分配',
                             data: probabilities,
-                            backgroundColor: '#ff9800'
+                            borderColor: '#ff9800',
+                            borderWidth: 2,
+                            fill: false
                         },
                         {
                             label: '選擇的機率',
                             data: highlightData,
-                            backgroundColor: '#ff0000'
+                            borderColor: '#ff0000',
+                            borderWidth: 2,
+                            fill: false,
+                            pointBackgroundColor: '#ff0000',
+                            pointBorderColor: '#ff0000',
+                            pointRadius: 5
                         }
                     ]
                 },
@@ -310,6 +317,11 @@
                                 display: true,
                                 text: '機率'
                             }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 0
                         }
                     }
                 }
