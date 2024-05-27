@@ -44,7 +44,7 @@
             // 清空之前的題目
             questionsContainer.innerHTML = '';
 
-            // 題目1：卜瓦松分佈
+            // 題目1：泊松分佈
             const lambda1 = generateRandomNumber(3, 10);
             const k1 = generateRandomNumber(1, 10);
             const poissonQuestion = document.createElement('div');
@@ -59,10 +59,10 @@
             `;
             questionsContainer.appendChild(poissonQuestion);
 
-            // 題目2：常態分佈
-            const mean2 = generateRandomNumber(20, 30);
-            const stddev2 = generateRandomNumber(2, 10);
-            const value2 = mean2 - generateRandomNumber(1, 5);
+            // 題目2：正態分佈
+            const mean2 = 21;
+            const stddev2 = 10;
+            const value2 = 19;
             const normalQuestion1 = document.createElement('div');
             normalQuestion1.className = 'question';
             normalQuestion1.innerHTML = `
@@ -75,10 +75,10 @@
             `;
             questionsContainer.appendChild(normalQuestion1);
 
-            // 題目3：常態分佈
-            const mean3 = generateRandomNumber(40, 60);
-            const stddev3 = generateRandomNumber(5, 10);
-            const value3 = mean3 - generateRandomNumber(1, 5);
+            // 題目3：正態分佈
+            const mean3 = 47;
+            const stddev3 = 6;
+            const value3 = 44;
             const normalQuestion2 = document.createElement('div');
             normalQuestion2.className = 'question';
             normalQuestion2.innerHTML = `
@@ -98,7 +98,7 @@
             binomialQuestion.className = 'question';
             binomialQuestion.innerHTML = `
                 <h2>題目4</h2>
-                <p>某種子粒的發芽率為${(p4 * 100).toFixed(0)}%。某農民種下${n4}顆子粒，求發芽子粒的期望值和變異數。</p>
+                <p>某種籽粒的發芽率為${(p4 * 100).toFixed(0)}%。某農民種下${n4}顆籽粒，求發芽籽粒的期望值和變異數。</p>
                 <details>
                     <summary>顯示答案</summary>
                     <div class="answer" id="answer4"></div>
@@ -168,7 +168,7 @@
             const factorial = (n) => (n === 0 ? 1 : n * factorial(n - 1));
             const probability = (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
             return `
-                <p>使用卜瓦松分佈的公式計算：</p>
+                <p>使用泊松分佈的公式計算：</p>
                 <p>P(X = k) = &lambda;<sup>k</sup> e<sup>-&lambda;</sup> / k!</p>
                 <p>其中，&lambda; = ${lambda} ，k = ${k}</p>
                 <p>計算步驟：</p>
@@ -177,17 +177,13 @@
         }
 
         function generateNormalExplanation(mean, stddev, value) {
-            const variance = Math.pow(stddev, 2);
-            const exponent = -Math.pow(value - mean, 2) / (2 * variance);
-            const probabilityDensity = (1 / (stddev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
+            const z = (value - mean) / stddev;
+            const probability = 0.5 * (1 + erf(z / Math.sqrt(2)));
             return `
-                <p>計算概率密度函數：</p>
-                <p>f(x) = 1 / (σ√(2π)) * e^(-(x - μ)^2 / (2σ^2))</p>
-                <p>其中，μ = ${mean} ，σ = ${stddev}</p>
-                <p>計算步驟：</p>
-                <p>f(${value}) = 1 / (${stddev} * √(2π)) * e^(-(${value} - ${mean})^2 / (2 * ${variance}))</p>
-                <p>f(${value}) = 1 / (${stddev} * √(2π)) * e^(${exponent.toFixed(4)})</p>
-                <p>f(${value}) ≈ ${probabilityDensity.toFixed(4)}</p>
+                <p>計算Z值：</p>
+                <p>Z = ( ${value} - ${mean} ) / ${stddev} = ${z.toFixed(2)}</p>
+                <p>查標準常態分佈表，當 Z = ${z.toFixed(2)} 時，累積機率為${probability.toFixed(4)}</p>
+                <p>所以，日平均氣溫低於${value}°C的天數比例為${probability.toFixed(4)}</p>
             `;
         }
 
@@ -239,6 +235,7 @@
                 <p>變異數 Var(X) = ${values.map((x, i) => `(${x} - ${mean.toFixed(2)})<sup>2</sup> &times; ${probabilities[i]}`).join(' + ')} = ${variance.toFixed(2)}</p>
             `;
         }
+
         function generateBinomialExpansionExplanation(n, p, k) {
             const factorial = (n) => (n === 0 ? 1 : n * factorial(n - 1));
             const combination = factorial(n) / (factorial(k) * factorial(n - k));
