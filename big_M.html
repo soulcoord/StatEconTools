@@ -1,228 +1,339 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台灣旅遊行程</title>
+    <title>南台灣與東海岸七日遊</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #121212;
+            color: #ffffff;
             margin: 0;
             padding: 0;
         }
+        .header {
+            background-color: #1f1f1f;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
         .container {
             width: 80%;
-            margin: 0 auto;
+            margin: auto;
+            overflow: hidden;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background: #1f1f1f;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        h1, h2 {
-            color: #333;
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
         }
-        .itinerary {
-            margin-bottom: 40px;
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s;
+        }
+        .nav a:hover {
+            background: #575757;
+        }
+        .showcase {
+            position: relative;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/e/e0/Nanwan_%28South_Bay%29.jpg') no-repeat center center/cover;
+            height: 400px;
+            color: white;
+            text-align: center;
+        }
+        .showcase h1 {
+            margin-top: 0;
+            padding-top: 100px;
+            font-size: 50px;
+        }
+        .showcase p {
+            font-size: 20px;
+        }
+        .content {
             padding: 20px;
-            border: 2px solid #007BFF;
-            border-radius: 10px;
+        }
+        .content img {
+            width: 45%;
+            height: auto;
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+        .content h2 {
+            color: #ffffff;
+            margin-top: 20px;
+        }
+        .content ul {
+            padding: 0;
+            list-style: none;
+        }
+        .content li {
+            margin-bottom: 10px;
+        }
+        .content a {
+            color: #77aaff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .content a:hover {
+            color: #dddddd;
         }
         .day {
             margin-bottom: 20px;
         }
-        .day h3 {
-            margin: 0;
-            color: #007BFF;
-        }
-        .day p {
-            margin: 5px 0;
-            line-height: 1.6;
-        }
-        .highlight {
-            color: #E74C3C;
-            font-weight: bold;
-        }
-        .address a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        .address a:hover {
-            text-decoration: underline;
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>南台灣與東海岸七日遊</h1>
+    </div>
+
+    <div class="nav">
+        <a href="#day1">第一天</a>
+        <a href="#day2">第二天</a>
+        <a href="#day3">第三天</a>
+        <a href="#day4">第四天</a>
+        <a href="#day5">第五天</a>
+        <a href="#day6">第六天</a>
+        <a href="#day7">第七天</a>
+    </div>
+
+    <div class="showcase">
+        <h1>探索南台灣與東海岸</h1>
+        <p>感受台灣的自然之美與文化魅力</p>
+    </div>
+
     <div class="container">
-
-        <div class="itinerary">
-            <h2>行程一：台北 → 阿里山 → 屏東墾丁 → 東部海線</h2>
-
-            <div class="day">
-                <h3>第1天：台北到阿里山</h3>
-                <p>台北車站搭乘高鐵至嘉義站 
-                <span class="address"><a href="https://maps.google.com.tw/?q=嘉義市東區高鐵西路168號" target="_blank">(嘉義市東區高鐵西路168號)</a></span></p>
-                <p>租車前往阿里山國家風景區 
-                <span class="address"><a href="https://maps.google.com.tw/?q=嘉義縣阿里山鄉中正村59號" target="_blank">(嘉義縣阿里山鄉中正村59號)</a></span></p>
-                <p class="highlight">美食：阿里山賓館餐廳，品嘗高山茶和台灣特色料理</p>
-            </div>
-
-            <div class="day">
-                <h3>第2天：阿里山</h3>
-                <p>景點：神木群步道、姐妹潭</p>
-                <p>租車前往屏東，約4小時車程</p>
-                <p class="highlight">美食：墾丁大街夜市，推薦品嘗墾丁大蝦、烤魷魚和芒果冰</p>
-            </div>
-
-            <div class="day">
-                <h3>第3天：屏東墾丁</h3>
-                <p>景點：鵝鑾鼻燈塔 
-                <span class="address"><a href="https://maps.google.com.tw/?q=屏東縣恆春鎮鵝鑾里鵝鑾路301號" target="_blank">(屏東縣恆春鎮鵝鑾里鵝鑾路301號)</a></span>、貓鼻頭公園 
-                <span class="address"><a href="https://maps.google.com.tw/?q=屏東縣恆春鎮公園路" target="_blank">(屏東縣恆春鎮公園路)</a></span></p>
-                <p class="highlight">美食：後壁湖漁港，推薦品嘗新鮮海鮮</p>
-            </div>
-
-            <div class="day">
-                <h3>第4天：屏東墾丁</h3>
-                <p>活動：浮潛、潛水 (推薦白沙灣或南灣)</p>
-                <p class="highlight">美食：墾丁大街夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第5天：墾丁到花蓮</h3>
-                <p>沿台東海岸線開車前往花蓮，約5小時車程</p>
-                <p>景點：三仙台 
-                <span class="address"><a href="https://maps.google.com.tw/?q=台東縣成功鎮基翬路74號" target="_blank">(台東縣成功鎮基翬路74號)</a></span></p>
-                <p class="highlight">美食：花蓮東大門夜市，推薦吃香雞排、蚵仔煎和紅豆湯</p>
-            </div>
-
-            <div class="day">
-                <h3>第6天：花蓮海線</h3>
-                <p>景點：太魯閣國家公園 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮縣秀林鄉富世村" target="_blank">(花蓮縣秀林鄉富世村)</a></span></p>
-                <p>活動：七星潭海灘 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮縣新城鄉" target="_blank">(花蓮縣新城鄉)</a></span></p>
-                <p class="highlight">美食：花蓮公正包子 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮市中山路199-2號" target="_blank">(花蓮市中山路199-2號)</a></span></p>
-            </div>
-
-            <div class="day">
-                <h3>第7天：花蓮到台北</h3>
-                <p>活動：自由活動 (推薦參觀花蓮文化創意園區)</p>
-                <p>交通：搭乘台鐵自強號返回台北</p>
+        <div id="day1" class="day">
+            <h2>第一天：台北到左營</h2>
+            <div class="content clearfix">
+                <h3>交通：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 從台北車站搭乘高鐵前往左營站，預計行程約2小時。</li>
+                    <li><strong>11:00：</strong> 到達左營站，租車前往墾丁國家公園，車程約2小時。</li>
+                </ul>
+                <h3>活動：</h3>
+                <ul>
+                    <li><strong>13:00：</strong> 抵達墾丁，入住當地民宿或酒店，放置行李，稍作休息。</li>
+                    <li><strong>15:00：</strong> 前往墾丁大街夜市，開始探索當地的美食和夜生活。</li>
+                </ul>
+                <h3>美食：</h3>
+                <ul>
+                    <li><strong>18:00：</strong> 在墾丁大街夜市享用當地特色小吃，如大腸包小腸、鹽酥雞、珍珠奶茶等。</li>
+                </ul>
+                <h3>景點：</h3>
+                <div class="clearfix">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/TRA_Taipei_Station_and_Zhongxiao_West_Road_at_night_20210115.jpg/300px-TRA_Taipei_Station_and_Zhongxiao_West_Road_at_night_20210115.jpg" alt="台北車站">
+                    <h3>台北車站</h3>
+                    <p>台北車站是台灣鐵路交通的主要樞紐，結合台灣鐵路、高鐵及捷運等多種交通方式，方便旅客轉乘。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/HSR_Zuoying_Station.JPG/1200px-HSR_Zuoying_Station.JPG" alt="左營站">
+                    <h3>左營站</h3>
+                    <p>左營站是高鐵南部的重要車站，連接高雄市與南部地區的主要交通樞紐，站內設施完善，便於旅客轉乘。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Nanwan_%28South_Bay%29.jpg" alt="墾丁國家公園">
+                    <h3>墾丁國家公園</h3>
+                    <p>墾丁國家公園位於台灣最南端，擁有豐富的自然景觀和多樣的生態環境，包括珊瑚礁、沙灘和森林，是熱門的旅遊勝地。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://photo.travelking.com.tw/scenery/9DE6C124-4006-4328-8EB9-F63336D65B69_d.jpg" alt="墾丁大街夜市">
+                    <h3>墾丁大街夜市</h3>
+                    <p>墾丁大街夜市是墾丁最著名的夜市，提供各種美食、紀念品和娛樂活動，是遊客必訪的地點。</p>
+                </div>
             </div>
         </div>
 
-        <div class="itinerary">
-            <h2>行程二：台北 → 左營 → 屏東墾丁 → 東部海線</h2>
-
-            <div class="day">
-                <h3>第1天：台北到左營</h3>
-                <p>台北車站搭乘高鐵至左營站 
-                <span class="address"><a href="https://maps.google.com.tw/?q=高雄市左營區站前北路" target="_blank">(高雄市左營區站前北路)</a></span></p>
-                <p>租車前往墾丁國家公園</p>
-                <p class="highlight">美食：墾丁大街夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第2天：屏東墾丁</h3>
-                <p>景點：鵝鑾鼻燈塔、龍磐草原 
-                <span class="address"><a href="https://maps.google.com.tw/?q=屏東縣恆春鎮草原路" target="_blank">(屏東縣恆春鎮草原路)</a></span></p>
-                <p>活動：水上活動 (推薦白沙灣)</p>
-                <p class="highlight">美食：後壁湖漁港</p>
-            </div>
-
-            <div class="day">
-                <h3>第3天：屏東墾丁</h3>
-                <p>活動：風帆衝浪 (推薦南灣)</p>
-                <p class="highlight">美食：墾丁大街夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第4天：墾丁到花蓮</h3>
-                <p>沿台東海岸線開車前往花蓮</p>
-                <p>景點：三仙台</p>
-                <p class="highlight">美食：花蓮東大門夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第5天：花蓮海線</h3>
-                <p>景點：太魯閣國家公園</p>
-                <p>活動：七星潭海灘</p>
-                <p class="highlight">美食：自強夜市 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮市中山路199-2號" target="_blank">(花蓮市中山路199-2號)</a></span></p>
-            </div>
-
-            <div class="day">
-                <h3>第6天：花蓮海線</h3>
-                <p>活動：賞鯨活動 (花蓮港出發)</p>
-                <p>景點：瑞穗牧場 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮縣瑞穗鄉舞鶴村9鄰193號" target="_blank">(花蓮縣瑞穗鄉舞鶴村9鄰193號)</a></span></p>
-                <p class="highlight">美食：光復糖廠 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮縣光復鄉糖廠路19號" target="_blank">(花蓮縣光復鄉糖廠路19號)</a></span></p>
-            </div>
-
-            <div class="day">
-                <h3>第7天：花蓮到台北</h3>
-                <p>自由活動，搭乘台鐵自強號返回台北</p>
+        <div id="day2" class="day">
+            <h2>第二天：屏東墾丁</h2>
+            <div class="content clearfix">
+                <h3>景點：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 出發前往鵝鑾鼻燈塔，欣賞壯麗的海景。</li>
+                    <li><strong>11:00：</strong> 前往龍磐草原，漫步在壯觀的草原和懸崖邊。</li>
+                </ul>
+                <h3>活動：</h3>
+                <ul>
+                    <li><strong>13:00：</strong> 午餐後，前往白沙灣進行浮潛或水上摩托車等活動。</li>
+                </ul>
+                <h3>美食：</h3>
+                <ul>
+                    <li><strong>18:00：</strong> 晚餐前往後壁湖漁港，享用新鮮的海鮮料理，如生魚片和海鮮鍋。</li>
+                </ul>
+                <div class="clearfix">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Eluanbi_Lighthouse_02.jpg/300px-Eluanbi_Lighthouse_02.jpg" alt="鵝鑾鼻燈塔">
+                    <h3>鵝鑾鼻燈塔</h3>
+                    <p>鵝鑾鼻燈塔位於墾丁國家公園內，是台灣最南端的燈塔，白色的塔身與藍天碧海相映成趣，是熱門的拍照景點。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://www.settour.com.tw/ss_img/poi/20220324/e6294fd7-3fb0-424e-af39-04bc413bd858.jpg" alt="龍磐草原">
+                    <h3>龍磐草原</h3>
+                    <p>龍磐草原位於墾丁東側，這裡有廣闊的草原和壯麗的海景，是漫步、放鬆和拍照的好地方。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://www.taiwan.net.tw/pic.ashx?qp=1/big_scenic_spots/pic_10596_8.jpg&sizetype=3" alt="白沙灣">
+                    <h3>白沙灣</h3>
+                    <p>白沙灣以其細緻的白沙和清澈的海水而聞名，是進行浮潛和水上活動的理想地點。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://img.uukt.com.tw/view/30/480/20161127235633EC2VH.jpg" alt="後壁湖漁港">
+                    <h3>後壁湖漁港</h3>
+                    <p>後壁湖漁港是墾丁的主要漁港之一，這裡有新鮮的海鮮市場和美味的海鮮餐廳，是品嚐美食的好地方。</p>
+                </div>
             </div>
         </div>
 
-        <div class="itinerary">
-            <h2>行程三：台北 → 東部海線</h2>
-
-            <div class="day">
-                <h3>第1天：台北到宜蘭</h3>
-                <p>交通：從台北租車，沿雪山隧道到宜蘭</p>
-                <p>景點：蘭陽博物館 
-                <span class="address"><a href="https://maps.google.com.tw/?q=宜蘭縣五結鄉季新村77號" target="_blank">(宜蘭縣五結鄉季新村77號)</a></span>、幾米公園 
-                <span class="address"><a href="https://maps.google.com.tw/?q=宜蘭市宜興路" target="_blank">(宜蘭市宜興路)</a></span></p>
-                <p class="highlight">美食：羅東夜市 
-                <span class="address"><a href="https://maps.google.com.tw/?q=宜蘭縣羅東鎮興東路" target="_blank">(宜蘭縣羅東鎮興東路)</a></span></p>
-            </div>
-
-            <div class="day">
-                <h3>第2天：宜蘭到花蓮</h3>
-                <p>沿海岸線駕車前往花蓮</p>
-                <p>景點：龜山島觀景台 
-                <span class="address"><a href="https://maps.google.com.tw/?q=宜蘭縣頭城鎮濱海路" target="_blank">(宜蘭縣頭城鎮濱海路)</a></span></p>
-                <p class="highlight">美食：花蓮東大門夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第3天：花蓮海線</h3>
-                <p>景點：太魯閣國家公園</p>
-                <p>活動：七星潭海灘</p>
-                <p class="highlight">美食：公正包子</p>
-            </div>
-
-            <div class="day">
-                <h3>第4天：花蓮海線</h3>
-                <p>活動：賞鯨活動</p>
-                <p>景點：鯉魚潭 
-                <span class="address"><a href="https://maps.google.com.tw/?q=花蓮縣壽豐鄉池南村" target="_blank">(花蓮縣壽豐鄉池南村)</a></span></p>
-                <p class="highlight">美食：瑞穗牧場</p>
-            </div>
-
-            <div class="day">
-                <h3>第5天：花蓮到台東</h3>
-                <p>沿海岸公路駕車前往台東</p>
-                <p>景點：三仙台</p>
-                <p class="highlight">美食：台東夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第6天：台東海線</h3>
-                <p>景點：三仙台、都歷遊客中心 
-                <span class="address"><a href="https://maps.google.com.tw/?q=台東縣成功鎮都歷村都歷街99號" target="_blank">(台東縣成功鎮都歷村都歷街99號)</a></span></p>
-                <p>活動：水上活動</p>
-                <p class="highlight">美食：台東夜市</p>
-            </div>
-
-            <div class="day">
-                <h3>第7天：台東到台北</h3>
-                <p>交通：沿海岸公路駕車返回台北</p>
+        <div id="day3" class="day">
+            <h2>第三天：墾丁到台東</h2>
+            <div class="content clearfix">
+                <h3>交通：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 早晨出發，沿台東海岸線開車前往台東，車程約3小時。</li>
+                </ul>
+                <h3>景點：</h3>
+                <ul>
+                    <li><strong>12:00：</strong> 停留在三仙台，探索著名的自然景點，欣賞壯觀的拱橋和島嶼景觀。</li>
+                </ul>
+                <h3>美食：</h3>
+                <ul>
+                    <li><strong>18:00：</strong> 晚餐在台東市區享受當地美食，如米苔目和卑南包子。</li>
+                </ul>
+                <div class="clearfix">
+                    <img src="https://tour.taitung.gov.tw/image/26553/1024x768" alt="三仙台">
+                    <h3>三仙台</h3>
+                    <p>三仙台是台東著名的自然景點，擁有獨特的拱橋和美麗的島嶼景觀，是拍照和散步的絕佳地點。</p>
+                </div>
             </div>
         </div>
+
+        <div id="day4" class="day">
+            <h2>第四天：台東到花蓮</h2>
+            <div class="content clearfix">
+                <h3>交通：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 早晨出發，沿著台東海岸線繼續開車前往花蓮，車程約3小時。</li>
+                </ul>
+                <h3>景點：</h3>
+                <ul>
+                    <li><strong>12:00：</strong> 停留在加路蘭海岸，這裡有壯觀的海岸線和美麗的景觀，非常適合拍照和散步。</li>
+                </ul>
+                <h3>美食：</h3>
+                <ul>
+                    <li><strong>18:00：</strong> 晚上在花蓮東大門夜市品嘗當地美食，如剝皮辣椒雞湯、花蓮薯、麻糬等。</li>
+                </ul>
+                <div class="clearfix">
+                    <img src="https://www.welcometw.com/wp-content/uploads/2020/11/bottle860408_124098498_1056661824779772_2773694663544276774_n.jpg" alt="加路蘭海岸">
+                    <h3>加路蘭海岸</h3>
+                    <p>加路蘭海岸擁有壯觀的海岸線和美麗的景觀，是拍照和散步的理想地點。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://tour-hualien-ws.hl.gov.tw/001/Upload/435/relpic/12302/1448/20897fc8-17f0-4e90-a442-6a1e7ebae933.jpg" alt="花蓮東大門夜市">
+                    <h3>花蓮東大門夜市</h3>
+                    <p>花蓮東大門夜市是花蓮市區最著名的夜市，提供各種地方小吃和手工藝品，是遊客必訪之地。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="day5" class="day">
+            <h2>第五天：花蓮海線</h2>
+            <div class="content clearfix">
+                <h3>景點：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 前往七星潭海灘，這裡是美麗的石頭海灘，適合放鬆和拍照。</li>
+                </ul>
+                <h3>活動：</h3>
+                <ul>
+                    <li><strong>13:00：</strong> 午餐後，前往花蓮縣的雲山水，這是一個結合了湖泊、山脈和美麗景觀的景點，適合散步和放鬆。</li>
+                </ul>
+                <h3>美食：</h3>
+                <ul>
+                    <li><strong>18:00：</strong> 晚上在自強夜市享用多樣的小吃，如棺材板、碳烤玉米、炸蛋蔥油餅等。</li>
+                </ul>
+                <div class="clearfix">
+                    <img src="https://www.taiwan.net.tw/pic.ashx?qp=1/big_scenic_spots/pic_9488_8.jpg&sizetype=3" alt="七星潭海灘">
+                    <h3>七星潭海灘</h3>
+                    <p>七星潭海灘以其獨特的卵石海灘和美麗的月牙形海灣著稱，是放鬆和拍照的好地方。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://www.erv-nsa.gov.tw/image/10579/1024x768" alt="雲山水">
+                    <h3>雲山水</h3>
+                    <p>雲山水位於花蓮縣壽豐鄉，這裡有美麗的湖泊、落羽松森林和豐富的自然景觀，是散步和放鬆的理想地點。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://khh.travel/content/images/Attractions/50493/1024x768_attractions-image-vzhia-mfu0ww73uuyygkjq.jpg" alt="自強夜市">
+                    <h3>自強夜市</h3>
+                    <p>自強夜市是花蓮市內著名的夜市之一，提供各種小吃和當地特色美食，是美食愛好者的天堂。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="day6" class="day">
+            <h2>第六天：花蓮海線</h2>
+            <div class="content clearfix">
+                <h3>活動：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 早上從花蓮港出發參加賞鯨活動，觀賞壯觀的鯨魚和海豚，體驗海上風光。</li>
+                </ul>
+                <h3>景點：</h3>
+                <ul>
+                    <li><strong>14:00：</strong> 下午前往瑞穗牧場，體驗農場生活，參觀牛舍，品嚐新鮮的乳製品。</li>
+                </ul>
+                <h3>美食：</h3>
+                <ul>
+                    <li><strong>18:00：</strong> 在光復糖廠享受冰涼的蔗糖冰品和當地特色甜點，了解製糖歷史。</li>
+                </ul>
+                <div class="clearfix">
+                    <img src="https://www.huadong.com.tw/images/facebook_1.jpg" alt="賞鯨活動">
+                    <h3>賞鯨活動</h3>
+                    <p>花蓮的賞鯨活動讓遊客有機會觀賞壯觀的鯨魚和海豚，體驗海上風光，享受自然的奇觀。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://www.erv-nsa.gov.tw/image/10337/1024x768" alt="瑞穗牧場">
+                    <h3>瑞穗牧場</h3>
+                    <p>瑞穗牧場位於花蓮縣瑞穗鄉，提供牧場體驗和新鮮的乳製品，是親子旅遊的好選擇。</p>
+                </div>
+                <div class="clearfix">
+                    <img src="https://www.erv-nsa.gov.tw/image/10551/1024x768" alt="光復糖廠">
+                    <h3>光復糖廠</h3>
+                    <p>光復糖廠是花蓮縣光復鄉的歷史景點，提供製糖過程參觀、糖品品嚐及冰品，是了解製糖歷史的好地方。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="day7" class="day">
+            <h2>第七天：花蓮到台北</h2>
+            <div class="content clearfix">
+                <h3>交通：</h3>
+                <ul>
+                    <li><strong>09:00：</strong> 早上自由活動，可以在花蓮市區購物或參觀其他景點。</li>
+                    <li><strong>12:00：</strong> 中午前出發，開車返回台北，車程約3.5-4小時。</li>
+                </ul>
+                <h3>活動：</h3>
+                <ul>
+                    <li><strong>16:00：</strong> 抵達台北，進行自由活動，可以參觀當地景點或購物。</li>
+                    <li><strong>18:00：</strong> 晚餐在台北市區享用當地美食，結束愉快的旅程。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 南台灣與東海岸七日遊. 版權所有.</p>
     </div>
 </body>
 </html>
