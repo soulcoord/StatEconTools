@@ -6,11 +6,12 @@
     <title>分配表首頁</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #121212;
             color: #FFFFFF;
+            line-height: 1.6;
         }
         header {
             padding: 20px;
@@ -23,7 +24,9 @@
             margin: 0;
         }
         .container {
-            padding: 50px 20px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .category {
             margin: 20px 0;
@@ -31,6 +34,20 @@
         }
         .category h2 {
             color: #ff9800;
+            font-size: 24px;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .category h2::after {
+            content: "";
+            width: 50px;
+            height: 2px;
+            background-color: #ff9800;
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .links {
             display: flex;
@@ -39,15 +56,17 @@
         }
         .links a {
             margin: 10px 15px;
-            padding: 10px 20px;
+            padding: 12px 25px;
             color: #FFFFFF;
             text-decoration: none;
             background-color: #333333;
             border-radius: 5px;
-            font-size: 18px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .links a:hover {
-            background-color: #555555;
+            background-color: #ff9800;
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -69,6 +88,12 @@
                 <a href="powa.html">普瓦松分配表</a>
                 <a href="two.html">二項式分配表</a>
                 <a href="t-distribution.html">T分配表</a>
+            </div>
+        </div>
+        <div class="category">
+            <h2>設施規劃</h2>
+            <div class="links">
+                <a href="pairwise.html">配對互換法</a>
             </div>
         </div>
     </div>
