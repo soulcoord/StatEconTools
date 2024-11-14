@@ -11,6 +11,7 @@
             margin: 20px;
             background-color: #121212;
             color: #FFFFFF;
+            line-height: 1.6;
         }
         nav {
             margin-bottom: 20px;
@@ -20,17 +21,21 @@
             color: #FFFFFF;
             text-decoration: none;
             font-size: 18px;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #ff9800;
         }
         table {
             width: 90%;
-            margin: 20px auto;
+            margin: 30px auto;
             border-collapse: collapse;
             font-size: 16px;
-            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         th, td {
             border: 1px solid #424242;
-            padding: 12px;
+            padding: 15px;
             text-align: center;
         }
         th {
@@ -38,6 +43,7 @@
             color: #ffffff;
             position: sticky;
             top: 0;
+            z-index: 2;
         }
         tbody tr:nth-child(odd) {
             background-color: #2c2c2c;
@@ -45,30 +51,45 @@
         tbody tr:nth-child(even) {
             background-color: #1e1e1e;
         }
+        tbody tr:hover {
+            background-color: #ff9800;
+            color: #212121;
+        }
         .highlight {
             background-color: #ff9800 !important;
+            color: #212121 !important;
         }
         .form-container {
             margin: 20px;
+            padding: 20px;
+            background-color: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: inline-block;
         }
         .form-container input {
-            padding: 5px;
+            padding: 10px;
             font-size: 16px;
+            width: 200px;
             background-color: #333333;
             color: #FFFFFF;
             border: 1px solid #555555;
+            border-radius: 5px;
         }
         .form-container button {
-            padding: 5px 10px;
+            padding: 10px 20px;
             font-size: 16px;
             margin-left: 10px;
-            background-color: #555555;
-            color: #FFFFFF;
-            border: 1px solid #777777;
+            background-color: #ff9800;
+            color: #212121;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .form-container button:hover {
-            background-color: #777777;
+            background-color: #e68900;
+            transform: translateY(-3px);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
@@ -84,7 +105,7 @@
     <h1>T 檢驗表</h1>
     <div class="form-container">
         <label for="dfSearch">搜尋自由度 (df):</label>
-        <input type="number" id="dfSearch" step="1" placeholder="輸入自由度">
+        <input type="number" id="dfSearch" step="1" placeholder="輸入自由度" min="1" max="100">
         <button onclick="searchDF()">搜尋</button>
     </div>
     <table id="tTable">
@@ -130,7 +151,7 @@
         function searchDF() {
             const df = parseInt(document.getElementById('dfSearch').value);
             if (isNaN(df) || df < 1 || df > 100) {
-                alert("請輸入有效的自由度");
+                alert("請輸入有效的自由度 (1-100)");
                 return;
             }
 

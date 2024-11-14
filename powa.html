@@ -11,6 +11,7 @@
             margin: 20px;
             background-color: #121212;
             color: #FFFFFF;
+            line-height: 1.6;
         }
         nav {
             margin-bottom: 20px;
@@ -20,16 +21,21 @@
             color: #FFFFFF;
             text-decoration: none;
             font-size: 18px;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #ff9800;
         }
         table {
             width: 90%;
-            margin: 20px auto;
+            margin: 30px auto;
             border-collapse: collapse;
             font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         th, td {
             border: 1px solid #424242;
-            padding: 12px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
         }
@@ -43,31 +49,43 @@
         tbody tr:nth-child(even) {
             background-color: #1e1e1e;
         }
+        tbody tr:hover {
+            background-color: #ff9800;
+            color: #212121;
+        }
         .highlight {
             background-color: #ff9800 !important;
-            color: #212121 ;
+            color: #212121;
         }
         .form-container {
             margin: 20px;
+            padding: 20px;
+            background-color: #1f1f1f;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         .form-container input {
-            padding: 5px;
+            padding: 10px;
             font-size: 16px;
             background-color: #333333;
             color: #FFFFFF;
             border: 1px solid #555555;
+            border-radius: 5px;
         }
         .form-container button {
-            padding: 5px 10px;
+            padding: 10px 20px;
             font-size: 16px;
             margin-left: 10px;
-            background-color: #555555;
-            color: #FFFFFF;
-            border: 1px solid #777777;
+            background-color: #ff9800;
+            color: #212121;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .form-container button:hover {
-            background-color: #777777;
+            background-color: #e68900;
+            transform: translateY(-3px);
         }
         #result {
             margin-top: 20px;
@@ -91,9 +109,12 @@
             color: #FFFFFF;
             border: 1px solid #555555;
             cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
         .pagination button:hover {
-            background-color: #555555;
+            background-color: #ff9800;
+            color: #212121;
         }
         .pagination .active button {
             background-color: #ff9800;
@@ -110,6 +131,8 @@
             background-color: #1f1f1f;
             padding: 20px;
             border: 1px solid #555555;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
             z-index: 1000;
         }
         #closeChart {
@@ -119,14 +142,18 @@
             background-color: #ff9800;
             color: #212121;
             border: none;
-            padding: 5px 10px;
+            padding: 10px;
             cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
         #closeChart:hover {
             background-color: #e68900;
         }
         canvas {
             background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
