@@ -25,29 +25,85 @@
             color: #e0e0e0;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color 0.3s, border-bottom 0.3s;
         }
-        nav a:hover {
+        nav a:hover, nav a.active {
             color: #ff9800;
+            border-bottom: 2px solid #ff9800;
+            padding-bottom: 2px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #ff9800;
+        }
+        .form-container {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #2b2b2b;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+        }
+        .form-container label {
+            font-size: 18px;
+            text-align: left;
+            flex: 1 1 100%;
+        }
+        .form-container input {
+            padding: 10px;
+            font-size: 18px;
+            background-color: #2b2b2b;
+            color: #ffffff;
+            border: 2px solid #555555;
+            border-radius: 5px;
+            outline: none;
+            flex: 1 1 auto;
+            min-width: 150px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ff9800;
+            color: #212121;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            flex: 0 0 auto;
+        }
+        .form-container button:hover {
+            background-color: #e68900;
+            transform: translateY(-2px);
         }
         table {
             width: 90%;
+            max-width: 1000px;
             margin: 20px auto;
             border-collapse: collapse;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
         th, td {
             border: 1px solid #333333;
             padding: 15px;
             text-align: center;
             transition: background-color 0.3s, color 0.3s;
+            cursor: pointer;
         }
         th {
             background-color: #424242;
             color: #ffcc00;
             font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
         tbody tr:nth-child(odd) {
             background-color: #2a2a2a;
@@ -63,48 +119,14 @@
             background-color: #ffcc00 !important;
             color: #000000 !important;
         }
-        .form-container {
-            margin: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .form-container input {
-            padding: 10px;
-            font-size: 18px;
-            background-color: #2b2b2b;
-            color: #ffffff;
-            border: 2px solid #555555;
-            border-radius: 5px;
-            outline: none;
-        }
-        .form-container button {
-            padding: 10px 20px;
-            font-size: 18px;
-            margin-left: 10px;
-            background-color: #ff9800;
-            color: #212121;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .form-container button:hover {
-            background-color: #e68900;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
         .pagination {
             margin: 20px auto;
             display: flex;
             justify-content: center;
             list-style-type: none;
             padding: 0;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         .pagination li {
             margin: 0 5px;
@@ -117,10 +139,11 @@
             border: 2px solid #555555;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
         }
         .pagination button:hover {
             background-color: #555555;
+            transform: translateY(-2px);
         }
         .pagination .active button {
             background-color: #ff9800;
@@ -132,14 +155,15 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
+            width: 90%;
+            max-width: 800px;
             height: 80%;
             background-color: #1f1f1f;
             padding: 20px;
             border: 2px solid #777777;
             border-radius: 10px;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
         }
         #closeChart {
             position: absolute;
@@ -151,13 +175,35 @@
             padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
         }
         #closeChart:hover {
             background-color: #e68900;
+            transform: translateY(-2px);
         }
         canvas {
             background-color: #ffffff;
             border-radius: 5px;
+            width: 100% !important;
+            height: auto !important;
+        }
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            .form-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .form-container button {
+                margin-left: 0;
+                width: 100%;
+            }
+            table {
+                width: 100%;
+            }
+            #chartContainer {
+                width: 95%;
+                height: 70%;
+            }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
@@ -168,12 +214,12 @@
         <a href="t-distribution.html">t檢驗表</a>
         <a href="powa.html">普瓦松分配表</a>
         <a href="two.html">二項式分配表</a>
-        <a href="index.html" style="color: #ff9800;">返回首頁</a>
+        <a href="index.html" class="active">返回首頁</a>
     </nav>    
     <h1>常態分配標準差表</h1>
     <div class="form-container">
-        <label for="searchValue">搜尋標準差 (例如 1.05):</label>
-        <input type="number" id="searchValue" name="searchValue" step="0.01" placeholder="輸入 Z 值">
+        <label for="searchValue">搜尋 Z 值 (例如 1.05):</label>
+        <input type="number" id="searchValue" name="searchValue" step="0.01" placeholder="輸入 Z 值" aria-label="搜尋 Z 值">
         <button onclick="searchZValue()">搜尋</button>
     </div>
     <table id="zTable">
@@ -225,7 +271,7 @@
             return 0.5 * (1 + erf(z / Math.sqrt(2)));
         }
 
-        // 新增檢測裝置類型的函數
+        // 檢測裝置類型
         function isMobile() {
             return /Mobi|Android/i.test(navigator.userAgent);
         }
@@ -244,7 +290,7 @@
             const start = (page - 1) * rowsPerPage;
             const end = start + rowsPerPage;
             const pageData = data.slice(start, end);
-            pageData.forEach(item => {
+            pageData.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 const tdZ = document.createElement('td');
                 const tdProbability = document.createElement('td');
@@ -253,11 +299,9 @@
 
                 // 根據裝置類型決定是否添加點擊事件處理程序
                 if (!isMobile()) {
-                    tdZ.onclick = () => {
-                        drawChart(item.z);
-                    };
-                    tdProbability.onclick = () => {
-                        drawChart(item.z);
+                    tr.style.cursor = 'pointer';
+                    tr.onclick = () => {
+                        drawChart(parseFloat(item.z));
                     };
                 }
 
@@ -294,23 +338,39 @@
             paginationButtons.forEach(button => {
                 button.classList.remove('active');
             });
-            paginationButtons[currentPage - 1].classList.add('active');
+            if (paginationButtons[currentPage - 1]) {
+                paginationButtons[currentPage - 1].classList.add('active');
+            }
         }
 
         // 搜尋 Z 值並高亮顯示
         function searchZValue() {
-            const searchValue = parseFloat(document.getElementById('searchValue').value).toFixed(2);
+            const searchInput = document.getElementById('searchValue');
+            const searchValue = parseFloat(searchInput.value).toFixed(2);
+            if (isNaN(searchValue)) {
+                alert("請輸入有效的 Z 值");
+                searchInput.focus();
+                return;
+            }
             const rowIndex = data.findIndex(item => item.z === searchValue);
             if (rowIndex !== -1) {
                 currentPage = Math.ceil((rowIndex + 1) / rowsPerPage);
                 renderTable(currentPage);
+                renderPagination();
                 updatePagination();
-                const rows = document.querySelectorAll('#zTableBody tr');
-                rows.forEach(row => {
-                    row.classList.remove('highlight');
-                });
-                rows[rowIndex % rowsPerPage].classList.add('highlight');
-                rows[rowIndex % rowsPerPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // 延遲高亮以確保表格已渲染
+                setTimeout(() => {
+                    const tableBody = document.getElementById('zTableBody');
+                    const rows = tableBody.querySelectorAll('tr');
+                    rows.forEach(row => row.classList.remove('highlight'));
+                    const targetRow = rows[rowIndex % rowsPerPage];
+                    if (targetRow) {
+                        targetRow.classList.add('highlight');
+                        targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
+            } else {
+                alert("未找到該 Z 值");
             }
         }
 
@@ -322,12 +382,12 @@
             }
 
             const labels = [];
-            const data = [];
+            const density = [];
             const fillData = [];
             for (let x = -4; x <= 4; x += 0.01) {
                 labels.push(x.toFixed(2));
                 const y = Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
-                data.push(y);
+                density.push(y);
                 fillData.push(x <= zValue ? y : null);
             }
 
@@ -338,7 +398,7 @@
                     datasets: [
                         {
                             label: '常態分配曲線',
-                            data: data,
+                            data: density,
                             borderColor: '#ff9800',
                             borderWidth: 2,
                             fill: false
@@ -353,6 +413,7 @@
                     ]
                 },
                 options: {
+                    responsive: true,
                     scales: {
                         x: {
                             title: {
@@ -364,24 +425,13 @@
                             title: {
                                 display: true,
                                 text: '機率密度'
-                            }
+                            },
+                            beginAtZero: true
                         }
                     },
                     plugins: {
-                        annotation: {
-                            annotations: [{
-                                type: 'line',
-                                mode: 'vertical',
-                                scaleID: 'x',
-                                value: zValue,
-                                borderColor: 'red',
-                                borderWidth: 2,
-                                label: {
-                                    content: 'Z = ' + zValue,
-                                    enabled: true,
-                                    position: 'top'
-                                }
-                            }]
+                        tooltip: {
+                            enabled: true
                         }
                     }
                 }
@@ -396,9 +446,11 @@
         }
 
         // 初始生成標準差表數據和分頁
-        generateData();
-        renderTable(currentPage);
-        renderPagination();
+        window.onload = function() {
+            generateData();
+            renderTable(currentPage);
+            renderPagination();
+        }
     </script>
 </body>
 </html>
