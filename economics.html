@@ -140,14 +140,13 @@
             <option value="A/G">A/G</option>
         </select>
         <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter N value">
-        <button onclick="searchValue()" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Search corresponding value">搜尋對應值</button>
     </div>
     <div id="rateDisplay" style="color: #e0e0e0; margin: 20px; font-size: 20px;">
         Interest Rate: <span id="rateValue">0</span>%
     </div>
     <div id="controls" class="mb-4">
         <label for="rate">Enter Interest Rate (%): </label>
-        <input id="rate" onchange="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter interest rate">
+        <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter interest rate">
     </div>
     <div id="interestRateValue"></div>
     <div class="table-wrapper">
