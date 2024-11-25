@@ -250,7 +250,6 @@
         function calculate() {
             var rate = parseFloat(document.getElementById('rate').value) / 100;
             if (isNaN(rate) || rate < 0) {
-                alert('Please enter a valid interest rate.');
                 return;
             }
             document.getElementById('rateValue').textContent = (rate * 100).toFixed(2);
