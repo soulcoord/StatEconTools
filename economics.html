@@ -23,18 +23,24 @@
             text-decoration: none;
             font-size: 18px;
         }
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
         table {
-            width: 90%;
+            width: 100%;
             margin: 20px auto;
             border-collapse: collapse;
-            font-size: 16px;
+            font-size: 14px;
             position: relative;
+            min-width: 800px; /* 確保表格在小屏幕上仍有適當寬度 */
         }
         th, td {
             border: 1px solid #424242;
-            padding: 12px;
+            padding: 8px;
             text-align: center;
             cursor: pointer;
+            white-space: nowrap; /* 防止單元格內容換行 */
         }
         th {
             position: sticky;
@@ -104,6 +110,36 @@
             color: #ffffff;
             border: 1px solid #555555;
         }
+
+        /* 手機版調整 */
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+                min-width: 600px;
+            }
+            th, td {
+                padding: 6px;
+            }
+            nav a {
+                font-size: 16px;
+                margin: 0 10px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            .form-control {
+                width: 100%;
+                margin: 5px 0;
+            }
+            #controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            #controls label {
+                margin-bottom: 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -111,44 +147,51 @@
         <a href="index.html" style="color: #ff9800;">返回首頁</a>
     </nav>  
     <h2>Engineering Economics Factor Table</h2>
-    <div id="controls">
-        <select id="rowSelect" class="form-control" data-toggle="tooltip" data-placement="top" title="Select factor type">
-            <option value="F/P">F/P</option>
-            <option value="P/F">P/F</option>
-            <option value="A/P">A/P</option>
-            <option value="P/A">P/A</option>
-            <option value="F/A">F/A</option>
-            <option value="A/F">A/F</option>
-            <option value="P/G">P/G</option>
-            <option value="A/G">A/G</option>
-        </select>
-        <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter N value">
+    <div id="searchControls" class="mb-4">
+        <div class="form-inline justify-content-center">
+            <select id="rowSelect" class="form-control" data-toggle="tooltip" data-placement="top" title="Select factor type">
+                <option value="F/P">F/P</option>
+                <option value="P/F">P/F</option>
+                <option value="A/P">A/P</option>
+                <option value="P/A">P/A</option>
+                <option value="F/A">F/A</option>
+                <option value="A/F">A/F</option>
+                <option value="P/G">P/G</option>
+                <option value="A/G">A/G</option>
+            </select>
+            <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter N value">
+            <button class="btn btn-primary" onclick="searchValue()">搜尋</button>
+        </div>
     </div>
     <div id="rateDisplay" style="color: #e0e0e0; margin: 20px; font-size: 20px;">
         Interest Rate: <span id="rateValue">0</span>%
     </div>
-    <div id="controls" class="mb-4">
-        <label for="rate">Enter Interest Rate (%): </label>
-        <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter interest rate">
+    <div id="rateControls" class="mb-4">
+        <div class="form-inline justify-content-center">
+            <label for="rate" class="mr-2">Enter Interest Rate (%): </label>
+            <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter interest rate">
+        </div>
     </div>
     <div id="interestRateValue"></div>
     <div class="table-wrapper">
-        <table id="factorTable">
-            <thead>
-                <tr>
-                    <th>N</th>
-                    <th>F/P</th>
-                    <th>P/F</th>
-                    <th>A/P</th>
-                    <th>P/A</th>
-                    <th>F/A</th>
-                    <th>A/F</th>
-                    <th>P/G</th>
-                    <th>A/G</th>
-                </tr>
-            </thead>
-            <tbody id="factorTableBody"></tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="factorTable" class="table table-dark table-bordered">
+                <thead>
+                    <tr>
+                        <th>N</th>
+                        <th>F/P</th>
+                        <th>P/F</th>
+                        <th>A/P</th>
+                        <th>P/A</th>
+                        <th>F/A</th>
+                        <th>A/F</th>
+                        <th>P/G</th>
+                        <th>A/G</th>
+                    </tr>
+                </thead>
+                <tbody id="factorTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Calculator Modal -->
@@ -220,36 +263,57 @@
         function searchValue() {
             var selectedColumn = document.getElementById('rowSelect').value;
             var nValue = document.getElementById('nValue').value;
-            if (!nValue) {
-                alert('Please enter a valid N value.');
+            if (!nValue || isNaN(nValue) || nValue < 1 || nValue > 60) {
+                alert('Please enter a valid N value between 1 and 60.');
                 return;
             }
+
             var table = document.getElementById('factorTable');
-            var rows = table.rows;
+            var rows = table.getElementsByTagName('tr');
             var columnIndex = -1;
+            
+            // Find the column index for the selected factor type
             for (var i = 0; i < rows[0].cells.length; i++) {
                 if (rows[0].cells[i].textContent === selectedColumn) {
                     columnIndex = i;
                     break;
                 }
             }
-            if (columnIndex !== -1) {
-                for (var j = 1; j < rows.length; j++) {
-                    if (rows[j].cells[0].textContent === nValue) {
-                        var cell = rows[j].cells[columnIndex];
-                        $('td').removeClass('highlight'); // 移除之前的高亮顏色
-                        $(cell).addClass('highlight'); // 添加高亮顏色
-                        cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); // 平滑滾動到該單元格
-                        return;
-                    }
+
+            if (columnIndex === -1) {
+                alert('No matching column found.');
+                return;
+            }
+
+            // Search for the matching row with the given N value
+            var found = false;
+            for (var j = 1; j < rows.length; j++) {
+                if (rows[j].cells[0].textContent === nValue) {
+                    var cell = rows[j].cells[columnIndex];
+                    $('td').removeClass('highlight'); // Remove previous highlights
+                    $(cell).addClass('highlight'); // Highlight the new cell
+                    
+                    // Scroll to the specific cell
+                    cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                    
+                    // Scroll to the table container
+                    $('.table-wrapper').animate({
+                        scrollLeft: $(cell).offset().left - $('.table-wrapper').offset().left + $('.table-wrapper').scrollLeft()
+                    }, 500);
+                    found = true;
+                    break;
                 }
             }
-            alert('No matching value found.');
+            if (!found) {
+                alert('No matching value found.');
+            }
         }
 
         function calculate() {
             var rate = parseFloat(document.getElementById('rate').value) / 100;
             if (isNaN(rate) || rate < 0) {
+                document.getElementById('rateValue').textContent = '0.00';
+                document.getElementById('factorTableBody').innerHTML = '';
                 return;
             }
             document.getElementById('rateValue').textContent = (rate * 100).toFixed(2);
@@ -292,6 +356,9 @@
                 $('#resultValue').val(result.toFixed(4));
             }
         }
+
+        // 初始化表格
+        document.addEventListener('DOMContentLoaded', calculate);
     </script>
 </body>
 </html>
