@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Engineering Economics Factor Table</title>
+    <title>工程經濟學係數表</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             text-align: center;
-            margin: 50px 0;
+            margin: 20px 0;
             background-color: #121212;
             color: #e0e0e0;
             overflow-x: auto;
@@ -19,28 +19,39 @@
         }
         nav a {
             margin: 0 15px;
-            color: #FFFFFF;
+            color: #ff9800;
             text-decoration: none;
             font-size: 18px;
+            font-weight: 500;
+        }
+        nav a:hover {
+            color: #ffd740;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
         }
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         table {
             width: 100%;
             margin: 20px auto;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 15px;
             position: relative;
-            min-width: 800px; /* 確保表格在小屏幕上仍有適當寬度 */
+            min-width: 800px;
         }
         th, td {
             border: 1px solid #424242;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
-            white-space: nowrap; /* 防止單元格內容換行 */
+            white-space: nowrap;
         }
         th {
             position: sticky;
@@ -73,13 +84,20 @@
         .form-control {
             display: inline-block;
             width: auto;
-            margin: 0 5px;
+            margin: 0 10px;
             background-color: #333333;
             color: #ffffff;
             border: 1px solid #555555;
+            padding: 10px;
+            border-radius: 5px;
         }
         .btn {
             margin: 5px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-weight: 500;
         }
         .btn-primary {
             background-color: #6200ea;
@@ -92,6 +110,7 @@
         .btn-secondary {
             background-color: #03dac6;
             border-color: #03dac6;
+            color: #212121;
         }
         .btn-secondary:hover {
             background-color: #018786;
@@ -104,11 +123,31 @@
         #calculatorModal .modal-content {
             background-color: #2c2c2c;
             color: #ffffff;
+            border-radius: 10px;
         }
         #calculatorModal .form-control {
             background-color: #333333;
             color: #ffffff;
             border: 1px solid #555555;
+        }
+        #nValueFeedback {
+            margin-top: 10px;
+        }
+        #rateControls label {
+            font-weight: 500;
+        }
+        .hidden-button {
+            background-color: #f44336;
+            color: #ffffff;
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.4);
+        }
+        .shown-button {
+            background-color: #03dac6;
+            color: #212121;
+            box-shadow: 0 4px 8px rgba(3, 218, 198, 0.4);
+        }
+        .btn:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         }
 
         /* 手機版調整 */
@@ -118,18 +157,18 @@
                 min-width: 600px;
             }
             th, td {
-                padding: 6px;
+                padding: 10px;
             }
             nav a {
                 font-size: 16px;
                 margin: 0 10px;
             }
             h2 {
-                font-size: 24px;
+                font-size: 28px;
             }
             .form-control {
                 width: 100%;
-                margin: 5px 0;
+                margin: 10px 0;
             }
             #controls {
                 display: flex;
@@ -139,14 +178,18 @@
             #controls label {
                 margin-bottom: 5px;
             }
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <nav>
-        <a href="index.html" style="color: #ff9800;">返回首頁</a>
+        <a href="index.html">返回首頁</a>
     </nav>  
-    <h2>Engineering Economics Factor Table</h2>
+    <h2>工程經濟學係數表</h2>
     <div id="searchControls" class="mb-4">
         <div class="form-inline justify-content-center">
             <select id="rowSelect" class="form-control" data-toggle="tooltip" data-placement="top" title="Select factor type">
@@ -159,34 +202,49 @@
                 <option value="P/G">P/G</option>
                 <option value="A/G">A/G</option>
             </select>
-            <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter N value">
+            <input id="nValue" min="1" max="60" placeholder="輸入 N 值 (1-60)" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter N value">
             <button class="btn btn-primary" onclick="searchValue()">搜尋</button>
         </div>
+        <div id="nValueFeedback" style="color: #ff6f61; font-size: 14px;"></div>
     </div>
     <div id="rateDisplay" style="color: #e0e0e0; margin: 20px; font-size: 20px;">
-        Interest Rate: <span id="rateValue">0</span>%
+        利率：<span id="rateValue">0</span>%
     </div>
     <div id="rateControls" class="mb-4">
         <div class="form-inline justify-content-center">
-            <label for="rate" class="mr-2">Enter Interest Rate (%): </label>
+            <label for="rate" class="mr-2">輸入利率 (%)：</label>
             <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control" data-toggle="tooltip" data-placement="top" title="Enter interest rate">
         </div>
     </div>
-    <div id="interestRateValue"></div>
+    <div class="mb-4">
+        <div class="form-inline justify-content-center">
+            <label class="mr-2">選擇不顯示的列：</label>
+            <div id="columnButtons" class="button-group">
+                <button class="btn shown-button" onclick="toggleColumnVisibility('F/P')" data-column-name="F/P">F/P</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('P/F')" data-column-name="P/F">P/F</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('A/P')" data-column-name="A/P">A/P</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('P/A')" data-column-name="P/A">P/A</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('F/A')" data-column-name="F/A">F/A</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('A/F')" data-column-name="A/F">A/F</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('P/G')" data-column-name="P/G">P/G</button>
+                <button class="btn shown-button" onclick="toggleColumnVisibility('A/G')" data-column-name="A/G">A/G</button>
+            </div>
+        </div>
+    </div>
     <div class="table-wrapper">
         <div class="table-responsive">
             <table id="factorTable" class="table table-dark table-bordered">
                 <thead>
                     <tr>
                         <th>N</th>
-                        <th>F/P</th>
-                        <th>P/F</th>
-                        <th>A/P</th>
-                        <th>P/A</th>
-                        <th>F/A</th>
-                        <th>A/F</th>
-                        <th>P/G</th>
-                        <th>A/G</th>
+                        <th data-column-name="F/P">F/P</th>
+                        <th data-column-name="P/F">P/F</th>
+                        <th data-column-name="A/P">A/P</th>
+                        <th data-column-name="P/A">P/A</th>
+                        <th data-column-name="F/A">F/A</th>
+                        <th data-column-name="A/F">A/F</th>
+                        <th data-column-name="P/G">P/G</th>
+                        <th data-column-name="A/G">A/G</th>
                     </tr>
                 </thead>
                 <tbody id="factorTableBody"></tbody>
@@ -194,50 +252,9 @@
         </div>
     </div>
 
-    <!-- Calculator Modal -->
-    <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="calculatorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="calculatorModalLabel">計算器</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="selectedValue">選擇的值:</label>
-                        <input type="text" class="form-control" id="selectedValue" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="selectedN">對應的N值:</label>
-                        <input type="text" class="form-control" id="selectedN" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="selectedFactor">對應的係數:</label>
-                        <input type="text" class="form-control" id="selectedFactor" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="multiplyValue">輸入要乘的數字:</label>
-                        <input type="number" class="form-control" id="multiplyValue" placeholder="輸入數字">
-                    </div>
-                    <div class="form-group">
-                        <label for="resultValue">結果:</label>
-                        <input type="text" class="form-control" id="resultValue" readonly>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-                    <button type="button" class="btn btn-primary" onclick="calculateResult()">計算</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
@@ -249,7 +266,6 @@
                 var columnIndex = cell.index();
                 var factor = $('#factorTable thead th').eq(columnIndex).text();
 
-                // Reset calculator fields
                 $('#multiplyValue').val('');
                 $('#resultValue').val('');
 
@@ -258,13 +274,45 @@
                 $('#selectedFactor').val(factor);
                 $('#calculatorModal').modal('show');
             });
+
+            $('#nValue').on('input', function () {
+                const nValue = parseInt(this.value);
+                if (isNaN(nValue) || nValue < 1 || nValue > 60) {
+                    $('#nValueFeedback').text('請輸入1到60之間的有效數值');
+                    this.classList.add('is-invalid');
+                } else {
+                    $('#nValueFeedback').text('');
+                    this.classList.remove('is-invalid');
+                }
+            });
         });
+
+        function toggleColumnVisibility(columnName) {
+            if (!columnName) return;
+            var colIndex = $('#factorTable th[data-column-name="' + columnName + '"]').index();
+            if (colIndex !== -1) {
+                $('#factorTable tr').each(function () {
+                    $(this).find('th, td').eq(colIndex).toggle();
+                });
+                updateButtonState(columnName);
+            }
+        }
+
+        function updateButtonState(columnName) {
+            var button = $('#columnButtons button[data-column-name="' + columnName + '"]');
+            var colIndex = $('#factorTable th[data-column-name="' + columnName + '"]').index();
+            if ($('#factorTable th').eq(colIndex).is(':visible')) {
+                button.removeClass('hidden-button').addClass('shown-button');
+            } else {
+                button.removeClass('shown-button').addClass('hidden-button');
+            }
+        }
 
         function searchValue() {
             var selectedColumn = document.getElementById('rowSelect').value;
             var nValue = document.getElementById('nValue').value;
             if (!nValue || isNaN(nValue) || nValue < 1 || nValue > 60) {
-                alert('Please enter a valid N value between 1 and 60.');
+                alert('請輸入1到60之間的有效N值');
                 return;
             }
 
@@ -272,7 +320,6 @@
             var rows = table.getElementsByTagName('tr');
             var columnIndex = -1;
             
-            // Find the column index for the selected factor type
             for (var i = 0; i < rows[0].cells.length; i++) {
                 if (rows[0].cells[i].textContent === selectedColumn) {
                     columnIndex = i;
@@ -281,31 +328,23 @@
             }
 
             if (columnIndex === -1) {
-                alert('No matching column found.');
+                alert('找不到對應的列');
                 return;
             }
 
-            // Search for the matching row with the given N value
             var found = false;
             for (var j = 1; j < rows.length; j++) {
                 if (rows[j].cells[0].textContent === nValue) {
                     var cell = rows[j].cells[columnIndex];
-                    $('td').removeClass('highlight'); // Remove previous highlights
-                    $(cell).addClass('highlight'); // Highlight the new cell
-                    
-                    // Scroll to the specific cell
+                    $('td').removeClass('highlight');
+                    $(cell).addClass('highlight');
                     cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-                    
-                    // Scroll to the table container
-                    $('.table-wrapper').animate({
-                        scrollLeft: $(cell).offset().left - $('.table-wrapper').offset().left + $('.table-wrapper').scrollLeft()
-                    }, 500);
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                alert('No matching value found.');
+                alert('找不到對應的值');
             }
         }
 
@@ -327,38 +366,37 @@
                 var P_A = 1 / A_P;
                 var F_A = (Math.pow(1 + rate, n) - 1) / rate;
                 var A_F = rate / (Math.pow(1 + rate, n) - 1);
-                var P_G = (1 / rate) * (((Math.pow(1 + rate, n) - 1) / (rate * Math.pow(1 + rate, n))) - (n / Math.pow(1 + rate, n)));
-                var A_G = (1 / rate) - (n / (Math.pow(1 + rate, n) - 1));
+                var P_G = (Math.pow(1 + rate, n) - rate * n - 1) / (rate * rate * Math.pow(1 + rate, n));
+                var A_G = 1 / n - rate / (Math.pow(1 + rate, n) - 1);
 
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${n}</td>
-                    <td>${F_P.toFixed(4)}</td>
-                    <td>${P_F.toFixed(4)}</td>
-                    <td>${A_P.toFixed(4)}</td>
-                    <td>${P_A.toFixed(4)}</td>
-                    <td>${F_A.toFixed(4)}</td>
-                    <td>${A_F.toFixed(4)}</td>
-                    <td>${P_G.toFixed(4)}</td>
-                    <td>${A_G.toFixed(4)}</td>
+                // 使用模板字面量來生成表格行，並添加額外的類別以增強UI
+                var row = `
+                    <tr>
+                        <td class="n-value">${n}</td>
+                        <td class="f-p">${F_P.toFixed(6)}</td>
+                        <td class="p-f">${P_F.toFixed(6)}</td>
+                        <td class="a-p">${A_P.toFixed(6)}</td>
+                        <td class="p-a">${P_A.toFixed(6)}</td>
+                        <td class="f-a">${F_A.toFixed(6)}</td>
+                        <td class="a-f">${A_F.toFixed(6)}</td>
+                        <td class="p-g">${P_G.toFixed(6)}</td>
+                        <td class="a-g">${A_G.toFixed(6)}</td>
+                    </tr>
                 `;
-                tbody.appendChild(row);
+                tbody.innerHTML += row;
             }
         }
 
         function calculateResult() {
-            var cellValue = parseFloat($('#selectedValue').val());
-            var multiplyValue = parseFloat($('#multiplyValue').val());
-            if (isNaN(multiplyValue)) {
-                $('#resultValue').val('請輸入有效的數字');
-            } else {
-                var result = cellValue * multiplyValue;
-                $('#resultValue').val(result.toFixed(4));
+            var selectedValue = parseFloat(document.getElementById('selectedValue').value);
+            var multiplyValue = parseFloat(document.getElementById('multiplyValue').value);
+            if (isNaN(selectedValue) || isNaN(multiplyValue)) {
+                alert('請輸入有效的數值');
+                return;
             }
+            var result = selectedValue * multiplyValue;
+            document.getElementById('resultValue').value = result.toFixed(6);
         }
-
-        // 初始化表格
-        document.addEventListener('DOMContentLoaded', calculate);
     </script>
 </body>
 </html>
