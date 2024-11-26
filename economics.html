@@ -8,11 +8,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 50px 0;
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: #1c1c1e; /* 深灰色背景 */
+            color: #f5f5f7; /* 更亮的白色字體 */
             overflow-x: hidden;
         }
         nav {
@@ -26,115 +26,116 @@
         }
         .table-wrapper {
             width: 100%;
+            max-height: 500px; /* Define a max height for the scrollable table */
             overflow: auto;
+            position: relative; /* Required for sticky positioning */
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
         table {
             width: 100%;
-            margin: 20px auto;
+            margin: 0 auto;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 15px;
             position: relative;
         }
         th, td {
-            border: 1px solid #424242;
-            padding: 8px;
+            border: 1px solid #333333;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
             white-space: nowrap;
+            transition: background-color 0.3s, color 0.3s; /* Add transition effects */
         }
         th {
             position: sticky;
             top: 0;
-            background-color: #333333; /* 讓標題的背景色與表格其他部分區分開來 */
-            color: #ffffff;
+            background-color: #262626; /* 深色的 header 背景以提升對比 */
+            color: #f5f5f7;
             z-index: 5;
-            border-bottom: 2px solid #ff9800; /* 增加下邊框的粗度使其更明顯 */
-            transition: background-color 0.3s, color 0.3s; /* 添加過渡效果 */
+            border-bottom: 2px solid #ff9800;
         }
         th:hover, td:hover {
             background-color: #ff9800;
             color: #212121;
         }
         tbody tr:nth-child(odd) {
-            background-color: #2c2c2c;
+            background-color: #2b2b2b; /* 更柔和的深灰色 */
         }
         tbody tr:nth-child(even) {
-            background-color: #1e1e1e;
+            background-color: #242424; /* 更淺一點的灰色來區分行 */
         }
         tbody td:first-child, thead th:first-child {
             position: sticky;
             left: 0;
-            background-color: #444444; /* 固定第一列時，讓背景色更容易區分 */
-            color: #ffffff;
+            background-color: #383838; /* 深灰色以區分首列 */
+            color: #f5f5f7;
             z-index: 6;
-            border-right: 2px solid #ff9800; /* 增加右邊框使更明顯 */
-            transition: background-color 0.3s, color 0.3s; /* 添加過渡效果 */
+            border-right: 2px solid #ff9800;
         }
         tbody td:first-child:hover, thead th:first-child:hover {
             background-color: #ff9800;
             color: #212121;
         }
-        thead th {
-            position: sticky;
-            top: 0;
-            z-index: 7;
-            background-color: #333333;
+        /* Highlighted cell */
+        .highlight {
+            background-color: #ffeb3b !important;
+            color: #212121 !important;
         }
-        /* 新增表格行的懸浮效果 */
-        tbody tr:hover {
-            background-color: #3e2723 !important;
+        /* Reduce padding and font size for smaller inputs */
+        .form-control-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            background-color: #2c2c2e;
+            color: #f5f5f7;
+            border: 1px solid #424242;
         }
-        .form-control {
-            background-color: #333333;
+        .form-control-sm::placeholder {
+            color: #b0b0b5;
+        }
+        /* Adjust buttons */
+        .btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            background-color: #ff9800;
             color: #ffffff;
-            border: 1px solid #555555;
+            border: none;
         }
-        .form-control::placeholder {
-            color: #bbbbbb; /* 修改提示文字顏色，使其在深色背景中更易閱讀 */
+        .btn:hover {
+            background-color: #e68900;
         }
-        .btn-primary {
-            background-color: #6200ea;
-            border-color: #6200ea;
-        }
-        .btn-primary:hover {
-            background-color: #3700b3;
-            border-color: #3700b3;
-        }
-        .btn-secondary {
-            background-color: #03dac6;
-            border-color: #03dac6;
-        }
-        .btn-secondary:hover {
-            background-color: #018786;
-            border-color: #018786;
-        }
-        .tooltip-inner {
-            background-color: #333333;
-            color: #ffffff;
-        }
+        /* Modal adjustments */
         #calculatorModal .modal-content {
-            background-color: #2c2c2c;
+            background-color: #2b2b2b;
             color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
         #calculatorModal .form-control {
-            background-color: #333333;
+            background-color: #3a3a3c;
             color: #ffffff;
             border: 1px solid #555555;
         }
         #calculatorModal .form-control::placeholder {
-            color: #bbbbbb; /* 修改提示文字顏色，使其在深色背景中更易閱讀 */
+            color: #bbbbbb;
+        }
+        /* Tooltip customization */
+        .tooltip-inner {
+            background-color: #333333;
+            color: #ffffff;
         }
 
-        /* 手機版調整 */
+        /* Mobile adjustments */
         @media (max-width: 768px) {
             body {
                 margin: 20px 0;
             }
             table {
-                font-size: 12px;
+                font-size: 13px;
             }
             th, td {
-                padding: 6px;
+                padding: 8px;
             }
             nav a {
                 font-size: 16px;
@@ -179,7 +180,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="d-flex flex-wrap justify-content-center gap-2">
-                        <select id="rowSelect" class="form-control" data-bs-toggle="tooltip" data-bs-placement="top" title="Select factor type">
+                        <select id="rowSelect" class="form-control form-control-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Select factor type">
                             <option value="F/P">F/P</option>
                             <option value="P/F">P/F</option>
                             <option value="A/P">A/P</option>
@@ -189,44 +190,42 @@
                             <option value="P/G">P/G</option>
                             <option value="A/G">A/G</option>
                         </select>
-                        <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter N value">
-                        <button class="btn btn-primary" onclick="searchValue()">搜尋</button>
+                        <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control form-control-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter N value">
+                        <button class="btn btn-primary btn-sm" onclick="searchValue()">搜尋</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="rateDisplay" style="color: #e0e0e0; margin: 20px; font-size: 20px;">
-            Interest Rate: <span id="rateValue">0</span>%
+        <div id="rateDisplay" style="color: #f5f5f7; margin: 20px; font-size: 20px;">
+            Interest Rate: <span id="rateValue">0.00</span>%
         </div>
         <div id="rateControls" class="mb-4">
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
                         <label for="rate" class="form-label">Enter Interest Rate (%): </label>
-                        <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter interest rate">
+                        <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control form-control-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter interest rate">
                     </div>
                 </div>
             </div>
         </div>
         <div class="table-wrapper">
-            <div class="table-responsive">
-                <table id="factorTable" class="table table-dark table-bordered">
-                    <thead>
-                        <tr>
-                            <th>N</th>
-                            <th>F/P</th>
-                            <th>P/F</th>
-                            <th>A/P</th>
-                            <th>P/A</th>
-                            <th>F/A</th>
-                            <th>A/F</th>
-                            <th>P/G</th>
-                            <th>A/G</th>
-                        </tr>
-                    </thead>
-                    <tbody id="factorTableBody"></tbody>
-                </table>
-            </div>
+            <table id="factorTable" class="table table-dark table-bordered">
+                <thead>
+                    <tr>
+                        <th>N</th>
+                        <th>F/P</th>
+                        <th>P/F</th>
+                        <th>A/P</th>
+                        <th>P/A</th>
+                        <th>F/A</th>
+                        <th>A/F</th>
+                        <th>P/G</th>
+                        <th>A/G</th>
+                    </tr>
+                </thead>
+                <tbody id="factorTableBody"></tbody>
+            </table>
         </div>
     </div>
 
@@ -241,28 +240,28 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="selectedValue" class="form-label">選擇的值:</label>
-                        <input type="text" class="form-control" id="selectedValue" readonly>
+                        <input type="text" class="form-control form-control-sm" id="selectedValue" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="selectedN" class="form-label">對應的N值:</label>
-                        <input type="text" class="form-control" id="selectedN" readonly>
+                        <input type="text" class="form-control form-control-sm" id="selectedN" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="selectedFactor" class="form-label">對應的係數:</label>
-                        <input type="text" class="form-control" id="selectedFactor" readonly>
+                        <input type="text" class="form-control form-control-sm" id="selectedFactor" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="multiplyValue" class="form-label">輸入要乘的數字:</label>
-                        <input type="number" class="form-control" id="multiplyValue" placeholder="輸入數字">
+                        <input type="number" class="form-control form-control-sm" id="multiplyValue" placeholder="輸入數字">
                     </div>
                     <div class="mb-3">
                         <label for="resultValue" class="form-label">結果:</label>
-                        <input type="text" class="form-control" id="resultValue" readonly>
+                        <input type="text" class="form-control form-control-sm" id="resultValue" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                    <button type="button" class="btn btn-primary" onclick="calculateResult()">計算</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="calculateResult()">計算</button>
                 </div>
             </div>
         </div>
@@ -392,7 +391,7 @@
             }
         }
 
-        // 初始化表格
+        // Initialize table on page load
         document.addEventListener('DOMContentLoaded', calculate);
     </script>
 </body>
