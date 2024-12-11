@@ -188,14 +188,12 @@
             return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
         }
 
-        // 計算階乘
+        // 優化階乘計算 (緩存實現)
+        const factorialCache = { 0: 1 };
         function factorial(n) {
-            if (n === 0) return 1;
-            let result = 1;
-            for (let i = 1; i <= n; i++) {
-                result *= i;
-            }
-            return result;
+            if (factorialCache[n] !== undefined) return factorialCache[n];
+            factorialCache[n] = n * factorial(n - 1);
+            return factorialCache[n];
         }
 
         // 動態生成普瓦松分配表數據
@@ -269,9 +267,14 @@
         function generateTable() {
             const lambdaInput = document.getElementById('lambdaValue');
             const lambda = parseFloat(lambdaInput.value);
+            const errorContainer = document.getElementById('result');
+            errorContainer.innerHTML = ''; // 清除舊的錯誤提示
+
             if (isNaN(lambda) || lambda <= 0) {
-                alert("請輸入有效且大於 0 的 λ 值");
-                lambdaInput.focus();
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = "請輸入有效且大於 0 的 λ 值";
+                errorMessage.style.color = "red";
+                errorContainer.appendChild(errorMessage);
                 return;
             }
             const data = generateData(lambda);

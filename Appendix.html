@@ -11,13 +11,13 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: #1a1a1a;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%);
             color: #e0e0e0;
         }
         nav {
-            background-color: #2b2b2b;
+            background-color: #242424;
             padding: 15px 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
             margin-bottom: 20px;
         }
         nav a {
@@ -26,6 +26,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s, border-bottom 0.3s;
+            font-size: 1rem;
         }
         nav a:hover, nav a.active {
             color: #ff9800;
@@ -35,7 +36,7 @@
         h1 {
             margin-bottom: 20px;
             font-size: 2em;
-            color: #FFFFFF;
+            color: #ffffff;
         }
         .form-container {
             margin: 20px auto;
@@ -46,7 +47,7 @@
             flex-wrap: wrap;
             max-width: 600px;
             padding: 20px;
-            background-color: #2b2b2b;
+            background-color: #2f2f2f;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
@@ -58,13 +59,17 @@
         .form-container input {
             padding: 10px;
             font-size: 18px;
-            background-color: #2b2b2b;
+            background-color: #3b3b3b;
             color: #ffffff;
             border: 2px solid #555555;
             border-radius: 5px;
             outline: none;
             flex: 1 1 auto;
             min-width: 150px;
+            transition: border-color 0.3s;
+        }
+        .form-container input:focus {
+            border-color: #ff9800;
         }
         .form-container button {
             padding: 10px 20px;
@@ -89,13 +94,13 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            background-color: #2b2b2b;
         }
         th, td {
             border: 1px solid #333333;
             padding: 15px;
             text-align: center;
             transition: background-color 0.3s, color 0.3s;
-            cursor: pointer;
         }
         th {
             background-color: #424242;
@@ -114,10 +119,20 @@
         tbody tr:hover {
             background-color: #ff9800;
             color: #212121;
+            transform: scale(1.01);
         }
         .highlight {
-            background-color: #ffcc00 !important;
+            background-color: #ffd700 !important;
             color: #000000 !important;
+        }
+
+        /* 半透明背景遮罩與圖表區域 */
+        #overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
         }
         #chartContainer {
             display: none;
@@ -157,6 +172,7 @@
             width: 100% !important;
             height: auto !important;
         }
+
         /* 響應式調整 */
         @media (max-width: 768px) {
             .form-container {
@@ -204,6 +220,7 @@
         </tbody>
     </table>
     <div id="result"></div>
+    <div id="overlay"></div>
     <div id="chartContainer">
         <button id="closeChart" onclick="closeChart()">關閉</button>
         <canvas id="zChart"></canvas>
@@ -262,7 +279,6 @@
                 tdZ.textContent = item.z;
                 tdProbability.textContent = item.probability;
 
-                // 根據裝置類型決定是否添加點擊事件處理程序
                 if (!isMobile()) {
                     tr.style.cursor = 'pointer';
                     tr.onclick = () => {
@@ -377,12 +393,14 @@
                 }
             });
 
+            document.getElementById('overlay').style.display = 'block';
             document.getElementById('chartContainer').style.display = 'block';
         }
 
         // 關閉圖表
         function closeChart() {
             document.getElementById('chartContainer').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         // 初始生成標準差表數據和加載第一批數據

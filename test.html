@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OC曲線生成器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #212529;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            text-align: center;
+            background-color: #343a40;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        #ocChart {
+            margin: 30px auto;
+            max-width: 900px;
+            height: 500px;
+        }
+        input, button, label {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        input {
+            width: 150px;
+            border: 1px solid #495057;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #495057;
+            color: #ff9800;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #ff9800;
+            outline: none;
+            background-color: #343a40;
+        }
+        button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 6px rgba(255,152,0,0.4);
+        }
+        button:hover {
+            background-color: #e68900;
+        }
+        h1 {
+            color: #ff9800;
+        }
+        p {
+            color: #ffffff;
+        }
+        @media (max-width: 600px) {
+            input {
+                width: 100px;
+            }
+            #ocChart {
+                height: 300px;
+            }
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+        }
+        .btn-group button {
+            flex: 1;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-chart-line"></i> OC曲線生成器</h1>
+        <p>輸入抽樣檢驗參數，生成OC曲線以分析抽樣計劃的效能</p>
+        <form id="ocForm">
+            <div>
+                <label for="sampleSize">樣本大小 (n):</label>
+                <input type="number" id="sampleSize" value="50" min="1" required>
+            </div>
+            <div>
+                <label for="acceptanceNumber">允收數量 (c):</label>
+                <input type="number" id="acceptanceNumber" value="2" min="0" required>
+            </div>
+            <button type="button" onclick="generateOC()">生成曲線</button>
+        </form>
+        <div id="ocChart"></div>
+    </div>
+    <script>
+        // 儲存對數階乘結果以提高效率
+        const logFactorialCache = [];
+
+        // 計算對數階乘（log(n!)），使用緩存以提高計算穩定性和效率
+        function logFactorial(n) {
+            if (n === 0 || n === 1) return 0;
+            if (logFactorialCache[n]) return logFactorialCache[n];
+
+            let logFact = logFactorialCache[n - 1] || 0;
+            for (let i = (logFactorialCache.length || 2); i <= n; i++) {
+                logFact += Math.log(i);
+                logFactorialCache[i] = logFact;
+            }
+            return logFact;
+        }
+
+        // 使用快速冪計算 p^x
+        function fastPower(base, exponent) {
+            let result = 1;
+            while (exponent > 0) {
+                if (exponent % 2 === 1) {
+                    result *= base;
+                }
+                base *= base;
+                exponent = Math.floor(exponent / 2);
+            }
+            return result;
+        }
+
+        // 計算二項分佈的機率，使用對數方法和快速冪以防止溢出
+        function binomialProbability(n, x, p) {
+            if (x > n) return 0;
+            if (p === 0) return x === 0 ? 1 : 0;
+            if (p === 1) return x === n ? 1 : 0;
+
+            const logC = logFactorial(n) - logFactorial(x) - logFactorial(n - x);
+            const logP = x * Math.log(p) + (n - x) * Math.log(1 - p);
+            const logProb = logC + logP;
+
+            // 防止指數運算溢出
+            if (logProb < -700) return 0; // 因為 Math.exp(-700) 約為 5e-305，接近於 0
+            return Math.exp(logProb);
+        }
+
+        // 計算接受概率，累積 P(X=0) 到 P(X=c)
+        function acceptanceProbability(n, c, p) {
+            let Pa = 0;
+            for (let x = 0; x <= c; x++) {
+                const prob = binomialProbability(n, x, p);
+                Pa += prob;
+            }
+            return Pa > 1 ? 1 : Pa; // 保持在 [0, 1] 範圍內
+        }
+
+        // 生成OC曲線，使用 ECharts 進行可視化
+        function generateOC() {
+            const sampleSize = parseInt(document.getElementById('sampleSize').value);
+            const acceptanceNumber = parseInt(document.getElementById('acceptanceNumber').value);
+
+            // 檢查用戶輸入是否合法
+            if (isNaN(sampleSize) || isNaN(acceptanceNumber) || sampleSize <= 0 || acceptanceNumber < 0) {
+                alert('請輸入合法的樣本大小和允收數量');
+                return;
+            }
+
+            if (acceptanceNumber > sampleSize) {
+                alert('允收數量不能大於樣本大小');
+                return;
+            }
+
+            const defectRates = [];
+            const acceptanceProbabilities = [];
+
+            for (let p = 0; p <= 0.2; p += 0.005) { // 降低取樣步長至 0.005 以提高效率
+                defectRates.push(p);
+                const pa = acceptanceProbability(sampleSize, acceptanceNumber, p);
+                acceptanceProbabilities.push(pa > 1 ? 1 : pa); // 保持在 [0, 1] 範圍內
+            }
+
+            // 使用 ECharts 繪製 OC 曲線
+            const chartDom = document.getElementById('ocChart');
+            const myChart = echarts.init(chartDom);
+            const option = {
+                title: {
+                    text: 'OC曲線',
+                    left: 'center',
+                    textStyle: {
+                        color: '#ff9800'
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'value',
+                    name: '不良率 (p)',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    axisLabel: {
+                        formatter: value => (value * 100).toFixed(1) + '%',
+                        color: '#ff9800'
+                    },
+                    min: 0,
+                    max: 0.2,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ff9800'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '接受概率 (Pa)',
+                    nameLocation: 'middle',
+                    nameGap: 40,
+                    axisLabel: {
+                        formatter: value => (value * 100).toFixed(0) + '%',
+                        color: '#ff9800'
+                    },
+                    min: 0,
+                    max: 1,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ff9800'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        data: defectRates.map((p, i) => [p, acceptanceProbabilities[i]]),
+                        type: 'line',
+                        smooth: true,
+                        lineStyle: {
+                            color: '#ff9800',
+                            width: 2
+                        },
+                        areaStyle: {
+                            color: 'rgba(255, 152, 0, 0.2)'
+                        }
+                    }
+                ],
+                backgroundColor: '#212529'
+            };
+            myChart.setOption(option);
+        }
+
+        // 初始生成圖表
+        window.onload = generateOC;
+    </script>
+</body>
+</html>
