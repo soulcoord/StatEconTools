@@ -158,19 +158,6 @@
             font-size: 14px;
         }
 
-        .top-header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .left-header {
-            position: sticky;
-            left: 0;
-            z-index: 20;
-            height: 60px;
-        }
-
         .course {
             color: #fff;
             font-weight: bold;
@@ -315,7 +302,6 @@
             <br/>
             <button id="generateTable">生成課表</button>
             <button id="saveTable">儲存課表 &amp; 下載PNG</button>
-            <button id="resetView">重置縮放</button>
         </div>
 
         <div id="errorContainer">
@@ -545,8 +531,7 @@
     /********************************************************
      * 2. 主程式 / 畫面渲染 / 事件綁定（原 app.js）
      ********************************************************/
-    let parsedCoursesData = [];  
-    let currentScale = 1;        
+    let parsedCoursesData = [];         
     const daysText = ['星期一', '星期二', '星期三', '星期四', '星期五'];
     let currentEditingCourse = null;
     let currentRowToPeriod = {};
@@ -562,15 +547,11 @@
     function bindUIEvents() {
         document.getElementById('generateTable').addEventListener('click', onGenerateTable);
         document.getElementById('saveTable').addEventListener('click', onSaveTable);
-        document.getElementById('resetView').addEventListener('click', onResetView);
         document.getElementById('modalClose').addEventListener('click', closeEditModal);
         document.getElementById('saveChanges').addEventListener('click', onSaveChanges);
         document.getElementById('deleteCourse').addEventListener('click', onDeleteCourse);
         document.getElementById('timetableGrid').addEventListener('click', onCourseClick);
         document.getElementById('editColor').addEventListener('input', updateColorPreview);
-
-        // 拖曳與縮放
-        initPanZoom();
     }
 
     // 更新顏色預覽
@@ -632,15 +613,6 @@
         });
     }
 
-    // 重置縮放
-    function onResetView() {
-        currentScale = 1;
-        const timetable = document.getElementById('timetableGrid');
-        timetable.style.transform = `scale(1)`;
-        const container = document.querySelector('.timetable-container');
-        container.scrollLeft = 0;
-        container.scrollTop = 0;
-    }
 
     // 渲染課表
     function renderTimetable() {
@@ -886,74 +858,6 @@
         alert('課程已刪除！');
     }
 
-    // 初始化拖曳/縮放
-    function initPanZoom() {
-        const timetableGrid = document.getElementById('timetableGrid');
-        if (!timetableGrid) return;
-
-        const hammertime = new Hammer(timetableGrid);
-        hammertime.get('pinch').set({ enable: true });
-        hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-
-        let initialScale = currentScale;
-
-        hammertime.on('pinchstart', () => {
-            initialScale = currentScale;
-        });
-
-        hammertime.on('pinchmove', (ev) => {
-            let newScale = initialScale * ev.scale;
-            newScale = Math.min(Math.max(0.5, newScale), 2);
-            currentScale = newScale;
-            timetableGrid.style.transform = `scale(${currentScale})`;
-        });
-
-        const timetableContainer = document.querySelector('.timetable-container');
-        hammertime.on('panmove', (ev) => {
-            timetableContainer.scrollLeft -= ev.deltaX;
-            timetableContainer.scrollTop -= ev.deltaY;
-        });
-
-        let isPanning = false;
-        let startX = 0, startY = 0;
-
-        timetableContainer.addEventListener('mousedown', (e) => {
-            isPanning = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            timetableContainer.style.cursor = 'grabbing';
-        });
-
-        timetableContainer.addEventListener('mousemove', (e) => {
-            if (!isPanning) return;
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            startX = e.clientX;
-            startY = e.clientY;
-            timetableContainer.scrollLeft -= dx;
-            timetableContainer.scrollTop -= dy;
-        });
-
-        timetableContainer.addEventListener('mouseup', () => {
-            isPanning = false;
-            timetableContainer.style.cursor = 'grab';
-        });
-
-        timetableContainer.addEventListener('mouseleave', () => {
-            isPanning = false;
-            timetableContainer.style.cursor = 'grab';
-        });
-
-        // 滾輪縮放優化
-        timetableContainer.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? -0.05 : 0.05;
-            let newScale = currentScale + delta;
-            newScale = Math.min(Math.max(0.5, newScale), 2);
-            currentScale = newScale;
-            timetableGrid.style.transform = `scale(${currentScale})`;
-        }, { passive: false });
-    }
 
     /********************************************************
      * 3. DOMContentLoaded: 初始化程式
