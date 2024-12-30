@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課表生成工具</title>
+    <style>
+        :root {
+            --background-color: #1e1e1e;
+            --container-bg: #2c2c2c;
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --header-color: #333333;
+            --text-color: #f0f0f0;
+            --cell-bg: #3c3c3c;
+            --course-border: rgba(255, 255, 255, 0.2);
+            --button-bg: #4CAF50;
+            --button-hover-bg: #45a049;
+            --input-bg: #2c2c2c;
+            --input-border: #555;
+            --modal-bg: rgba(0, 0, 0, 0.8);
+            --modal-content-bg: #2c2c2c;
+            --error-color: #ff4c4c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            margin-bottom: 25px;
+            font-size: 16px;
+            padding: 15px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button {
+            display: inline-block;
+            margin: 5px;
+            padding: 12px 30px;
+            background-color: var(--button-bg);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+
+        .timetable-container {
+            width: 100%;
+            overflow: auto;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            cursor: grab;
+            margin-top: 20px;
+        }
+
+        .timetable {
+            display: grid;
+            gap: 1px;
+            background-color: #555;
+            position: relative;
+            min-width: 800px;
+            transition: transform 0.3s;
+        }
+
+        .cell {
+            background-color: var(--cell-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #777;
+            text-align: center;
+            font-size: 14px;
+            padding: 5px;
+        }
+
+        .top-header, .left-header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
+            white-space: pre-line; /* 支援換行 */
+        }
+
+        .top-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 1em;
+        }
+
+        .left-header {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            font-size: 0.9em;
+        }
+
+        .course {
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 2px;
+            box-sizing: border-box;
+            overflow: hidden;
+            border: 1px solid var(--course-border);
+            opacity: 0.95;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            position: relative;
+        }
+
+        .course:hover {
+            transform: scale(1.05);
+            opacity: 1;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 30;
+        }
+
+        .course-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .course-info {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: var(--modal-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .close, .close-settings {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus,
+        .close-settings:hover,
+        .close-settings:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"], input[type="number"], input[type="color"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-bottom: 15px;
+            text-align: center;
+            background-color: rgba(255, 76, 76, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #colorPreview {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            textarea {
+                height: 200px;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            .top-header, .left-header {
+                font-size: 0.9em;
+                padding: 8px;
+            }
+
+            .cell {
+                font-size: 13px;
+                height: 50px;
+            }
+
+            .course {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>課表生成工具</h1>
+        <textarea id="inputData" placeholder="請貼上你的課程 JSON 資料"></textarea>
+        <div style="text-align: center;">
+            <button id="generateTable">生成課表</button>
+            <button id="saveTable">儲存課表 &amp; 下載PNG</button>
+        </div>
+        <div id="errorContainer" class="error-message"></div>
+        <div class="timetable-container">
+            <div class="timetable" id="timetableGrid"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>編輯課程</h2>
+            <label for="editName">課程名稱:</label>
+            <input type="text" id="editName">
+            
+            <label for="editTeacher">教師編號:</label>
+            <input type="text" id="editTeacher">
+            
+            <label for="editDay">星期 (1-5):</label>
+            <input type="number" id="editDay" min="1" max="5">
+            
+            <label for="editStart">開始節次:</label>
+            <select id="editStart"></select>
+            
+            <label for="editEnd">結束節次:</label>
+            <select id="editEnd"></select>
+            
+            <label for="editLocation">教室:</label>
+            <input type="text" id="editLocation">
+            
+            <label for="editColor">課程顏色:</label>
+            <input type="color" id="editColor">
+            <div id="colorPreview"></div>
+            
+            <button id="saveChanges">保存</button>
+        </div>
+    </div>
+
+    <!-- Include Hammer.js library for touch gestures -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <!-- Include html2canvas library for saving timetable as PNG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        // 定義自定義節次及其對應的時間
+        const customPeriods = {
+            "A": 0.5, 
+            "1": 1.0,
+            "2": 2.0,
+            "3": 3.0,
+            "4": 4.0,
+            "4.5": 4.5, 
+            "5": 5.0,
+            "6": 6.0,
+            "7": 7.0,
+            "8": 8.0,
+            "8.5": 8.5, 
+            "9": 9.0,
+            "10": 10.0,
+            "11": 11.0,
+            "12": 12.0,
+        };
+
+        const customPeriodsTime = {
+            "A": "07:00~07:50", 
+            "1": "08:00~08:50",
+            "2": "09:00~09:50",
+            "3": "10:00~10:50",
+            "4": "11:00~11:50",
+            "4.5": "12:00~12:50", 
+            "5": "13:00~13:50",
+            "6": "14:00~14:50",
+            "7": "15:00~15:50",
+            "8": "16:00~16:50",
+            "8.5": "17:00~17:50", 
+            "9": "18:40~19:25",
+            "10": "19:30~20:15",
+            "11": "20:25~21:10",
+            "12": "21:15~22:00",
+        };
+
+        const days = ['星期一', '星期二', '星期三', '星期四', '星期五'];
+
+        const defaultColors = [
+            '#FF6B6B', '#6BCB77', '#4D96FF', '#FFD93D', '#845EC2',
+            '#FF9671', '#00C9A7', '#C3423F', '#5A189A', '#0081CF'
+        ];
+
+        let colorIndex = 0;
+        let processedData = [];
+        let uniquePeriods = [];
+        let sortedPeriodNames = [];
+        let currentScale = 1;
+
+        // For editing
+        let currentEditingCourse = null;
+
+        // 預先把所有可能的節次名稱丟到陣列（排序過）
+        const allPeriodNames = Object.keys(customPeriods).sort((a, b) => customPeriods[a] - customPeriods[b]);
+
+        // 將所有節次名稱放到編輯 Modal 下拉選單
+        const editStartSelect = document.getElementById('editStart');
+        const editEndSelect = document.getElementById('editEnd');
+        allPeriodNames.forEach(period => {
+            const optionStart = document.createElement('option');
+            optionStart.value = period;
+            optionStart.textContent = period;
+            editStartSelect.appendChild(optionStart);
+
+            const optionEnd = document.createElement('option');
+            optionEnd.value = period;
+            optionEnd.textContent = period;
+            editEndSelect.appendChild(optionEnd);
+        });
+
+        // 工具函式：生成 UUID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // 工具函式：顯示錯誤
+        function showErrorMessages(errors) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = '';
+            if (errors.length === 0) {
+                errorContainer.style.display = 'none';
+                return;
+            }
+            errorContainer.style.display = 'block';
+            errors.forEach(err => {
+                const p = document.createElement('p');
+                p.textContent = err;
+                errorContainer.appendChild(p);
+            });
+        }
+
+        // 工具函式：設置 Cookie
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+        }
+
+        // 工具函式：獲取 Cookie
+        function getCookie(name) {
+            return document.cookie.split('; ').reduce((r, v) => {
+                const parts = v.split('=');
+                return parts[0] === name ? decodeURIComponent(parts[1]) : r
+            }, '');
+        }
+
+        // 前處理：檢查資料合法性 + 計算所需的唯一節次（只保留實際用到的最小與最大節次範圍）
+        function preprocessData(jsonData) {
+            const errors = [];
+
+            // 第一輪檢查資料格式
+            jsonData.forEach((entry, index) => {
+                if (entry.length < 6) {
+                    errors.push(`第 ${index + 1} 筆資料錯誤: 欄位數不足 (${entry.length} 欄位)`);
+                    return;
+                }
+                const [name, teacher, day, startPeriod, endPeriod, location, color] = entry;
+                const startRaw = customPeriods[startPeriod] !== undefined ? customPeriods[startPeriod] : parseFloat(startPeriod);
+                const endRaw = customPeriods[endPeriod] !== undefined ? customPeriods[endPeriod] : parseFloat(endPeriod);
+
+                if (isNaN(startRaw) || isNaN(endRaw)) {
+                    errors.push(`第 ${index + 1} 筆資料錯誤: 開始或結束節次 "${startPeriod}" 或 "${endPeriod}" 不是有效的節次`);
+                }
+                if (startRaw > endRaw) {
+                    errors.push(`第 ${index + 1} 筆資料錯誤: 開始節次 "${startPeriod}" 大於結束節次 "${endPeriod}"`);
+                }
+            });
+
+            if (errors.length > 0) {
+                return { processed: null, errors };
+            }
+
+            // 統計實際使用到的節次
+            const usedPeriodValues = [];
+            jsonData.forEach(entry => {
+                const startRaw = customPeriods[entry[3]] !== undefined ? customPeriods[entry[3]] : parseFloat(entry[3]);
+                const endRaw = customPeriods[entry[4]] !== undefined ? customPeriods[entry[4]] : parseFloat(entry[4]);
+                usedPeriodValues.push(startRaw, endRaw);
+            });
+            const minPeriodValue = Math.min(...usedPeriodValues);
+            const maxPeriodValue = Math.max(...usedPeriodValues);
+
+            // 篩出真正有用到的節次（例如只保留從最小到最大的那段）
+            // 並且要按照順序
+            uniquePeriods = allPeriodNames
+                .map(name => [name, customPeriods[name]])
+                .filter(([_, val]) => val >= minPeriodValue && val <= maxPeriodValue)
+                .sort((a, b) => a[1] - b[1])
+                .map(([name]) => name);
+
+            // 接著建立一個 { 節次(數值) -> 真正 row index } 的映射
+            const periodMap = {};
+            uniquePeriods.forEach((p, idx) => {
+                periodMap[customPeriods[p]] = idx + 1;
+            });
+
+            // 建立 processed 資料
+            const processed = jsonData.map(entry => {
+                const [name, teacher, day, startPeriod, endPeriod, location, color] = entry;
+                const startRawNum = customPeriods[startPeriod] !== undefined ? customPeriods[startPeriod] : parseFloat(startPeriod);
+                const endRawNum = customPeriods[endPeriod] !== undefined ? customPeriods[endPeriod] : parseFloat(endPeriod);
+
+                // 轉成對應的 row index
+                const start = periodMap[startRawNum];
+                const end = periodMap[endRawNum];
+
+                return {
+                    id: generateUUID(),
+                    name: name,
+                    teacher: teacher,
+                    day: day,
+                    startRaw: startPeriod, // 原始節次名稱
+                    endRaw: endPeriod,     // 原始節次名稱
+                    start,
+                    end,
+                    location: location,
+                    color: color || defaultColors[colorIndex++ % defaultColors.length],
+                    additional: []
+                };
+            });
+
+            // 檢查衝突
+            const conflicts = [];
+            processed.forEach((course, index) => {
+                processed.forEach((other, otherIndex) => {
+                    if (index !== otherIndex && course.day === other.day) {
+                        const courseStart = customPeriods[course.startRaw] || parseFloat(course.startRaw);
+                        const courseEnd = customPeriods[course.endRaw] || parseFloat(course.endRaw);
+                        const otherStart = customPeriods[other.startRaw] || parseFloat(other.startRaw);
+                        const otherEnd = customPeriods[other.endRaw] || parseFloat(other.endRaw);
+                        if (
+                            (courseStart >= otherStart && courseStart < otherEnd) ||
+                            (courseEnd > otherStart && courseEnd <= otherEnd) ||
+                            (courseStart <= otherStart && courseEnd >= otherEnd)
+                        ) {
+                            conflicts.push(`課程 "${course.name}" 與課程 "${other.name}" 時間重疊於星期${course.day}`);
+                        }
+                    }
+                });
+            });
+
+            return { processed, errors: conflicts };
+        }
+
+        // 計算課程所需的 rowSpan
+        function calculateRowSpan(start, end) {
+            return end - start + 1;
+        }
+
+        // 創建表頭或左側標籤
+        function createHeader(text, type) {
+            const div = document.createElement('div');
+            div.classList.add('cell');
+            if (type === 'top') {
+                div.classList.add('top-header');
+            } else if (type === 'left') {
+                div.classList.add('left-header');
+            }
+            div.textContent = text;
+            return div;
+        }
+
+        // 創建空白格子
+        function createCell() {
+            const div = document.createElement('div');
+            div.classList.add('cell');
+            return div;
+        }
+
+        // 創建課程元素
+        function createCourseElement(course) {
+            const div = document.createElement('div');
+            div.classList.add('course');
+            div.style.backgroundColor = course.color;
+            div.dataset.courseId = course.id; // 自定屬性以識別課程
+
+            const nameDiv = document.createElement('div');
+            nameDiv.classList.add('course-name');
+            nameDiv.textContent = course.name;
+
+            const infoDiv = document.createElement('div');
+            infoDiv.classList.add('course-info');
+            infoDiv.textContent = course.location;
+
+            div.appendChild(nameDiv);
+            div.appendChild(infoDiv);
+
+            // 滑上去的提示
+            div.title = `課程名稱: ${course.name}\n教師編號: ${course.teacher}\n教室: ${course.location}`;
+            return div;
+        }
+
+        // 渲染課表
+        function renderTimetable() {
+            const timetableGrid = document.getElementById('timetableGrid');
+            timetableGrid.innerHTML = '';
+
+            // 動態定義 grid 的行與列
+            // columns: 1 (節次欄) + 5 天
+            // rows: 1 (頂部標題) + uniquePeriods.length
+            timetableGrid.style.gridTemplateColumns = `150px repeat(${days.length}, 1fr)`;
+            timetableGrid.style.gridTemplateRows = `60px repeat(${uniquePeriods.length}, 60px)`;
+
+            const fragment = document.createDocumentFragment();
+
+            // 1. 最左上角的「節次」標頭
+            const cornerHeader = createHeader('節次', 'top');
+            cornerHeader.style.gridRow = '1';
+            cornerHeader.style.gridColumn = '1';
+            fragment.appendChild(cornerHeader);
+
+            // 2. 星期一到星期五(頂部橫列)
+            days.forEach((dayText, i) => {
+                const header = createHeader(dayText, 'top');
+                header.style.gridRow = '1';
+                header.style.gridColumn = (i + 2).toString(); 
+                fragment.appendChild(header);
+            });
+
+            // 3. 左側節次標頭
+            uniquePeriods.forEach((pName, index) => {
+                const rowIndex = index + 2; 
+                const label = `${pName}\n${customPeriodsTime[pName] || ''}`;
+                const leftHeader = createHeader(label, 'left');
+                leftHeader.style.gridRow = rowIndex.toString();
+                leftHeader.style.gridColumn = '1';
+                fragment.appendChild(leftHeader);
+            });
+
+            // 4. 建立所有空白格（避免滑動時看不到格線，可以先產生出來）
+            for (let r = 2; r <= uniquePeriods.length + 1; r++) {
+                for (let c = 2; c <= days.length + 1; c++) {
+                    const cell = createCell();
+                    cell.style.gridRow = r.toString();
+                    cell.style.gridColumn = c.toString();
+                    fragment.appendChild(cell);
+                }
+            }
+
+            // 5. 放入課程區塊
+            processedData.forEach(course => {
+                const dayIndex = parseInt(course.day) - 1;   
+                if (dayIndex < 0 || dayIndex >= days.length) return;
+
+                // 找到此課程在 uniquePeriods 中的對應位置
+                const startRow = course.start + 1; // gridRow 的起點(多加1是因為第一 row 是標題)
+                const rowSpan = calculateRowSpan(course.start, course.end);
+
+                // 建立課程元素
+                const courseElement = createCourseElement(course);
+                courseElement.style.gridRow = `${startRow} / span ${rowSpan}`;
+                // column = dayIndex + 2（1是節次欄，1是頂部標題欄）
+                courseElement.style.gridColumn = `${dayIndex + 2}`;
+
+                fragment.appendChild(courseElement);
+            });
+
+            timetableGrid.appendChild(fragment);
+        }
+
+        // 監聽按鈕：生成課表
+        document.getElementById('generateTable').addEventListener('click', () => {
+            const inputData = document.getElementById('inputData').value.trim();
+            if (!inputData) {
+                alert('請輸入課程 JSON 資料！');
+                return;
+            }
+
+            let jsonData;
+            try {
+                jsonData = JSON.parse(inputData);
+                if (!Array.isArray(jsonData)) {
+                    throw new Error('JSON 資料應該是一個陣列');
+                }
+            } catch (e) {
+                alert('JSON 格式錯誤，請檢查！');
+                return;
+            }
+
+            const { processed, errors } = preprocessData(jsonData);
+
+            if (errors.length > 0) {
+                showErrorMessages(errors);
+                alert('生成課表時發現重疊課程或資料錯誤，請檢查錯誤提示。');
+                return;
+            } else {
+                showErrorMessages([]);
+            }
+
+            processedData = processed;
+            renderTimetable();
+            saveTimetableToCookie();
+        });
+
+        // Modal 相關
+        const modal = document.getElementById('editModal');
+        const span = document.getElementsByClassName('close')[0];
+        const saveChangesBtn = document.getElementById('saveChanges');
+        const colorPreview = document.getElementById('colorPreview');
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        function showEditModal(course) {
+            currentEditingCourse = course;
+            document.getElementById('editName').value = course.name;
+            document.getElementById('editTeacher').value = course.teacher;
+            document.getElementById('editDay').value = course.day;
+            document.getElementById('editStart').value = course.startRaw;
+            document.getElementById('editEnd').value = course.endRaw;
+            document.getElementById('editLocation').value = course.location;
+            document.getElementById('editColor').value = course.color;
+            colorPreview.style.backgroundColor = course.color;
+            modal.style.display = "flex";
+        }
+
+        saveChangesBtn.addEventListener('click', () => {
+            if (!currentEditingCourse) return;
+            // 取得更新後的值
+            const updatedName = document.getElementById('editName').value.trim();
+            const updatedTeacher = document.getElementById('editTeacher').value.trim();
+            const updatedDay = parseInt(document.getElementById('editDay').value);
+            const updatedStartRaw = document.getElementById('editStart').value;
+            const updatedEndRaw = document.getElementById('editEnd').value;
+            const updatedLocation = document.getElementById('editLocation').value.trim();
+            const updatedColor = document.getElementById('editColor').value;
+
+            // 基本驗證
+            if (!updatedName || !updatedTeacher || isNaN(updatedDay) || !updatedStartRaw || !updatedEndRaw || !updatedLocation) {
+                alert('請填寫所有欄位！');
+                return;
+            }
+            if (updatedDay < 1 || updatedDay > 5) {
+                alert('星期應在1到5之間！');
+                return;
+            }
+            const updatedStart = customPeriods[updatedStartRaw] !== undefined ? customPeriods[updatedStartRaw] : parseFloat(updatedStartRaw);
+            const updatedEnd = customPeriods[updatedEndRaw] !== undefined ? customPeriods[updatedEndRaw] : parseFloat(updatedEndRaw);
+            if (updatedStart > updatedEnd) {
+                alert('開始節次不能大於結束節次！');
+                return;
+            }
+
+            // 更新課程資料
+            currentEditingCourse.name = updatedName;
+            currentEditingCourse.teacher = updatedTeacher;
+            currentEditingCourse.day = updatedDay.toString();
+            currentEditingCourse.startRaw = updatedStartRaw;
+            currentEditingCourse.endRaw = updatedEndRaw;
+            currentEditingCourse.location = updatedLocation;
+            currentEditingCourse.color = updatedColor;
+
+            // 將 processedData 轉換回原始 JSON 格式（陣列的陣列），包含顏色
+            const rawData = processedData.map(c => [c.name, c.teacher, c.day, c.startRaw, c.endRaw, c.location, c.color, ...c.additional]);
+
+            // 重新處理數據
+            const { processed, errors } = preprocessData(rawData);
+
+            if (errors.length > 0) {
+                showErrorMessages(errors);
+                alert('保存後發現課程時間衝突或資料錯誤，請檢查錯誤提示。');
+                return;
+            } else {
+                showErrorMessages([]);
+            }
+
+            // 更新 processedData
+            processedData = processed;
+
+            // 重新渲染課表
+            renderTimetable();
+            modal.style.display = "none";
+            saveTimetableToCookie();
+        });
+
+        // 動態代理監聽課程區塊的點擊(顯示編輯)
+        document.getElementById('timetableGrid').addEventListener('click', (event) => {
+            let target = event.target;
+            while (target && target !== event.currentTarget) {
+                if (target.classList.contains('course')) {
+                    const courseId = target.dataset.courseId;
+                    const course = processedData.find(c => c.id === courseId);
+                    if (course) {
+                        showEditModal(course);
+                    }
+                    break;
+                }
+                target = target.parentElement;
+            }
+        });
+
+        // 儲存課表到 Cookie & 同時下載PNG
+        document.getElementById('saveTable').addEventListener('click', () => {
+            if (processedData.length === 0) {
+                alert('目前沒有課表資料可儲存！');
+                return;
+            }
+            saveTimetableToCookie();
+            alert('課表已儲存到 Cookie！');
+
+            // 下載PNG
+            const timetableGrid = document.getElementById('timetableGrid');
+            html2canvas(timetableGrid).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'timetable.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        });
+
+        // 保存課表到 Cookie
+        function saveTimetableToCookie() {
+            const timetableData = JSON.stringify(processedData);
+            setCookie('timetableData', timetableData, 30); // 保存30天
+        }
+
+        // 從 Cookie 載入課表
+        function loadTimetableFromCookie() {
+            const timetableData = getCookie('timetableData');
+            if (!timetableData) {
+                return;
+            }
+            try {
+                const jsonData = JSON.parse(timetableData);
+                const { processed, errors } = preprocessData(jsonData);
+                if (errors.length > 0) {
+                    showErrorMessages(errors);
+                    alert('載入課表時發現重疊課程，請檢查錯誤提示。');
+                    return;
+                } else {
+                    showErrorMessages([]);
+                }
+                processedData = processed;
+                renderTimetable();
+                alert('課表已從 Cookie 載入！');
+            } catch (e) {
+                console.error('載入課表時發生錯誤：', e);
+            }
+        }
+
+        // 放大縮小 & 滑動功能 (Hammer.js)
+        const timetableContainer = document.querySelector('.timetable-container');
+        const timetableElement = document.getElementById('timetableGrid');
+        const hammertime = new Hammer(timetableElement);
+
+        hammertime.get('pinch').set({ enable: true });
+        hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+        hammertime.on('pinchmove', (ev) => {
+            currentScale *= ev.scale;
+            currentScale = Math.min(Math.max(0.5, currentScale), 2);
+            timetableElement.style.transform = `scale(${currentScale})`;
+        });
+
+        hammertime.on('panmove', (ev) => {
+            timetableContainer.scrollLeft -= ev.deltaX;
+            timetableContainer.scrollTop -= ev.deltaY;
+        });
+
+        // Touch panning fallback
+        let isPanning = false;
+        let startX, startY;
+
+        timetableContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                isPanning = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                timetableContainer.style.cursor = 'grabbing';
+            }
+        });
+
+        timetableContainer.addEventListener('touchmove', (e) => {
+            if (!isPanning) return;
+            const touch = e.touches[0];
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            timetableContainer.scrollLeft -= dx;
+            timetableContainer.scrollTop -= dy;
+        });
+
+        timetableContainer.addEventListener('touchend', () => {
+            isPanning = false;
+            timetableContainer.style.cursor = 'grab';
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('colorPreview').style.backgroundColor = '#ffffff';
+            loadTimetableFromCookie();
+        });
+    </script>
+</body>
+</html>
