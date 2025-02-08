@@ -1,871 +1,942 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>模組化課表生成工具</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>模組化課表生成工具</title>
+  <!-- CSS 部分 -->
+  <style>
+    :root {
+      --background-color: #1e1e1e;
+      --container-bg: #2c2c2c;
+      --primary-color: #4CAF50;
+      --secondary-color: #2196F3;
+      --header-color: #333333;
+      --text-color: #f0f0f0;
+      --cell-bg: #3c3c3c;
+      --course-border: rgba(255, 255, 255, 0.2);
+      --button-bg: #4CAF50;
+      --button-hover-bg: #45a049;
+      --input-bg: #2c2c2c;
+      --input-border: #555;
+      --modal-bg: rgba(0, 0, 0, 0.8);
+      --modal-content-bg: #2c2c2c;
+      --error-color: #ff4c4c;
+    }
 
-    <!-- 建議把 CSS 拆成獨立檔案 style.css，但此處直接整合在同一檔 -->
-    <style>
-        :root {
-            --background-color: #1e1e1e;
-            --container-bg: #2c2c2c;
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --header-color: #333333;
-            --text-color: #f0f0f0;
-            --cell-bg: #3c3c3c;
-            --course-border: rgba(255, 255, 255, 0.2);
-            --button-bg: #4CAF50;
-            --button-hover-bg: #45a049;
-            --input-bg: #2c2c2c;
-            --input-border: #555;
-            --modal-bg: rgba(0, 0, 0, 0.8);
-            --modal-content-bg: #2c2c2c;
-            --error-color: #ff4c4c;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--container-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--container-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-        }
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 2.5em;
+    }
 
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-        .controls {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      padding: 15px;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
 
-        textarea {
-            width: 100%;
-            height: 200px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            padding: 15px;
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            resize: vertical;
-            transition: border-color 0.3s;
-        }
+    textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
 
-        textarea:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
+    button {
+      display: inline-block;
+      margin: 5px;
+      padding: 12px 30px;
+      background-color: var(--button-bg);
+      color: #ffffff;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
 
-        button {
-            display: inline-block;
-            margin: 5px;
-            padding: 12px 30px;
-            background-color: var(--button-bg);
-            color: #ffffff;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
+    button:hover {
+      background-color: var(--button-hover-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+    }
 
-        button:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
-        }
+    /* 優化錯誤訊息 */
+    #errorContainer {
+      text-align: center;
+      margin: 10px 0;
+      position: relative;
+    }
 
-        #errorContainer {
-            text-align: center;
-            margin: 10px 0;
-        }
+    .error-message {
+      color: var(--error-color);
+      background-color: rgba(255, 76, 76, 0.1);
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 600px;
+      white-space: pre-line;
+      text-align: left;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
 
-        .error-message {
-            color: var(--error-color);
-            background-color: rgba(255, 76, 76, 0.1);
-            margin: 0 auto;
-            padding: 10px;
-            border-radius: 5px;
-            max-width: 600px;
-            display: none;
-            white-space: pre-line;
-            text-align: left;
-            font-size: 14px;
-        }
+    .error-message.show {
+      opacity: 1;
+    }
 
-        .timetable-container {
-            width: 100%;
-            overflow: auto;
-            border-radius: 8px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-            margin-top: 20px;
-            position: relative;
-            cursor: grab;
-            background-color: #1e1e1e;
-        }
+    .timetable-container {
+      width: 100%;
+      overflow: auto;
+      border-radius: 8px;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+      margin-top: 20px;
+      position: relative;
+      cursor: grab;
+      background-color: #1e1e1e;
+      touch-action: none; /* 為 Hammer.js 做準備 */
+    }
 
-        .timetable {
-            display: grid;
-            gap: 1px;
-            background-color: #555;
-            position: relative;
-            min-width: 800px;
-            transition: transform 0.3s;
-        }
+    .timetable {
+      display: grid;
+      gap: 1px;
+      background-color: #555;
+      position: relative;
+      min-width: 800px;
+      transition: transform 0.3s;
+    }
 
-        .cell {
-            background-color: var(--cell-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #777;
-            text-align: center;
-            font-size: 14px;
-            padding: 5px;
-        }
+    .cell {
+      background-color: var(--cell-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #777;
+      text-align: center;
+      font-size: 14px;
+      padding: 5px;
+    }
 
-        .top-header, .left-header {
-            background-color: var(--primary-color);
-            color: #ffffff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            text-align: center;
-            white-space: pre-line;
-            font-size: 14px;
-        }
+    .top-header,
+    .left-header {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      white-space: pre-line;
+      font-size: 14px;
+    }
 
-        .course {
-            color: #fff;
-            font-weight: bold;
-            border-radius: 8px;
-            padding: 8px;
-            margin: 2px;
-            box-sizing: border-box;
-            overflow: hidden;
-            border: 1px solid var(--course-border);
-            opacity: 0.95;
-            cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
-            width: calc(100% - 4px);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 13px;
-            position: relative;
-        }
+    .course {
+      color: #fff;
+      font-weight: bold;
+      border-radius: 8px;
+      padding: 8px;
+      margin: 2px;
+      box-sizing: border-box;
+      overflow: hidden;
+      border: 1px solid var(--course-border);
+      opacity: 0.95;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+      width: calc(100% - 4px);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      position: relative;
+    }
 
-        .course:hover {
-            transform: scale(1.05);
-            opacity: 1;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            z-index: 30;
-        }
+    .course:hover {
+      transform: scale(1.05);
+      opacity: 1;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      z-index: 30;
+    }
 
-        .course-name {
-            font-weight: bold;
-            margin-bottom: 4px;
-            word-break: break-word;
-            text-align: center;
-        }
+    .course-name {
+      font-weight: bold;
+      margin-bottom: 4px;
+      word-break: break-word;
+      text-align: center;
+    }
 
-        .course-info {
-            font-size: 11px;
-            opacity: 0.9;
-            word-break: break-word;
-            text-align: center;
-        }
+    .course-info {
+      font-size: 11px;
+      opacity: 0.9;
+      word-break: break-word;
+      text-align: center;
+    }
 
-        /* Modal */
-        .modal {
-            display: none; 
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; 
-            background-color: var(--modal-bg);
-            align-items: center;
-            justify-content: center;
-        }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: var(--modal-bg);
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s;
+    }
 
-        .modal-content {
-            background-color: var(--modal-content-bg);
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 400px;
-            color: var(--text-color);
-            position: relative;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        .close {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .modal-content {
+      background-color: var(--modal-content-bg);
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      color: var(--text-color);
+      position: relative;
+    }
 
-        .close:hover,
-        .close:focus {
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
-        }
+    .close {
+      color: #aaa;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-size: 14px;
-        }
+    .close:hover,
+    .close:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="color"],
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid var(--input-border);
-            border-radius: 5px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            font-size: 14px;
-        }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-size: 14px;
+    }
 
-        #colorPreview {
-            width: 30px;
-            height: 30px;
-            border: 1px solid #ccc;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 10px;
-            border-radius: 4px;
-        }
+    input[type="text"],
+    input[type="number"],
+    input[type="color"],
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid var(--input-border);
+      border-radius: 5px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      font-size: 14px;
+    }
 
-        /* 手機端響應式 */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8em;
-            }
-            textarea {
-                height: 140px;
-            }
-            .controls button {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-            .modal-content {
-                width: 90%;
-                max-width: 300px;
-            }
-        }
-    </style>
+    #colorPreview {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ccc;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+      border-radius: 4px;
+    }
+
+    /* 手機端響應式 */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8em;
+      }
+      textarea {
+        height: 140px;
+      }
+      .controls button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+      .modal-content {
+        width: 90%;
+        max-width: 300px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>模組化課表生成工具（單檔整合版）</h1>
-        <div class="controls">
-            <textarea id="inputData" placeholder="請貼上你的課程 JSON 資料，例如：[[&quot;課名&quot;,&quot;老師&quot;,&quot;1&quot;,&quot;A&quot;,&quot;2&quot;,&quot;教室&quot;], ...]"></textarea>
-            <br/>
-            <button id="generateTable">生成課表</button>
-            <button id="saveTable">儲存課表 &amp; 下載PNG</button>
-        </div>
-
-        <div id="errorContainer">
-            <div class="error-message" id="errorMessage"></div>
-        </div>
-
-        <!-- 課表容器 -->
-        <div class="timetable-container">
-            <div class="timetable" id="timetableGrid"></div>
-        </div>
+  <div class="container">
+    <h1>模組化課表生成工具（單檔整合版）</h1>
+    <div class="controls">
+      <textarea id="inputData" placeholder="請貼上你的課程 JSON 資料，例如：[[&quot;課名&quot;,&quot;老師&quot;,&quot;1&quot;,&quot;A&quot;,&quot;2&quot;,&quot;教室&quot;], ...]"></textarea>
+      <br />
+      <button id="generateTable">生成課表</button>
+      <button id="saveTable">儲存課表 &amp; 下載PNG</button>
     </div>
 
-    <!-- 編輯課程 Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="modalClose">&times;</span>
-            <h2>編輯課程</h2>
-            <label for="editName">課程名稱:</label>
-            <input type="text" id="editName"/>
-            
-            <label for="editTeacher">教師編號:</label>
-            <input type="text" id="editTeacher"/>
-            
-            <label for="editDay">星期 (1-5):</label>
-            <input type="number" id="editDay" min="1" max="5"/>
-            
-            <label for="editStart">開始節次:</label>
-            <select id="editStart"></select>
-            
-            <label for="editEnd">結束節次:</label>
-            <select id="editEnd"></select>
-            
-            <label for="editLocation">教室:</label>
-            <input type="text" id="editLocation"/>
-            
-            <label for="editColor">課程顏色:</label>
-            <input type="color" id="editColor"/>
-            <div id="colorPreview"></div>
-            
-            <button id="saveChanges">保存</button>
-            <button id="deleteCourse" style="background-color: #d9534f;">刪除課程</button>
-        </div>
+    <div id="errorContainer">
+      <div class="error-message" id="errorMessage"></div>
     </div>
 
-    <!-- 需要用到的第三方套件（若不需要這些功能可刪除） -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 課表容器 -->
+    <div class="timetable-container" id="timetableContainer">
+      <div class="timetable" id="timetableGrid"></div>
+    </div>
+  </div>
 
-    <!-- 以下為整合版的 JS，將原本 dataProcessing.js、app.js 合併在同一檔 -->
-    <script>
+  <!-- 編輯課程 Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="modalClose">&times;</span>
+      <h2>編輯課程</h2>
+      <label for="editName">課程名稱:</label>
+      <input type="text" id="editName" />
+
+      <label for="editTeacher">教師編號:</label>
+      <input type="text" id="editTeacher" />
+
+      <label for="editDay">星期 (1-5):</label>
+      <input type="number" id="editDay" min="1" max="5" />
+
+      <label for="editStart">開始節次:</label>
+      <select id="editStart"></select>
+
+      <label for="editEnd">結束節次:</label>
+      <select id="editEnd"></select>
+
+      <label for="editLocation">教室:</label>
+      <input type="text" id="editLocation" />
+
+      <label for="editColor">課程顏色:</label>
+      <input type="color" id="editColor" />
+      <div id="colorPreview"></div>
+
+      <div style="margin-top: 15px; text-align: right;">
+        <button id="saveChanges">保存</button>
+        <button id="deleteCourse" style="background-color: #d9534f;">刪除課程</button>
+        <button id="cancelEdit" style="background-color: #777;">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三方套件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- 整合版 JS -->
+  <script>
     /********************************************************
      * 1. 資料處理 / 驗證 / 節次定義（原 dataProcessing.js）
      ********************************************************/
     const timePeriodsMapping = {
-        "A": 0.5,
-        "1": 1.0,
-        "2": 2.0,
-        "3": 3.0,
-        "4": 4.0,
-        "4.5": 4.5,
-        "5": 5.0,
-        "6": 6.0,
-        "7": 7.0,
-        "8": 8.0,
-        "8.5": 8.5,
-        "9": 9.0,
-        "10": 10.0,
-        "11": 11.0,
-        "12": 12.0,
+      "A": 0.5,
+      "1": 1.0,
+      "2": 2.0,
+      "3": 3.0,
+      "4": 4.0,
+      "4.5": 4.5,
+      "5": 5.0,
+      "6": 6.0,
+      "7": 7.0,
+      "8": 8.0,
+      "8.5": 8.5,
+      "9": 9.0,
+      "10": 10.0,
+      "11": 11.0,
+      "12": 12.0,
     };
 
     const timePeriodsText = {
-        "A": "07:00~07:50",
-        "1": "08:00~08:50",
-        "2": "09:00~09:50",
-        "3": "10:00~10:50",
-        "4": "11:00~11:50",
-        "4.5": "12:00~12:50",
-        "5": "13:00~13:50",
-        "6": "14:00~14:50",
-        "7": "15:00~15:50",
-        "8": "16:00~16:50",
-        "8.5": "17:00~17:50",
-        "9": "18:40~19:25",
-        "10": "19:30~20:15",
-        "11": "20:25~21:10",
-        "12": "21:15~22:00",
+      "A": "07:00~07:50",
+      "1": "08:00~08:50",
+      "2": "09:00~09:50",
+      "3": "10:00~10:50",
+      "4": "11:00~11:50",
+      "4.5": "12:00~12:50",
+      "5": "13:00~13:50",
+      "6": "14:00~14:50",
+      "7": "15:00~15:50",
+      "8": "16:00~16:50",
+      "8.5": "17:00~17:50",
+      "9": "18:40~19:25",
+      "10": "19:30~20:15",
+      "11": "20:25~21:10",
+      "12": "21:15~22:00",
     };
 
     const allPeriodNames = Object.keys(timePeriodsMapping).sort(
-        (a, b) => timePeriodsMapping[a] - timePeriodsMapping[b]
+      (a, b) => timePeriodsMapping[a] - timePeriodsMapping[b]
     );
 
     // 生成 UUID
     function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
     }
 
     // 將節次填入下拉選單
     function loadTimePeriods() {
-        const editStartSelect = document.getElementById('editStart');
-        const editEndSelect = document.getElementById('editEnd');
-        if (!editStartSelect || !editEndSelect) return;
+      const editStartSelect = document.getElementById('editStart');
+      const editEndSelect = document.getElementById('editEnd');
+      if (!editStartSelect || !editEndSelect) return;
 
-        editStartSelect.innerHTML = '';
-        editEndSelect.innerHTML = '';
+      editStartSelect.innerHTML = '';
+      editEndSelect.innerHTML = '';
 
-        allPeriodNames.forEach(period => {
-            const optionStart = document.createElement('option');
-            optionStart.value = period;
-            optionStart.textContent = `${period} (${timePeriodsText[period]})`;
-            editStartSelect.appendChild(optionStart);
+      allPeriodNames.forEach(period => {
+        const optionStart = document.createElement('option');
+        optionStart.value = period;
+        optionStart.textContent = `${period} (${timePeriodsText[period]})`;
+        editStartSelect.appendChild(optionStart);
 
-            const optionEnd = document.createElement('option');
-            optionEnd.value = period;
-            optionEnd.textContent = `${period} (${timePeriodsText[period]})`;
-            editEndSelect.appendChild(optionEnd);
-        });
+        const optionEnd = document.createElement('option');
+        optionEnd.value = period;
+        optionEnd.textContent = `${period} (${timePeriodsText[period]})`;
+        editEndSelect.appendChild(optionEnd);
+      });
     }
 
     // 前置驗證 & 衝突檢查
     function preprocessData(jsonData) {
-        const errors = [];
-        const usedPeriodValues = [];
+      const errors = [];
+      const usedPeriodValues = [];
 
-        const processed = jsonData.map((entry, index) => {
-            if (entry.length < 6) {
-                errors.push(`第 ${index + 1} 筆資料錯誤: 欄位數不足 (需至少6個欄位)`);
-                return null;
-            }
-            const [courseName, teacherId, day, startRaw, endRaw, location, color] = entry;
-
-            const startVal = (timePeriodsMapping[startRaw] !== undefined) 
-                ? timePeriodsMapping[startRaw] : parseFloat(startRaw);
-            const endVal = (timePeriodsMapping[endRaw] !== undefined) 
-                ? timePeriodsMapping[endRaw] : parseFloat(endRaw);
-
-            if (isNaN(startVal) || isNaN(endVal)) {
-                errors.push(`第 ${index + 1} 筆: 開始或結束節次 "${startRaw}" 或 "${endRaw}" 非合法節次`);
-            }
-            if (startVal > endVal) {
-                errors.push(`第 ${index + 1} 筆: 開始節次大於結束節次`);
-            }
-            usedPeriodValues.push(startVal, endVal);
-
-            return {
-                id: generateUUID(),
-                name: courseName,
-                teacher: teacherId,
-                day: day,
-                startRaw,
-                endRaw,
-                location: location || '',
-                color: color || null,
-            };
-        }).filter(e => e !== null);
-
-        if (errors.length > 0) {
-            return { processed: [], errors };
+      const processed = jsonData.map((entry, index) => {
+        if (entry.length < 6) {
+          errors.push(`第 ${index + 1} 筆資料錯誤: 欄位數不足 (需至少6個欄位)`);
+          return null;
         }
+        const [courseName, teacherId, day, startRaw, endRaw, location, color] = entry;
 
-        // 決定最小與最大節次
-        const minVal = Math.min(...usedPeriodValues);
-        const maxVal = Math.max(...usedPeriodValues);
+        const startVal = (timePeriodsMapping[startRaw] !== undefined)
+          ? timePeriodsMapping[startRaw] : parseFloat(startRaw);
+        const endVal = (timePeriodsMapping[endRaw] !== undefined)
+          ? timePeriodsMapping[endRaw] : parseFloat(endRaw);
 
-        // 篩出實際需要的節次並建立「數值 -> rowIndex」對應
-        const filteredPeriodNames = allPeriodNames.filter(key => {
-            const val = timePeriodsMapping[key];
-            return (val >= minVal && val <= maxVal);
-        });
-        const periodMap = {};
-        const rowToPeriod = {}; // 新增：rowIndex -> period
-        filteredPeriodNames.forEach((p, idx) => {
-            periodMap[ timePeriodsMapping[p] ] = idx + 2; // +2 因為第一行是標頭
-            rowToPeriod[idx + 2] = p;
-        });
-
-        // 填補顏色 & 計算實際 row index
-        const defaultColors = [
-            '#FF6B6B', '#6BCB77', '#4D96FF', '#FFD93D', '#845EC2',
-            '#FF9671', '#00C9A7', '#C3423F', '#5A189A', '#0081CF'
-        ];
-        let colorIndex = 0;
-
-        processed.forEach(item => {
-            if (!item.color) {
-                item.color = defaultColors[colorIndex % defaultColors.length];
-                colorIndex++;
-            }
-            const sVal = timePeriodsMapping[item.startRaw] || parseFloat(item.startRaw);
-            const eVal = timePeriodsMapping[item.endRaw] || parseFloat(item.endRaw);
-            item.start = periodMap[sVal];
-            item.end   = periodMap[eVal];
-        });
-
-        // 檢查衝突
-        for (let i = 0; i < processed.length; i++) {
-            const c1 = processed[i];
-            for (let j = i + 1; j < processed.length; j++) {
-                const c2 = processed[j];
-                if (c1.day === c2.day) {
-                    const c1Start = timePeriodsMapping[c1.startRaw] || parseFloat(c1.startRaw);
-                    const c1End   = timePeriodsMapping[c1.endRaw]   || parseFloat(c1.endRaw);
-                    const c2Start = timePeriodsMapping[c2.startRaw] || parseFloat(c2.startRaw);
-                    const c2End   = timePeriodsMapping[c2.endRaw]   || parseFloat(c2.endRaw);
-
-                    if (
-                        (c1Start >= c2Start && c1Start < c2End) ||
-                        (c1End > c2Start && c1End <= c2End) ||
-                        (c1Start <= c2Start && c1End >= c2End)
-                    ) {
-                        errors.push(
-                            `課程「${c1.name}」與「${c2.name}」在星期${c1.day} 時間重疊`
-                        );
-                    }
-                }
-            }
+        if (isNaN(startVal) || isNaN(endVal)) {
+          errors.push(`第 ${index + 1} 筆: 開始或結束節次 "${startRaw}" 或 "${endRaw}" 非合法節次`);
         }
+        if (startVal > endVal) {
+          errors.push(`第 ${index + 1} 筆: 開始節次大於結束節次`);
+        }
+        usedPeriodValues.push(startVal, endVal);
 
-        return { processed: (errors.length > 0) ? [] : processed, errors, rowToPeriod };
+        return {
+          id: generateUUID(),
+          name: courseName,
+          teacher: teacherId,
+          day: day,
+          startRaw,
+          endRaw,
+          location: location || '',
+          color: color || null,
+        };
+      }).filter(e => e !== null);
+
+      if (errors.length > 0) {
+        return { processed: [], errors };
+      }
+
+      // 決定最小與最大節次
+      const minVal = Math.min(...usedPeriodValues);
+      const maxVal = Math.max(...usedPeriodValues);
+
+      // 篩出實際需要的節次並建立「數值 -> rowIndex」對應
+      const filteredPeriodNames = allPeriodNames.filter(key => {
+        const val = timePeriodsMapping[key];
+        return (val >= minVal && val <= maxVal);
+      });
+      const periodMap = {};
+      const rowToPeriod = {}; // rowIndex -> period
+      filteredPeriodNames.forEach((p, idx) => {
+        periodMap[timePeriodsMapping[p]] = idx + 2; // +2 因為第一行是標頭
+        rowToPeriod[idx + 2] = p;
+      });
+
+      // 填補顏色 & 計算實際 row index
+      const defaultColors = [
+        '#FF6B6B', '#6BCB77', '#4D96FF', '#FFD93D', '#845EC2',
+        '#FF9671', '#00C9A7', '#C3423F', '#5A189A', '#0081CF'
+      ];
+      let colorIndex = 0;
+
+      processed.forEach(item => {
+        if (!item.color) {
+          item.color = defaultColors[colorIndex % defaultColors.length];
+          colorIndex++;
+        }
+        const sVal = timePeriodsMapping[item.startRaw] || parseFloat(item.startRaw);
+        const eVal = timePeriodsMapping[item.endRaw] || parseFloat(item.endRaw);
+        item.start = periodMap[sVal];
+        item.end = periodMap[eVal];
+      });
+
+      // 檢查衝突
+      for (let i = 0; i < processed.length; i++) {
+        const c1 = processed[i];
+        for (let j = i + 1; j < processed.length; j++) {
+          const c2 = processed[j];
+          if (c1.day === c2.day) {
+            const c1Start = timePeriodsMapping[c1.startRaw] || parseFloat(c1.startRaw);
+            const c1End = timePeriodsMapping[c1.endRaw] || parseFloat(c1.endRaw);
+            const c2Start = timePeriodsMapping[c2.startRaw] || parseFloat(c2.startRaw);
+            const c2End = timePeriodsMapping[c2.endRaw] || parseFloat(c2.endRaw);
+
+            if (
+              (c1Start >= c2Start && c1Start < c2End) ||
+              (c1End > c2Start && c1End <= c2End) ||
+              (c1Start <= c2Start && c1End >= c2End)
+            ) {
+              errors.push(
+                `課程「${c1.name}」與「${c2.name}」在星期${c1.day} 時間重疊`
+              );
+            }
+          }
+        }
+      }
+
+      return { processed: (errors.length > 0) ? [] : processed, errors, rowToPeriod };
     }
 
     /********************************************************
      * 2. 主程式 / 畫面渲染 / 事件綁定（原 app.js）
      ********************************************************/
-    let parsedCoursesData = [];         
+    let parsedCoursesData = [];
     const daysText = ['星期一', '星期二', '星期三', '星期四', '星期五'];
     let currentEditingCourse = null;
     let currentRowToPeriod = {};
 
     // 初始化
     function initApp() {
-        loadTimetableFromStorage();
-        bindUIEvents();
-        renderTimetable();
+      loadTimetableFromStorage();
+      bindUIEvents();
+      renderTimetable();
+      initHammer(); // 初始化 Hammer.js 手勢拖曳
     }
 
     // 綁定事件
     function bindUIEvents() {
-        document.getElementById('generateTable').addEventListener('click', onGenerateTable);
-        document.getElementById('saveTable').addEventListener('click', onSaveTable);
-        document.getElementById('modalClose').addEventListener('click', closeEditModal);
-        document.getElementById('saveChanges').addEventListener('click', onSaveChanges);
-        document.getElementById('deleteCourse').addEventListener('click', onDeleteCourse);
-        document.getElementById('timetableGrid').addEventListener('click', onCourseClick);
-        document.getElementById('editColor').addEventListener('input', updateColorPreview);
+      document.getElementById('generateTable').addEventListener('click', onGenerateTable);
+      document.getElementById('saveTable').addEventListener('click', onSaveTable);
+      document.getElementById('modalClose').addEventListener('click', closeEditModal);
+      document.getElementById('cancelEdit').addEventListener('click', closeEditModal);
+      document.getElementById('saveChanges').addEventListener('click', onSaveChanges);
+      document.getElementById('deleteCourse').addEventListener('click', onDeleteCourse);
+      document.getElementById('timetableGrid').addEventListener('click', onCourseClick);
+      document.getElementById('editColor').addEventListener('input', updateColorPreview);
+      // 按下 Esc 鍵關閉 Modal
+      document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+          closeEditModal();
+        }
+      });
+      // 點擊 Modal 背景區塊時關閉 Modal
+      document.getElementById('editModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+          closeEditModal();
+        }
+      });
     }
 
     // 更新顏色預覽
     function updateColorPreview() {
-        const color = document.getElementById('editColor').value;
-        document.getElementById('colorPreview').style.backgroundColor = color;
+      const color = document.getElementById('editColor').value;
+      document.getElementById('colorPreview').style.backgroundColor = color;
+    }
+
+    // 顯示錯誤訊息（並 3 秒後淡出）
+    function showErrorMessages(errors) {
+      const errorMessageEl = document.getElementById('errorMessage');
+      if (!errorMessageEl) return;
+      errorMessageEl.innerHTML = '';
+      if (errors.length === 0) {
+        errorMessageEl.classList.remove('show');
+        return;
+      }
+      errorMessageEl.classList.add('show');
+      errorMessageEl.textContent = errors.join('\n');
+      // 3秒後自動淡出
+      setTimeout(() => {
+        errorMessageEl.classList.remove('show');
+      }, 3000);
     }
 
     // 生成課表
     function onGenerateTable() {
-        const inputData = document.getElementById('inputData').value.trim();
-        if (!inputData) {
-            alert('請輸入課程 JSON 資料！');
-            return;
+      const inputData = document.getElementById('inputData').value.trim();
+      if (!inputData) {
+        alert('請輸入課程 JSON 資料！');
+        return;
+      }
+
+      let jsonData;
+      try {
+        jsonData = JSON.parse(inputData);
+        if (!Array.isArray(jsonData)) {
+          throw new Error('JSON 資料應該是一個陣列');
         }
+      } catch (e) {
+        alert('JSON 格式錯誤，請檢查！');
+        return;
+      }
 
-        let jsonData;
-        try {
-            jsonData = JSON.parse(inputData);
-            if (!Array.isArray(jsonData)) {
-                throw new Error('JSON 資料應該是一個陣列');
-            }
-        } catch (e) {
-            alert('JSON 格式錯誤，請檢查！');
-            return;
-        }
+      const { processed, errors, rowToPeriod } = preprocessData(jsonData);
+      showErrorMessages(errors);
+      currentRowToPeriod = rowToPeriod;
 
-        const { processed, errors, rowToPeriod } = preprocessData(jsonData);
-        showErrorMessages(errors);
-        currentRowToPeriod = rowToPeriod;
-
-        if (errors.length > 0) {
-            alert('生成課表時發現錯誤或衝突，請查看錯誤訊息！');
-            parsedCoursesData = [];
-            renderTimetable();
-            return;
-        }
-
-        parsedCoursesData = processed;
+      if (errors.length > 0) {
+        alert('生成課表時發現錯誤或衝突，請查看錯誤訊息！');
+        parsedCoursesData = [];
         renderTimetable();
-        saveTimetableToStorage();
+        return;
+      }
+
+      parsedCoursesData = processed;
+      renderTimetable();
+      saveTimetableToStorage();
     }
 
     // 儲存課表到 localStorage，並下載 PNG
     function onSaveTable() {
-        if (parsedCoursesData.length === 0) {
-            alert('目前沒有課表資料！');
-            return;
-        }
-        saveTimetableToStorage();
-        alert('課表已儲存到 localStorage！');
+      if (parsedCoursesData.length === 0) {
+        alert('目前沒有課表資料！');
+        return;
+      }
+      saveTimetableToStorage();
+      alert('課表已儲存到 localStorage！');
 
-        const timetableGrid = document.getElementById('timetableGrid');
-        html2canvas(timetableGrid, { backgroundColor: null }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'timetable.png';
-            link.href = canvas.toDataURL();
-            link.click();
-        });
+      const timetableGrid = document.getElementById('timetableGrid');
+      // 顯示 Loading 效果
+      const loadingOverlay = document.createElement('div');
+      loadingOverlay.style.position = 'absolute';
+      loadingOverlay.style.top = 0;
+      loadingOverlay.style.left = 0;
+      loadingOverlay.style.width = '100%';
+      loadingOverlay.style.height = '100%';
+      loadingOverlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      loadingOverlay.style.display = 'flex';
+      loadingOverlay.style.alignItems = 'center';
+      loadingOverlay.style.justifyContent = 'center';
+      loadingOverlay.style.zIndex = '50';
+      loadingOverlay.innerHTML = '<span style="color:#fff; font-size:18px;">產生圖片中...</span>';
+      document.getElementById('timetableContainer').appendChild(loadingOverlay);
+
+      html2canvas(timetableGrid, { backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'timetable.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        // 移除 Loading 效果
+        document.getElementById('timetableContainer').removeChild(loadingOverlay);
+      });
     }
-
 
     // 渲染課表
     function renderTimetable() {
-        const timetableGrid = document.getElementById('timetableGrid');
-        timetableGrid.innerHTML = '';
+      const timetableGrid = document.getElementById('timetableGrid');
+      timetableGrid.innerHTML = '';
 
-        if (parsedCoursesData.length === 0) {
-            timetableGrid.style.gridTemplateColumns = '150px 1fr';
-            timetableGrid.style.gridTemplateRows = '60px 1fr';
-            timetableGrid.innerHTML = '<div style="color:#ccc; text-align:center; padding:20px;">暫無課程資料</div>';
-            return;
+      if (parsedCoursesData.length === 0) {
+        timetableGrid.style.gridTemplateColumns = '150px 1fr';
+        timetableGrid.style.gridTemplateRows = '60px 1fr';
+        timetableGrid.innerHTML = '<div style="color:#ccc; text-align:center; padding:20px;">暫無課程資料</div>';
+        return;
+      }
+
+      // 找出最小與最大 row
+      const allStarts = parsedCoursesData.map(c => c.start);
+      const allEnds = parsedCoursesData.map(c => c.end);
+      const minRow = Math.min(...allStarts);
+      const maxRow = Math.max(...allEnds);
+      const totalRows = maxRow - minRow + 1;
+
+      timetableGrid.style.gridTemplateColumns = `150px repeat(5, 1fr)`;
+      timetableGrid.style.gridTemplateRows = `60px repeat(${totalRows}, 60px)`;
+
+      // 左上角
+      timetableGrid.appendChild(createHeaderCell('節次', 'top', 1, 1));
+      // 星期標題
+      daysText.forEach((dayText, i) => {
+        timetableGrid.appendChild(createHeaderCell(dayText, 'top', 1, i + 2));
+      });
+
+      // 左側節次標頭
+      for (let r = 0; r < totalRows; r++) {
+        const gridRow = r + 2;
+        const realRow = minRow + r;
+        const periodKey = currentRowToPeriod[gridRow];
+        const showText = timePeriodsText[periodKey]
+          ? `${periodKey}\n${timePeriodsText[periodKey]}`
+          : `Row ${realRow}`;
+        timetableGrid.appendChild(createHeaderCell(showText, 'left', gridRow, 1));
+      }
+
+      // 建立空白 cell
+      for (let r = 2; r < totalRows + 2; r++) {
+        for (let c = 2; c <= 6; c++) {
+          timetableGrid.appendChild(createCell(r, c));
         }
+      }
 
-        // 找出 min/max row
-        const allStarts = parsedCoursesData.map(c => c.start);
-        const allEnds = parsedCoursesData.map(c => c.end);
-        const minRow = Math.min(...allStarts);
-        const maxRow = Math.max(...allEnds);
-        const totalRows = maxRow - minRow + 1;
+      // 放入課程區塊
+      parsedCoursesData.forEach(course => {
+        const dayIndex = parseInt(course.day) - 1;
+        const colStart = dayIndex + 2;
+        const rowStart = course.start;
+        const rowSpan = course.end - course.start + 1;
 
-        timetableGrid.style.gridTemplateColumns = `150px repeat(5, 1fr)`;
-        timetableGrid.style.gridTemplateRows = `60px repeat(${totalRows}, 60px)`;
+        const courseEl = document.createElement('div');
+        courseEl.classList.add('course');
+        courseEl.style.backgroundColor = course.color;
+        courseEl.dataset.courseId = course.id;
 
-        // 左上角
-        timetableGrid.appendChild(createHeaderCell('節次', 'top', 1, 1));
-        // 星期標題
-        daysText.forEach((dayText, i) => {
-            timetableGrid.appendChild(createHeaderCell(dayText, 'top', 1, i + 2));
-        });
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('course-name');
+        nameDiv.textContent = course.name;
 
-        // 左側節次標頭
-        for (let r = 0; r < totalRows; r++) {
-            const gridRow = r + 2;
-            const realRow = minRow + r;
-            const periodKey = currentRowToPeriod[gridRow];
-            const showText = timePeriodsText[periodKey] 
-                ? `${periodKey}\n${timePeriodsText[periodKey]}` 
-                : `Row ${realRow}`;
-            timetableGrid.appendChild(createHeaderCell(showText, 'left', gridRow, 1));
-        }
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('course-info');
+        infoDiv.textContent = course.location;
 
-        // 先建立空白格
-        for (let r = 2; r < totalRows + 2; r++) {
-            for (let c = 2; c <= 6; c++) {
-                timetableGrid.appendChild(createCell(r, c));
-            }
-        }
+        courseEl.appendChild(nameDiv);
+        courseEl.appendChild(infoDiv);
 
-        // 放入課程區塊
-        parsedCoursesData.forEach(course => {
-            const dayIndex = parseInt(course.day) - 1;
-            const colStart = dayIndex + 2;
-            const rowStart = course.start;
-            const rowSpan = course.end - course.start + 1;
+        courseEl.title = `課程：${course.name}\n教師：${course.teacher}\n教室：${course.location}`;
+        courseEl.style.gridRow = `${rowStart} / span ${rowSpan}`;
+        courseEl.style.gridColumn = colStart.toString();
 
-            const courseEl = document.createElement('div');
-            courseEl.classList.add('course');
-            courseEl.style.backgroundColor = course.color;
-            courseEl.dataset.courseId = course.id;
-
-            const nameDiv = document.createElement('div');
-            nameDiv.classList.add('course-name');
-            nameDiv.textContent = course.name;
-
-            const infoDiv = document.createElement('div');
-            infoDiv.classList.add('course-info');
-            infoDiv.textContent = course.location;
-
-            courseEl.appendChild(nameDiv);
-            courseEl.appendChild(infoDiv);
-
-            courseEl.title = `課程：${course.name}\n教師：${course.teacher}\n教室：${course.location}`;
-            courseEl.style.gridRow = `${rowStart} / span ${rowSpan}`;
-            courseEl.style.gridColumn = colStart.toString();
-
-            timetableGrid.appendChild(courseEl);
-        });
+        timetableGrid.appendChild(courseEl);
+      });
     }
 
     // 建立表頭格子
     function createHeaderCell(text, type, gridRow, gridCol) {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        if (type === 'top') {
-            div.classList.add('top-header');
-        } else if (type === 'left') {
-            div.classList.add('left-header');
-        }
-        div.style.gridRow = gridRow;
-        div.style.gridColumn = gridCol;
-        div.innerHTML = text.replace(/\n/g, '<br/>');
-        return div;
+      const div = document.createElement('div');
+      div.classList.add('cell');
+      if (type === 'top') {
+        div.classList.add('top-header');
+      } else if (type === 'left') {
+        div.classList.add('left-header');
+      }
+      div.style.gridRow = gridRow;
+      div.style.gridColumn = gridCol;
+      div.innerHTML = text.replace(/\n/g, '<br/>');
+      return div;
     }
 
     // 建立空白 cell
     function createCell(gridRow, gridCol) {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        div.style.gridRow = gridRow;
-        div.style.gridColumn = gridCol;
-        return div;
-    }
-
-    // 顯示錯誤訊息
-    function showErrorMessages(errors) {
-        const errorMessageEl = document.getElementById('errorMessage');
-        if (!errorMessageEl) return;
-        errorMessageEl.innerHTML = '';
-        if (errors.length === 0) {
-            errorMessageEl.style.display = 'none';
-            return;
-        }
-        errorMessageEl.style.display = 'block';
-        errorMessageEl.textContent = errors.join('\n');
+      const div = document.createElement('div');
+      div.classList.add('cell');
+      div.style.gridRow = gridRow;
+      div.style.gridColumn = gridCol;
+      return div;
     }
 
     // 儲存到 localStorage
     function saveTimetableToStorage() {
-        const storageKey = 'timetableData';
-        const dataToStore = JSON.stringify(parsedCoursesData);
-        localStorage.setItem(storageKey, dataToStore);
+      const storageKey = 'timetableData';
+      const dataToStore = JSON.stringify(parsedCoursesData);
+      localStorage.setItem(storageKey, dataToStore);
     }
 
     // 從 localStorage 載入
     function loadTimetableFromStorage() {
-        const storageKey = 'timetableData';
-        const stored = localStorage.getItem(storageKey);
-        if (!stored) {
-            return;
+      const storageKey = 'timetableData';
+      const stored = localStorage.getItem(storageKey);
+      if (!stored) {
+        return;
+      }
+      try {
+        const parsed = JSON.parse(stored);
+        const { processed, errors, rowToPeriod } = preprocessData(parsed.map(c => {
+          return [
+            c.name, c.teacher, c.day, c.startRaw, c.endRaw, c.location, c.color
+          ];
+        }));
+        if (errors.length === 0) {
+          parsedCoursesData = processed;
+          currentRowToPeriod = rowToPeriod;
+        } else {
+          showErrorMessages(errors);
         }
-        try {
-            const parsed = JSON.parse(stored);
-            const { processed, errors, rowToPeriod } = preprocessData(parsed.map(c => {
-                return [
-                    c.name, c.teacher, c.day, c.startRaw, c.endRaw, c.location, c.color
-                ];
-            }));
-            if (errors.length === 0) {
-                parsedCoursesData = processed;
-                currentRowToPeriod = rowToPeriod;
-            } else {
-                showErrorMessages(errors);
-            }
-        } catch (e) {
-            console.error('載入 localStorage 時發生錯誤：', e);
-        }
+      } catch (e) {
+        console.error('載入 localStorage 時發生錯誤：', e);
+      }
     }
 
-    // 點擊課程(進入編輯)
+    // 點擊課程進入編輯模式
     function onCourseClick(e) {
-        let target = e.target;
-        while (target && target !== e.currentTarget) {
-            if (target.classList.contains('course')) {
-                const courseId = target.dataset.courseId;
-                currentEditingCourse = parsedCoursesData.find(c => c.id === courseId);
-                if (currentEditingCourse) {
-                    openEditModal(currentEditingCourse);
-                }
-                break;
-            }
-            target = target.parentElement;
+      let target = e.target;
+      while (target && target !== e.currentTarget) {
+        if (target.classList.contains('course')) {
+          const courseId = target.dataset.courseId;
+          currentEditingCourse = parsedCoursesData.find(c => c.id === courseId);
+          if (currentEditingCourse) {
+            openEditModal(currentEditingCourse);
+          }
+          break;
         }
+        target = target.parentElement;
+      }
     }
 
     // 開啟編輯 Modal
     function openEditModal(course) {
-        const editModal = document.getElementById('editModal');
-        if (!editModal) return;
-        editModal.style.display = 'flex';
+      const editModal = document.getElementById('editModal');
+      if (!editModal) return;
+      editModal.style.display = 'flex';
 
-        document.getElementById('editName').value = course.name;
-        document.getElementById('editTeacher').value = course.teacher;
-        document.getElementById('editDay').value = course.day;
-        document.getElementById('editStart').value = course.startRaw;
-        document.getElementById('editEnd').value = course.endRaw;
-        document.getElementById('editLocation').value = course.location;
-        document.getElementById('editColor').value = course.color;
-        document.getElementById('colorPreview').style.backgroundColor = course.color;
+      document.getElementById('editName').value = course.name;
+      document.getElementById('editTeacher').value = course.teacher;
+      document.getElementById('editDay').value = course.day;
+      document.getElementById('editStart').value = course.startRaw;
+      document.getElementById('editEnd').value = course.endRaw;
+      document.getElementById('editLocation').value = course.location;
+      document.getElementById('editColor').value = course.color;
+      document.getElementById('colorPreview').style.backgroundColor = course.color;
     }
 
     // 關閉編輯 Modal
     function closeEditModal() {
-        const editModal = document.getElementById('editModal');
-        if (editModal) {
-            editModal.style.display = 'none';
-        }
-        currentEditingCourse = null;
+      const editModal = document.getElementById('editModal');
+      if (editModal) {
+        editModal.style.display = 'none';
+      }
+      currentEditingCourse = null;
     }
 
     // 按下「保存」(編輯課程)
     function onSaveChanges() {
-        if (!currentEditingCourse) return;
+      if (!currentEditingCourse) return;
 
-        const updatedName = document.getElementById('editName').value.trim();
-        const updatedTeacher = document.getElementById('editTeacher').value.trim();
-        const updatedDay = document.getElementById('editDay').value.trim();
-        const updatedStartRaw = document.getElementById('editStart').value;
-        const updatedEndRaw = document.getElementById('editEnd').value;
-        const updatedLocation = document.getElementById('editLocation').value.trim();
-        const updatedColor = document.getElementById('editColor').value;
+      const updatedName = document.getElementById('editName').value.trim();
+      const updatedTeacher = document.getElementById('editTeacher').value.trim();
+      const updatedDay = document.getElementById('editDay').value.trim();
+      const updatedStartRaw = document.getElementById('editStart').value;
+      const updatedEndRaw = document.getElementById('editEnd').value;
+      const updatedLocation = document.getElementById('editLocation').value.trim();
+      const updatedColor = document.getElementById('editColor').value;
 
-        if (!updatedName || !updatedTeacher || !updatedDay || !updatedStartRaw || !updatedEndRaw || !updatedLocation) {
-            alert('請確保所有欄位都已填寫！');
-            return;
-        }
+      if (!updatedName || !updatedTeacher || !updatedDay || !updatedStartRaw || !updatedEndRaw || !updatedLocation) {
+        alert('請確保所有欄位都已填寫！');
+        return;
+      }
 
-        currentEditingCourse.name     = updatedName;
-        currentEditingCourse.teacher  = updatedTeacher;
-        currentEditingCourse.day      = updatedDay;
-        currentEditingCourse.startRaw = updatedStartRaw;
-        currentEditingCourse.endRaw   = updatedEndRaw;
-        currentEditingCourse.location = updatedLocation;
-        currentEditingCourse.color    = updatedColor;
+      currentEditingCourse.name = updatedName;
+      currentEditingCourse.teacher = updatedTeacher;
+      currentEditingCourse.day = updatedDay;
+      currentEditingCourse.startRaw = updatedStartRaw;
+      currentEditingCourse.endRaw = updatedEndRaw;
+      currentEditingCourse.location = updatedLocation;
+      currentEditingCourse.color = updatedColor;
 
-        // 重新驗證
-        const rawData = parsedCoursesData.map(c => {
-            return [c.name, c.teacher, c.day, c.startRaw, c.endRaw, c.location, c.color];
-        });
-        const { processed, errors, rowToPeriod } = preprocessData(rawData);
-        showErrorMessages(errors);
-        currentRowToPeriod = rowToPeriod;
+      // 重新驗證
+      const rawData = parsedCoursesData.map(c => {
+        return [c.name, c.teacher, c.day, c.startRaw, c.endRaw, c.location, c.color];
+      });
+      const { processed, errors, rowToPeriod } = preprocessData(rawData);
+      showErrorMessages(errors);
+      currentRowToPeriod = rowToPeriod;
 
-        if (errors.length === 0) {
-            parsedCoursesData = processed;
-            renderTimetable();
-            closeEditModal();
-            saveTimetableToStorage();
-        } else {
-            alert('課程資料存在錯誤或衝突，請檢查！');
-        }
+      if (errors.length === 0) {
+        parsedCoursesData = processed;
+        renderTimetable();
+        closeEditModal();
+        saveTimetableToStorage();
+      } else {
+        alert('課程資料存在錯誤或衝突，請檢查！');
+      }
     }
 
     // 按下「刪除課程」
     function onDeleteCourse() {
-        if (!currentEditingCourse) return;
-        const confirmDel = confirm(`確定要刪除課程「${currentEditingCourse.name}」嗎？`);
-        if (!confirmDel) return;
+      if (!currentEditingCourse) return;
+      const confirmDel = confirm(`確定要刪除課程「${currentEditingCourse.name}」嗎？`);
+      if (!confirmDel) return;
 
-        parsedCoursesData = parsedCoursesData.filter(c => c.id !== currentEditingCourse.id);
-        renderTimetable();
-        closeEditModal();
-        saveTimetableToStorage();
-        alert('課程已刪除！');
+      parsedCoursesData = parsedCoursesData.filter(c => c.id !== currentEditingCourse.id);
+      renderTimetable();
+      closeEditModal();
+      saveTimetableToStorage();
+      alert('課程已刪除！');
     }
 
+    /********************************************************
+     * 3. 手勢拖曳（Hammer.js）
+     ********************************************************/
+    function initHammer() {
+      const timetableContainer = document.getElementById('timetableContainer');
+      if (!timetableContainer) return;
+      const hammerManager = new Hammer(timetableContainer);
+      hammerManager.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+      let startX = 0, startY = 0;
+      hammerManager.on('panstart', function (e) {
+        startX = timetableContainer.scrollLeft;
+        startY = timetableContainer.scrollTop;
+      });
+      hammerManager.on('panmove', function (e) {
+        timetableContainer.scrollLeft = startX - e.deltaX;
+        timetableContainer.scrollTop = startY - e.deltaY;
+      });
+    }
 
     /********************************************************
-     * 3. DOMContentLoaded: 初始化程式
+     * 4. DOMContentLoaded: 初始化程式
      ********************************************************/
     document.addEventListener('DOMContentLoaded', () => {
-        loadTimePeriods(); // 載入節次下拉選單
-        initApp();         // 初始化整個 App
+      loadTimePeriods(); // 載入節次下拉選單
+      initApp();         // 初始化整個 App
     });
-    </script>
+  </script>
 </body>
 </html>
