@@ -1,413 +1,501 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>常態分配標準差表</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%);
-            color: #e0e0e0;
-        }
-        nav {
-            background-color: #242424;
-            padding: 15px 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-            margin-bottom: 20px;
-        }
-        nav a {
-            margin: 0 20px;
-            color: #e0e0e0;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s, border-bottom 0.3s;
-            font-size: 1rem;
-        }
-        nav a:hover, nav a.active {
-            color: #ff9800;
-            border-bottom: 2px solid #ff9800;
-            padding-bottom: 2px;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2em;
-            color: #ffffff;
-        }
-        .form-container {
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            max-width: 600px;
-            padding: 20px;
-            background-color: #2f2f2f;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-        }
-        .form-container label {
-            font-size: 18px;
-            text-align: left;
-            flex: 1 1 100%;
-        }
-        .form-container input {
-            padding: 10px;
-            font-size: 18px;
-            background-color: #3b3b3b;
-            color: #ffffff;
-            border: 2px solid #555555;
-            border-radius: 5px;
-            outline: none;
-            flex: 1 1 auto;
-            min-width: 150px;
-            transition: border-color 0.3s;
-        }
-        .form-container input:focus {
-            border-color: #ff9800;
-        }
-        .form-container button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #ff9800;
-            color: #212121;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            flex: 0 0 auto;
-        }
-        .form-container button:hover {
-            background-color: #e68900;
-            transform: translateY(-2px);
-        }
-        table {
-            width: 90%;
-            max-width: 1000px;
-            margin: 20px auto;
-            border-collapse: collapse;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-            background-color: #2b2b2b;
-        }
-        th, td {
-            border: 1px solid #333333;
-            padding: 15px;
-            text-align: center;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        th {
-            background-color: #424242;
-            color: #ffcc00;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        tbody tr:nth-child(odd) {
-            background-color: #2a2a2a;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #333333;
-        }
-        tbody tr:hover {
-            background-color: #ff9800;
-            color: #212121;
-            transform: scale(1.01);
-        }
-        .highlight {
-            background-color: #ffd700 !important;
-            color: #000000 !important;
-        }
-
-        /* 半透明背景遮罩與圖表區域 */
-        #overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-        }
-        #chartContainer {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 800px;
-            height: 80%;
-            background-color: #1f1f1f;
-            padding: 20px;
-            border: 2px solid #777777;
-            border-radius: 10px;
-            z-index: 1000;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
-        }
-        #closeChart {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff9800;
-            color: #212121;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        #closeChart:hover {
-            background-color: #e68900;
-            transform: translateY(-2px);
-        }
-        canvas {
-            background-color: #ffffff;
-            border-radius: 5px;
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        /* 響應式調整 */
-        @media (max-width: 768px) {
-            .form-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .form-container button {
-                margin-left: 0;
-                width: 100%;
-            }
-            table {
-                width: 100%;
-            }
-            #chartContainer {
-                width: 95%;
-                height: 70%;
-            }
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常態分配標準差表</title>
+  <!-- 使用 Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+  <style>
+    /* Reset 與基本設定 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%);
+      color: #e0e0e0;
+      line-height: 1.6;
+      overflow-y: scroll;
+    }
+    a {
+      text-decoration: none;
+    }
+    /* 導覽列 */
+    nav {
+      background-color: #242424;
+      padding: 15px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+      margin-bottom: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav .nav-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      margin: 0 20px;
+      color: #e0e0e0;
+      font-weight: 500;
+      transition: color 0.3s, border-bottom 0.3s;
+      font-size: 1rem;
+      padding-bottom: 3px;
+    }
+    nav a:hover, nav a.active {
+      color: #ff9800;
+      border-bottom: 2px solid #ff9800;
+    }
+    /* 主標題 */
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+      color: #ffffff;
+    }
+    /* 表單容器 */
+    .form-container {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: 600px;
+      padding: 20px;
+      background-color: #2f2f2f;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    }
+    .form-container label {
+      font-size: 18px;
+      text-align: left;
+      flex: 1 1 100%;
+    }
+    .form-container input {
+      padding: 10px;
+      font-size: 18px;
+      background-color: #3b3b3b;
+      color: #ffffff;
+      border: 2px solid #555555;
+      border-radius: 5px;
+      outline: none;
+      flex: 1 1 auto;
+      min-width: 150px;
+      transition: border-color 0.3s;
+    }
+    .form-container input:focus {
+      border-color: #ff9800;
+    }
+    .form-container button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #ff9800;
+      color: #212121;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      flex: 0 0 auto;
+    }
+    .form-container button:hover {
+      background-color: #e68900;
+      transform: translateY(-2px);
+    }
+    /* 提示訊息 */
+    #message {
+      text-align: center;
+      margin: 10px;
+      font-size: 1rem;
+      color: #ff9800;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    /* 表格樣式 */
+    table {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+      background-color: #2b2b2b;
+    }
+    th, td {
+      border: 1px solid #333333;
+      padding: 15px;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    th {
+      background-color: #424242;
+      color: #ffcc00;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tbody tr:nth-child(odd) {
+      background-color: #2a2a2a;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #333333;
+    }
+    tbody tr {
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    tbody tr:hover {
+      background-color: #ff9800;
+      color: #212121;
+      transform: scale(1.01);
+    }
+    .highlight {
+      background-color: #ffd700 !important;
+      color: #000000 !important;
+    }
+    /* 半透明背景遮罩與圖表區域 */
+    #overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #chartContainer {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 800px;
+      height: 80%;
+      background-color: #1f1f1f;
+      padding: 20px;
+      border: 2px solid #777777;
+      border-radius: 10px;
+      z-index: 1000;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #chartContainer.show, #overlay.show {
+      opacity: 1;
+    }
+    #closeChart {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff9800;
+      color: #212121;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    #closeChart:hover {
+      background-color: #e68900;
+      transform: translateY(-2px);
+    }
+    canvas {
+      background-color: #ffffff;
+      border-radius: 5px;
+      width: 100% !important;
+      height: auto !important;
+    }
+    /* 響應式調整 */
+    @media (max-width: 768px) {
+      .form-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .form-container button {
+        margin-left: 0;
+        width: 100%;
+      }
+      table {
+        width: 100%;
+      }
+      #chartContainer {
+        width: 95%;
+        height: 70%;
+      }
+      nav a {
+        margin: 5px 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <a href="Appendix.html">常態分配標準差表</a>
-        <a href="t-distribution.html">t檢驗表</a>
-        <a href="powa.html">普瓦松分配表</a>
-        <a href="two.html">二項式分配表</a>
-        <a href="index.html" class="active">返回首頁</a>
-    </nav>    
-    <h1>常態分配標準差表</h1>
-    <div class="form-container">
-        <label for="searchValue">搜尋 Z 值 (例如 1.05):</label>
-        <input type="number" id="searchValue" name="searchValue" step="0.01" placeholder="輸入 Z 值" aria-label="搜尋 Z 值">
-        <button onclick="searchZValue()">搜尋</button>
+  <!-- 導覽列 -->
+  <nav>
+    <div class="nav-container">
+      <a href="Appendix.html">常態分配標準差表</a>
+      <a href="t-distribution.html">t檢驗表</a>
+      <a href="powa.html">普瓦松分配表</a>
+      <a href="two.html">二項式分配表</a>
+      <a href="index.html" class="active">返回首頁</a>
     </div>
-    <table id="zTable">
-        <thead>
-            <tr>
-                <th>Z 值</th>
-                <th>累積機率</th>
-            </tr>
-        </thead>
-        <tbody id="zTableBody">
-            <!-- 這裡將由 JavaScript 動態生成內容 -->
-        </tbody>
-    </table>
-    <div id="result"></div>
-    <div id="overlay"></div>
-    <div id="chartContainer">
-        <button id="closeChart" onclick="closeChart()">關閉</button>
-        <canvas id="zChart"></canvas>
-    </div>
+  </nav>
+  
+  <h1>常態分配標準差表</h1>
+  
+  <!-- 搜尋與輸入區 -->
+  <div class="form-container">
+    <label for="searchValue">搜尋 Z 值 (例如 1.05):</label>
+    <input type="number" id="searchValue" name="searchValue" step="0.01" placeholder="輸入 Z 值" aria-label="搜尋 Z 值">
+    <button onclick="searchZValue()">搜尋</button>
+  </div>
+  <!-- 顯示搜尋回饋訊息 -->
+  <div id="message"></div>
+  
+  <!-- 資料表格 -->
+  <table id="zTable">
+    <thead>
+      <tr>
+        <th>Z 值</th>
+        <th>累積機率</th>
+      </tr>
+    </thead>
+    <tbody id="zTableBody">
+      <!-- 由 JavaScript 動態生成內容 -->
+    </tbody>
+  </table>
+  
+  <!-- 圖表遮罩與區域 -->
+  <div id="overlay"></div>
+  <div id="chartContainer">
+    <button id="closeChart" onclick="closeChart()">關閉</button>
+    <canvas id="zChart"></canvas>
+  </div>
+  
+  <script>
+    const data = [];
+    const rowsPerLoad = 100;
+    let loadedRows = 0;
+    let chart;
 
-    <script>
-        const data = [];
-        const rowsPerLoad = 100;
-        let loadedRows = 0;
-        let chart;
+    // 使用高斯誤差函數來計算常態分配的累積分佈函數
+    function erf(x) {
+      const a1 =  0.254829592;
+      const a2 = -0.284496736;
+      const a3 =  1.421413741;
+      const a4 = -1.453152027;
+      const a5 =  1.061405429;
+      const p  =  0.3275911;
 
-        // 使用高斯誤差函數來計算常態分配的累積分佈函數
-        function erf(x) {
-            const a1 =  0.254829592;
-            const a2 = -0.284496736;
-            const a3 =  1.421413741;
-            const a4 = -1.453152027;
-            const a5 =  1.061405429;
-            const p  =  0.3275911;
+      const sign = (x >= 0) ? 1 : -1;
+      x = Math.abs(x);
 
-            const sign = (x >= 0) ? 1 : -1;
-            x = Math.abs(x);
+      const t = 1.0 / (1.0 + p * x);
+      const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+      return sign * y;
+    }
 
-            const t = 1.0 / (1.0 + p * x);
-            const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+    // 常態分配累積分佈函數
+    function cumulativeDistribution(z) {
+      return 0.5 * (1 + erf(z / Math.sqrt(2)));
+    }
 
-            return sign * y;
+    // 判斷是否為行動裝置
+    function isMobile() {
+      return /Mobi|Android/i.test(navigator.userAgent);
+    }
+
+    // 生成資料
+    function generateData() {
+      for (let z = -4.00; z <= 4.00; z += 0.01) {
+        data.push({ z: z.toFixed(2), probability: cumulativeDistribution(z).toFixed(4) });
+      }
+    }
+
+    // 渲染表格
+    function renderTable() {
+      const tableBody = document.getElementById('zTableBody');
+      const end = Math.min(loadedRows + rowsPerLoad, data.length);
+      for (let i = loadedRows; i < end; i++) {
+        const item = data[i];
+        const tr = document.createElement('tr');
+        const tdZ = document.createElement('td');
+        const tdProbability = document.createElement('td');
+        tdZ.textContent = item.z;
+        tdProbability.textContent = item.probability;
+
+        // 非行動裝置下可點擊行產生圖表
+        if (!isMobile()) {
+          tr.style.cursor = 'pointer';
+          tr.onclick = () => {
+            drawChart(parseFloat(item.z));
+          };
         }
 
-        // 常態分配的累積分佈函數
-        function cumulativeDistribution(z) {
-            return 0.5 * (1 + erf(z / Math.sqrt(2)));
-        }
+        tr.appendChild(tdZ);
+        tr.appendChild(tdProbability);
+        tableBody.appendChild(tr);
+      }
+      loadedRows = end;
+    }
 
-        // 檢測裝置類型
-        function isMobile() {
-            return /Mobi|Android/i.test(navigator.userAgent);
+    // 監聽滾動事件，自動載入更多資料
+    window.onscroll = function() {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        if (loadedRows < data.length) {
+          renderTable();
         }
+      }
+    };
 
-        // 動態生成標準差表數據
-        function generateData() {
-            for (let z = -4.00; z <= 4.00; z += 0.01) {
-                data.push({ z: z.toFixed(2), probability: cumulativeDistribution(z).toFixed(4) });
+    // 顯示提示訊息（搜尋不到時使用）
+    function showMessage(msg) {
+      const messageDiv = document.getElementById('message');
+      messageDiv.textContent = msg;
+      messageDiv.style.opacity = 1;
+      setTimeout(() => {
+        messageDiv.style.opacity = 0;
+      }, 2000);
+    }
+
+    // 搜尋 Z 值，並高亮對應的列
+    function searchZValue() {
+      const searchInput = document.getElementById('searchValue');
+      let searchValue = parseFloat(searchInput.value);
+      if (isNaN(searchValue)) {
+        showMessage("請輸入有效的 Z 值");
+        searchInput.focus();
+        return;
+      }
+      searchValue = searchValue.toFixed(2);
+      const rowIndex = data.findIndex(item => item.z === searchValue);
+      if (rowIndex !== -1) {
+        // 若目標行尚未載入，則持續載入直到包含目標行
+        while (loadedRows <= rowIndex) {
+          renderTable();
+        }
+        const tableBody = document.getElementById('zTableBody');
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => row.classList.remove('highlight'));
+        const targetRow = rows[rowIndex];
+        if (targetRow) {
+          targetRow.classList.add('highlight');
+          targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        showMessage("未找到該 Z 值");
+      }
+    }
+
+    // 繪製常態分配圖表
+    function drawChart(zValue) {
+      const ctx = document.getElementById('zChart').getContext('2d');
+      if (chart) {
+        chart.destroy();
+      }
+
+      const labels = [];
+      const density = [];
+      const fillData = [];
+      for (let x = -4; x <= 4; x += 0.01) {
+        labels.push(x.toFixed(2));
+        const y = Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+        density.push(y);
+        fillData.push(x <= zValue ? y : null);
+      }
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '常態分配曲線',
+              data: density,
+              borderColor: '#ff9800',
+              borderWidth: 2,
+              fill: false,
+              tension: 0.2
+            },
+            {
+              label: '累積機率區域',
+              data: fillData,
+              backgroundColor: 'rgba(255, 152, 0, 0.5)',
+              borderColor: 'rgba(255, 152, 0, 0.5)',
+              fill: true,
+              pointRadius: 0
             }
-        }
-
-        // 動態生成標準差表
-        function renderTable() {
-            const tableBody = document.getElementById('zTableBody');
-            const end = Math.min(loadedRows + rowsPerLoad, data.length);
-            for (let i = loadedRows; i < end; i++) {
-                const item = data[i];
-                const tr = document.createElement('tr');
-                const tdZ = document.createElement('td');
-                const tdProbability = document.createElement('td');
-                tdZ.textContent = item.z;
-                tdProbability.textContent = item.probability;
-
-                if (!isMobile()) {
-                    tr.style.cursor = 'pointer';
-                    tr.onclick = () => {
-                        drawChart(parseFloat(item.z));
-                    };
-                }
-
-                tr.appendChild(tdZ);
-                tr.appendChild(tdProbability);
-                tableBody.appendChild(tr);
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Z 值'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: '機率密度'
+              },
+              beginAtZero: true
             }
-            loadedRows = end;
-        }
-
-        // 滾動事件監聽器，用於加載更多數據
-        window.onscroll = function() {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-                if (loadedRows < data.length) {
-                    renderTable();
-                }
+          },
+          plugins: {
+            tooltip: {
+              enabled: true
+            },
+            legend: {
+              display: true
             }
-        };
-
-        // 搜尋 Z 值並高亮顯示
-        function searchZValue() {
-            const searchInput = document.getElementById('searchValue');
-            const searchValue = parseFloat(searchInput.value).toFixed(2);
-            if (isNaN(searchValue)) {
-                alert("請輸入有效的 Z 值");
-                searchInput.focus();
-                return;
-            }
-            const rowIndex = data.findIndex(item => item.z === searchValue);
-            if (rowIndex !== -1) {
-                // 如果找到目標值，但尚未載入至頁面，則加載目標行所在的數據
-                while (loadedRows <= rowIndex) {
-                    renderTable();
-                }
-                const tableBody = document.getElementById('zTableBody');
-                const rows = tableBody.querySelectorAll('tr');
-                rows.forEach(row => row.classList.remove('highlight'));
-                const targetRow = rows[rowIndex];
-                if (targetRow) {
-                    targetRow.classList.add('highlight');
-                    targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            } else {
-                alert("未找到該 Z 值");
-            }
+          }
         }
+      });
 
-        // 繪製常態分配圖表
-        function drawChart(zValue) {
-            const ctx = document.getElementById('zChart').getContext('2d');
-            if (chart) {
-                chart.destroy();
-            }
+      // 顯示圖表與遮罩（加入淡入效果）
+      const overlay = document.getElementById('overlay');
+      const chartContainer = document.getElementById('chartContainer');
+      overlay.style.display = 'block';
+      chartContainer.style.display = 'block';
+      setTimeout(() => {
+        overlay.classList.add('show');
+        chartContainer.classList.add('show');
+      }, 10);
+    }
 
-            const labels = [];
-            const density = [];
-            const fillData = [];
-            for (let x = -4; x <= 4; x += 0.01) {
-                labels.push(x.toFixed(2));
-                const y = Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
-                density.push(y);
-                fillData.push(x <= zValue ? y : null);
-            }
+    // 關閉圖表
+    function closeChart() {
+      const overlay = document.getElementById('overlay');
+      const chartContainer = document.getElementById('chartContainer');
+      overlay.classList.remove('show');
+      chartContainer.classList.remove('show');
+      // 等待淡出效果後隱藏
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        chartContainer.style.display = 'none';
+      }, 300);
+    }
 
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: '常態分配曲線',
-                            data: density,
-                            borderColor: '#ff9800',
-                            borderWidth: 2,
-                            fill: false
-                        },
-                        {
-                            label: '累積機率區域',
-                            data: fillData,
-                            backgroundColor: 'rgba(255, 152, 0, 0.5)',
-                            borderColor: 'rgba(255, 152, 0, 0.5)',
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Z 值'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: '機率密度'
-                            },
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            enabled: true
-                        }
-                    }
-                }
-            });
-
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('chartContainer').style.display = 'block';
-        }
-
-        // 關閉圖表
-        function closeChart() {
-            document.getElementById('chartContainer').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        // 初始生成標準差表數據和加載第一批數據
-        window.onload = function() {
-            generateData();
-            renderTable();
-        }
-    </script>
+    // 初始化：生成資料並載入第一批資料
+    window.onload = function() {
+      generateData();
+      renderTable();
+    }
+  </script>
 </body>
 </html>

@@ -15,9 +15,12 @@
         }
         nav {
             margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
         }
         nav a {
-            margin: 0 15px;
             color: #FFFFFF;
             text-decoration: none;
             font-size: 18px;
@@ -32,6 +35,7 @@
             border-collapse: collapse;
             font-size: 16px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
         }
         th, td {
             border: 1px solid #424242;
@@ -67,21 +71,45 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             display: inline-block;
+            width: 90%;
+            max-width: 500px;
+        }
+        .form-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff9800;
+            font-size: 0.9em;
         }
         .form-container input {
             padding: 10px;
             font-size: 16px;
-            width: 200px;
+            width: 100%;
+            box-sizing: border-box;
             background-color: #333333;
             color: #FFFFFF;
             border: 1px solid #555555;
             border-radius: 5px;
-            margin: 5px;
+            margin: 5px 0;
+        }
+        .form-container input:focus {
+            outline: 2px solid #ff9800;
+            background-color: #404040;
+        }
+        .input-hint {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 4px;
+            display: block;
         }
         .form-container button {
             padding: 10px 20px;
             font-size: 16px;
-            margin-left: 10px;
+            width: 100%;
+            margin: 10px 0 0 0;
             background-color: #ff9800;
             color: #212121;
             border: none;
@@ -107,6 +135,7 @@
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
         #closeChart {
             position: absolute;
@@ -127,6 +156,61 @@
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            max-height: 80vh;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 0;
+            list-style: none;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .pagination button:hover {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: #121212;
+        }
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff9800;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: #ff4444;
+            margin: 10px 0;
+            display: none;
+        }
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px;
+            background: #ff9800;
+            color: #121212;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
@@ -141,10 +225,17 @@
     </nav> 
     <h1>二項分配表</h1>
     <div class="form-container">
-        <label for="nValue">n 值 (試驗次數):</label>
-        <input type="number" id="nValue" name="nValue" step="1" placeholder="輸入 n 值">
-        <label for="pValue">p 值 (成功機率):</label>
-        <input type="number" id="pValue" name="pValue" step="0.01" placeholder="輸入 p 值">
+        <div class="form-group">
+            <label for="nValue">試驗次數 (n)</label>
+            <input type="number" id="nValue" min="1" max="1000" placeholder="例如：20">
+            <span class="input-hint">建議值：1-1000</span>
+        </div>
+        <div class="form-group">
+            <label for="pValue">成功機率 (p)</label>
+            <input type="number" id="pValue" step="0.01" min="0" max="1" placeholder="例如：0.5">
+            <span class="input-hint">範圍：0 ≤ p ≤ 1</span>
+        </div>
+        <div id="pError" class="error-message"></div>
         <button onclick="generateTable()">生成表格</button>
     </div>
     <table id="binomialTable">
@@ -166,16 +257,13 @@
         <button id="closeChart" onclick="closeChart()">關閉</button>
         <canvas id="binomialChart"></canvas>
     </div>
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
 
     <script>
         const rowsPerPage = 20;
         let currentPage = 1;
         let chart;
-
-        // 檢測裝置類型
-        function isMobile() {
-            return /Mobi|Android/i.test(navigator.userAgent);
-        }
+        let data = [];
 
         // 計算二項分配的機率質量函數
         function binomialProbability(n, k, p) {
@@ -220,16 +308,6 @@
                 tdK.textContent = item.k;
                 tdProbability.textContent = item.probability;
 
-                // 根據裝置類型決定是否添加點擊事件處理程序
-                if (!isMobile()) {
-                    tdK.onclick = () => {
-                        drawChart(data, item.k);
-                    };
-                    tdProbability.onclick = () => {
-                        drawChart(data, item.k);
-                    };
-                }
-
                 tr.appendChild(tdK);
                 tr.appendChild(tdProbability);
                 tableBody.appendChild(tr);
@@ -267,16 +345,27 @@
         }
 
         // 生成表格
-        function generateTable() {
+        async function generateTable() {
             const n = parseInt(document.getElementById('nValue').value);
             const p = parseFloat(document.getElementById('pValue').value);
             if (isNaN(n) || isNaN(p) || p < 0 || p > 1) {
                 alert("請輸入有效的 n 值和 p 值 (0 <= p <= 1)");
                 return;
             }
-            const data = generateData(n, p);
-            renderTable(data, currentPage);
-            renderPagination(data);
+
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            document.body.appendChild(loader);
+            loader.style.display = 'block';
+
+            try {
+                data = generateData(n, p);
+                renderTable(data, currentPage);
+                renderPagination(data);
+            } finally {
+                loader.style.display = 'none';
+                document.body.removeChild(loader);
+            }
         }
 
         // 繪製二項分配圖表
@@ -344,6 +433,63 @@
         function closeChart() {
             document.getElementById('chartContainer').style.display = 'none';
         }
+
+        // 顯示/隱藏返回頂部按鈕
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTop');
+            btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+
+        // 輸入驗證
+        document.getElementById('pValue').addEventListener('input', function(e) {
+            const value = parseFloat(e.target.value);
+            const error = document.getElementById('pError');
+            if (value < 0 || value > 1) {
+                error.style.display = 'block';
+                error.textContent = 'p值必須在0到1之間';
+                this.classList.add('invalid');
+            } else {
+                error.style.display = 'none';
+                this.classList.remove('invalid');
+            }
+        });
+
+        // 鍵盤導航
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                navigatePage(currentPage + 1);
+            } else if (e.key === 'ArrowLeft') {
+                navigatePage(currentPage - 1);
+            }
+        });
+
+        function navigatePage(newPage) {
+            const pageCount = Math.ceil(data.length / rowsPerPage);
+            if (newPage >= 1 && newPage <= pageCount) {
+                currentPage = newPage;
+                renderTable(data, currentPage);
+                updatePagination();
+            }
+        }
+
+        // 觸摸滑動支持
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diffX = touchStartX - touchEndX;
+            
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    navigatePage(currentPage + 1);
+                } else {
+                    navigatePage(currentPage - 1);
+                }
+            }
+        });
     </script>
 </body>
 </html>

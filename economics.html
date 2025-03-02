@@ -1,398 +1,482 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Engineering Economics Factor Table</title>
-    <!-- 更新 Bootstrap 至最新版本 (Bootstrap 5) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            margin: 50px 0;
-            background-color: #1c1c1e; /* 深灰色背景 */
-            color: #f5f5f7; /* 更亮的白色字體 */
-            overflow-x: hidden;
-        }
-        nav {
-            margin-bottom: 20px;
-        }
-        nav a {
-            margin: 0 15px;
-            color: #ff9800;
-            text-decoration: none;
-            font-size: 18px;
-        }
-        .table-wrapper {
-            width: 100%;
-            max-height: 500px; /* Define a max height for the scrollable table */
-            overflow: auto;
-            position: relative; /* Required for sticky positioning */
-            margin-top: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-        table {
-            width: 100%;
-            margin: 0 auto;
-            border-collapse: collapse;
-            font-size: 15px;
-            position: relative;
-        }
-        th, td {
-            border: 1px solid #333333;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: background-color 0.3s, color 0.3s; /* Add transition effects */
-        }
-        th {
-            position: sticky;
-            top: 0;
-            background-color: #262626; /* 深色的 header 背景以提升對比 */
-            color: #f5f5f7;
-            z-index: 5;
-            border-bottom: 2px solid #ff9800;
-        }
-        th:hover, td:hover {
-            background-color: #ff9800;
-            color: #212121;
-        }
-        tbody tr:nth-child(odd) {
-            background-color: #2b2b2b; /* 更柔和的深灰色 */
-        }
-        tbody tr:nth-child(even) {
-            background-color: #242424; /* 更淺一點的灰色來區分行 */
-        }
-        tbody td:first-child, thead th:first-child {
-            position: sticky;
-            left: 0;
-            background-color: #383838; /* 深灰色以區分首列 */
-            color: #f5f5f7;
-            z-index: 6;
-            border-right: 2px solid #ff9800;
-        }
-        tbody td:first-child:hover, thead th:first-child:hover {
-            background-color: #ff9800;
-            color: #212121;
-        }
-        /* Highlighted cell */
-        .highlight {
-            background-color: #ffeb3b !important;
-            color: #212121 !important;
-        }
-        /* Reduce padding and font size for smaller inputs */
-        .form-control-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-            background-color: #2c2c2e;
-            color: #f5f5f7;
-            border: 1px solid #424242;
-        }
-        .form-control-sm::placeholder {
-            color: #b0b0b5;
-        }
-        /* Adjust buttons */
-        .btn {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.875rem;
-            background-color: #ff9800;
-            color: #ffffff;
-            border: none;
-        }
-        .btn:hover {
-            background-color: #e68900;
-        }
-        /* Modal adjustments */
-        #calculatorModal .modal-content {
-            background-color: #2b2b2b;
-            color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-        #calculatorModal .form-control {
-            background-color: #3a3a3c;
-            color: #ffffff;
-            border: 1px solid #555555;
-        }
-        #calculatorModal .form-control::placeholder {
-            color: #bbbbbb;
-        }
-        /* Tooltip customization */
-        .tooltip-inner {
-            background-color: #333333;
-            color: #ffffff;
-        }
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>工程經濟因子速查表</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #FFAC1C;
+      --background-dark: #121212;
+      --surface-dark: #1E1E1E;
+      --text-primary: #E0E0E0;
+      --hover-state: rgba(255, 172, 28, 0.15);
+      --border-color: #333;
+    }
 
-        /* Mobile adjustments */
-        @media (max-width: 768px) {
-            body {
-                margin: 20px 0;
-            }
-            table {
-                font-size: 13px;
-            }
-            th, td {
-                padding: 8px;
-            }
-            nav a {
-                font-size: 16px;
-                margin: 0 10px;
-            }
-            h2 {
-                font-size: 24px;
-            }
-            .form-control {
-                width: 100%;
-                margin: 5px 0;
-            }
-            #controls {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            #controls label {
-                margin-bottom: 5px;
-            }
-            .form-inline {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .form-inline > * {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+    /* 全站背景與字型 */
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--background-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* 導覽列 */
+    .navbar-custom {
+      background: var(--surface-dark);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    .navbar-brand, .nav-link {
+      color: var(--primary-color) !important;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover {
+      color: #fff !important;
+    }
+
+    /* 主要內容容器 */
+    .main-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* sticky header 與查詢列 */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background: var(--surface-dark);
+      z-index: 1020;
+      padding: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .input-group-dynamic {
+      max-width: 800px;
+      margin: 1.5rem auto;
+      gap: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .form-control-custom, .form-select {
+      background: #2A2A2A !important;
+      border: 1px solid #444 !important;
+      color: var(--text-primary) !important;
+      transition: all 0.2s ease;
+    }
+    .form-control-custom:focus, .form-select:focus {
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 3px rgba(255, 172, 28, 0.25);
+    }
+
+    /* 表格樣式 */
+    .table-container {
+      position: relative;
+      border-radius: 12px;
+      overflow: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      background: var(--surface-dark);
+      margin: 2rem 0;
+    }
+    .factor-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+    .factor-table th,
+    .factor-table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      min-width: 100px;
+      transition: background 0.2s ease;
+    }
+    .factor-table th {
+      background: #2E2E2E;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .factor-table td:first-child {
+      position: sticky;
+      left: 0;
+      background: var(--surface-dark);
+      z-index: 1;
+      font-weight: 500;
+    }
+    .factor-table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .factor-table td:hover {
+      background: var(--hover-state);
+      cursor: pointer;
+    }
+    .highlight-cell {
+      background: #FFE082 !important;
+      color: #212121;
+      animation: highlight 1.5s ease;
+    }
+    @keyframes highlight {
+      0% { background-color: var(--primary-color); }
+      100% { background-color: #FFE082; }
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1050;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .spinner {
+      width: 3rem;
+      height: 3rem;
+      border: 0.25em solid var(--primary-color);
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Calculator Modal */
+    .calculator-modal .modal-content {
+      background: var(--surface-dark);
+      border-radius: 12px;
+    }
+    .calculator-modal .input-group {
+      margin: 0.75rem 0;
+    }
+    .calculator-modal .input-group-text {
+      background: #2A2A2A;
+      border: 1px solid #444;
+      color: var(--text-primary);
+      min-width: 120px;
+    }
+
+    /* Toast container 調整 */
+    .toast-container {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 1100;
+    }
+
+    @media (max-width: 768px) {
+      .factor-table {
+        font-size: 0.875rem;
+      }
+      .factor-table th,
+      .factor-table td {
+        padding: 0.75rem;
+      }
+      .input-group-dynamic {
+        flex-direction: column;
+      }
+      .form-control-custom, .form-select {
+        width: 100% !important;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <a href="index.html">返回首頁</a>
-    </nav>  
+  <!-- 導覽列 -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
-        <h2>Engineering Economics Factor Table</h2>
-        <div id="searchControls" class="mb-4">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="d-flex flex-wrap justify-content-center gap-2">
-                        <select id="rowSelect" class="form-control form-control-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Select factor type">
-                            <option value="F/P">F/P</option>
-                            <option value="P/F">P/F</option>
-                            <option value="A/P">A/P</option>
-                            <option value="P/A">P/A</option>
-                            <option value="F/A">F/A</option>
-                            <option value="A/F">A/F</option>
-                            <option value="P/G">P/G</option>
-                            <option value="A/G">A/G</option>
-                        </select>
-                        <input id="nValue" min="1" max="60" placeholder="Enter N value" type="number" class="form-control form-control-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter N value">
-                        <button class="btn btn-primary btn-sm" onclick="searchValue()">搜尋</button>
-                    </div>
-                </div>
-            </div>
+      <a class="navbar-brand" href="index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left me-2" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        返回首頁
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <!-- sticky header 與查詢區 -->
+    <div class="sticky-header">
+      <h1 class="h3 text-center mb-4">工程經濟因子速查表</h1>
+      <div class="d-flex flex-wrap input-group-dynamic">
+        <select id="factorType" class="form-select">
+          <option value="F/P">終值因子 (F/P)</option>
+          <option value="P/F">現值因子 (P/F)</option>
+          <option value="A/P">資本回收因子 (A/P)</option>
+          <option value="P/A">現值年金因子 (P/A)</option>
+          <option value="F/A">終值年金因子 (F/A)</option>
+          <option value="A/F">償債基金因子 (A/F)</option>
+          <option value="P/G">梯度現值因子 (P/G)</option>
+          <option value="A/G">梯度年金因子 (A/G)</option>
+        </select>
+        <input type="number" id="searchN" class="form-control form-control-custom" 
+               placeholder="輸入期數 (1-60)" min="1" max="60">
+        <button class="btn btn-primary" onclick="searchFactor()" style="background: var(--primary-color); border: none;">
+          立即查詢
+        </button>
+      </div>
+      <div class="text-center mt-3">
+        <div class="d-inline-block bg-dark p-2 rounded-pill">
+          <span class="me-3">當前利率：<span id="currentRate">0.00</span>%</span>
+          <input type="number" id="interestRate" class="form-control-custom d-inline-block" 
+                 style="width: 120px;" step="0.25" placeholder="輸入利率" aria-label="Interest rate input">
         </div>
-        <div id="rateDisplay" style="color: #f5f5f7; margin: 20px; font-size: 20px;">
-            Interest Rate: <span id="rateValue">0.00</span>%
-        </div>
-        <div id="rateControls" class="mb-4">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
-                        <label for="rate" class="form-label">Enter Interest Rate (%): </label>
-                        <input id="rate" oninput="calculate()" placeholder="Enter interest rate" step="0.01" type="number" class="form-control form-control-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Enter interest rate">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="table-wrapper">
-            <table id="factorTable" class="table table-dark table-bordered">
-                <thead>
-                    <tr>
-                        <th>N</th>
-                        <th>F/P</th>
-                        <th>P/F</th>
-                        <th>A/P</th>
-                        <th>P/A</th>
-                        <th>F/A</th>
-                        <th>A/F</th>
-                        <th>P/G</th>
-                        <th>A/G</th>
-                    </tr>
-                </thead>
-                <tbody id="factorTableBody"></tbody>
-            </table>
-        </div>
+      </div>
     </div>
 
-    <!-- Calculator Modal -->
-    <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="calculatorModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="calculatorModalLabel">計算器</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="selectedValue" class="form-label">選擇的值:</label>
-                        <input type="text" class="form-control form-control-sm" id="selectedValue" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="selectedN" class="form-label">對應的N值:</label>
-                        <input type="text" class="form-control form-control-sm" id="selectedN" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="selectedFactor" class="form-label">對應的係數:</label>
-                        <input type="text" class="form-control form-control-sm" id="selectedFactor" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="multiplyValue" class="form-label">輸入要乘的數字:</label>
-                        <input type="number" class="form-control form-control-sm" id="multiplyValue" placeholder="輸入數字">
-                    </div>
-                    <div class="mb-3">
-                        <label for="resultValue" class="form-label">結果:</label>
-                        <input type="text" class="form-control form-control-sm" id="resultValue" readonly>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">關閉</button>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="calculateResult()">計算</button>
-                </div>
-            </div>
-        </div>
+    <!-- 表格區 -->
+    <div class="table-container">
+      <table class="factor-table">
+        <thead>
+          <tr>
+            <th>N</th>
+            <th>F/P</th>
+            <th>P/F</th>
+            <th>A/P</th>
+            <th>P/A</th>
+            <th>F/A</th>
+            <th>A/F</th>
+            <th>P/G</th>
+            <th>A/G</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
     </div>
+  </div>
 
-    <!-- 更新 Bootstrap 5 的 JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
+  <!-- loading overlay -->
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
 
-            $('#factorTable').on('click', 'td', function () {
-                var cell = $(this);
-                var cellValue = cell.text();
-                var row = cell.closest('tr');
-                var nValue = row.find('td:first-child').text();
-                var columnIndex = cell.index();
-                var factor = $('#factorTable thead th').eq(columnIndex).text();
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
 
-                // Reset calculator fields
-                $('#multiplyValue').val('');
-                $('#resultValue').val('');
+  <!-- Calculator Modal -->
+  <div class="modal fade calculator-modal" id="calculatorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">快速計算器</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="關閉"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group">
+            <span class="input-group-text">選取值</span>
+            <input type="text" id="selectedValue" class="form-control form-control-custom" readonly>
+          </div>
+          <div class="input-group">
+            <span class="input-group-text">期數 (N)</span>
+            <input type="text" id="selectedN" class="form-control form-control-custom" readonly>
+          </div>
+          <div class="input-group">
+            <span class="input-group-text">計算因子</span>
+            <input type="text" id="selectedFactor" class="form-control form-control-custom" readonly>
+          </div>
+          <hr class="my-3">
+          <div class="input-group">
+            <span class="input-group-text">輸入金額</span>
+            <input type="number" id="inputAmount" class="form-control form-control-custom" 
+                   placeholder="請輸入數值" step="100">
+          </div>
+          <div class="input-group mt-2">
+            <span class="input-group-text">計算結果</span>
+            <input type="text" id="calculationResult" class="form-control form-control-custom bg-dark" readonly>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+          <button type="button" class="btn btn-primary" onclick="performCalculation()">立即計算</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                $('#selectedValue').val(cellValue);
-                $('#selectedN').val(nValue);
-                $('#selectedFactor').val(factor);
-                var calculatorModal = new bootstrap.Modal(document.getElementById('calculatorModal'));
-                calculatorModal.show();
+  <!-- JavaScript 區段 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    let currentHighlight = null;
+
+    // 顯示/隱藏 loading 效果
+    function showLoading() {
+      loadingOverlay.classList.add('active');
+    }
+    function hideLoading() {
+      loadingOverlay.classList.remove('active');
+    }
+
+    // 依照輸入利率計算各項因子，並動態填入表格
+    function calculateFactors() {
+      showLoading();
+      const rateInput = document.getElementById('interestRate').value;
+      const rate = parseFloat(rateInput) / 100;
+      document.getElementById('currentRate').textContent = rate ? (rate * 100).toFixed(2) : '0.00';
+
+      setTimeout(() => {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        if (!rate || rate <= 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4">請輸入有效利率以顯示數據</td></tr>';
+          hideLoading();
+          return;
+        }
+
+        for (let n = 1; n <= 60; n++) {
+          const F_P = Math.pow(1 + rate, n);
+          const P_F = 1 / F_P;
+          const A_P = (rate * F_P) / (F_P - 1);
+          const P_A = 1 / A_P;
+          const F_A = (F_P - 1) / rate;
+          const A_F = rate / (F_P - 1);
+          const P_G = ((F_A - n) / (rate * rate)) * P_F;
+          const A_G = (1 / rate) - (n / (F_P - 1));
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${n}</td>
+            <td>${F_P.toFixed(6)}</td>
+            <td>${P_F.toFixed(6)}</td>
+            <td>${A_P.toFixed(6)}</td>
+            <td>${P_A.toFixed(6)}</td>
+            <td>${F_A.toFixed(6)}</td>
+            <td>${A_F.toFixed(6)}</td>
+            <td>${P_G.toFixed(6)}</td>
+            <td>${A_G.toFixed(6)}</td>
+          `;
+          tbody.appendChild(row);
+        }
+        hideLoading();
+      }, 300);
+    }
+
+    // 查詢指定期數與因子並高亮顯示
+    function searchFactor() {
+      const factor = document.getElementById('factorType').value;
+      const nValue = document.getElementById('searchN').value;
+      const table = document.querySelector('.factor-table');
+      
+      if (!nValue || nValue < 1 || nValue > 60) {
+        showToast('請輸入有效的期數 (1-60)', 'warning');
+        return;
+      }
+      
+      const rows = table.rows;
+      let found = false;
+      
+      // 從表頭之後的列進行比對
+      for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].cells;
+        if (cells[0].textContent === nValue) {
+          if (currentHighlight) currentHighlight.classList.remove('highlight-cell');
+          // 取得對應因子在表頭中的索引
+          const headerCells = table.tHead.rows[0].cells;
+          let headerIndex = -1;
+          for (let j = 0; j < headerCells.length; j++) {
+            if (headerCells[j].textContent.trim() === factor) {
+              headerIndex = j;
+              break;
+            }
+          }
+          if (headerIndex !== -1) {
+            cells[headerIndex].classList.add('highlight-cell');
+            currentHighlight = cells[headerIndex];
+            // 平滑捲動到指定位置
+            table.parentElement.scrollTo({
+              top: rows[i].offsetTop - 100,
+              left: cells[headerIndex].offsetLeft - 50,
+              behavior: 'smooth'
             });
-        });
-
-        function searchValue() {
-            var selectedColumn = document.getElementById('rowSelect').value;
-            var nValue = document.getElementById('nValue').value;
-            if (!nValue || isNaN(nValue) || nValue < 1 || nValue > 60) {
-                alert('Please enter a valid N value between 1 and 60.');
-                return;
-            }
-
-            var table = document.getElementById('factorTable');
-            var rows = table.getElementsByTagName('tr');
-            var columnIndex = -1;
-            
-            // Find the column index for the selected factor type
-            for (var i = 0; i < rows[0].cells.length; i++) {
-                if (rows[0].cells[i].textContent === selectedColumn) {
-                    columnIndex = i;
-                    break;
-                }
-            }
-
-            if (columnIndex === -1) {
-                alert('No matching column found.');
-                return;
-            }
-
-            // Search for the matching row with the given N value
-            var found = false;
-            for (var j = 1; j < rows.length; j++) {
-                if (rows[j].cells[0].textContent === nValue) {
-                    var cell = rows[j].cells[columnIndex];
-                    $('td').removeClass('highlight'); // Remove previous highlights
-                    $(cell).addClass('highlight'); // Highlight the new cell
-                    
-                    // Scroll to the specific cell
-                    $('.table-wrapper').animate({
-                        scrollLeft: $(cell).offset().left - $('.table-wrapper').offset().left + $('.table-wrapper').scrollLeft()
-                    }, 500);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                alert('No matching value found.');
-            }
+            found = true;
+            break;
+          }
         }
+      }
+      if (!found) showToast('找不到符合條件的數據', 'danger');
+    }
 
-        function calculate() {
-            var rate = parseFloat(document.getElementById('rate').value) / 100;
-            if (isNaN(rate) || rate < 0) {
-                document.getElementById('rateValue').textContent = '0.00';
-                document.getElementById('factorTableBody').innerHTML = '';
-                return;
-            }
-            document.getElementById('rateValue').textContent = (rate * 100).toFixed(2);
-            var tbody = document.getElementById('factorTableBody');
-            tbody.innerHTML = '';
+    // 顯示 Toast 訊息，使用 toast-container 統一管理
+    function showToast(message, type = 'info') {
+      const toastContainer = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast align-items-center text-white bg-${type} border-0 mb-2`;
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>`;
+      toastContainer.appendChild(toast);
+      const bsToast = new bootstrap.Toast(toast, { autohide: true, delay: 3000 });
+      bsToast.show();
+      toast.addEventListener('hidden.bs.toast', () => toast.remove());
+    }
 
-            for (var n = 1; n <= 60; n++) {
-                var F_P = Math.pow(1 + rate, n);
-                var P_F = 1 / F_P;
-                var A_P = (rate * Math.pow(1 + rate, n)) / (Math.pow(1 + rate, n) - 1);
-                var P_A = 1 / A_P;
-                var F_A = (Math.pow(1 + rate, n) - 1) / rate;
-                var A_F = rate / (Math.pow(1 + rate, n) - 1);
-                var P_G = (1 / rate) * (((Math.pow(1 + rate, n) - 1) / (rate * Math.pow(1 + rate, n))) - (n / Math.pow(1 + rate, n)));
-                var A_G = (1 / rate) - (n / (Math.pow(1 + rate, n) - 1));
+    // 執行計算器計算功能
+    function performCalculation() {
+      const value = parseFloat(document.getElementById('selectedValue').value);
+      const amount = parseFloat(document.getElementById('inputAmount').value);
+      const resultField = document.getElementById('calculationResult');
 
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${n}</td>
-                    <td>${F_P.toFixed(4)}</td>
-                    <td>${P_F.toFixed(4)}</td>
-                    <td>${A_P.toFixed(4)}</td>
-                    <td>${P_A.toFixed(4)}</td>
-                    <td>${F_A.toFixed(4)}</td>
-                    <td>${A_F.toFixed(4)}</td>
-                    <td>${P_G.toFixed(4)}</td>
-                    <td>${A_G.toFixed(4)}</td>
-                `;
-                tbody.appendChild(row);
-            }
-        }
+      if (isNaN(value) || isNaN(amount)) {
+        resultField.value = '請輸入有效數值';
+        return;
+      }
 
-        function calculateResult() {
-            var cellValue = parseFloat($('#selectedValue').val());
-            var multiplyValue = parseFloat($('#multiplyValue').val());
-            if (isNaN(multiplyValue)) {
-                $('#resultValue').val('請輸入有效的數字');
-            } else {
-                var result = cellValue * multiplyValue;
-                $('#resultValue').val(result.toFixed(4));
-            }
-        }
+      const result = (value * amount).toLocaleString('zh-Hant', {
+        maximumFractionDigits: 4
+      });
+      resultField.value = result;
+      showToast('計算完成！結果已更新', 'success');
+    }
 
-        // Initialize table on page load
-        document.addEventListener('DOMContentLoaded', calculate);
-    </script>
+    // 節流防抖
+    function debounce(func, timeout = 300) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), timeout);
+      };
+    }
+
+    // 監聽利率輸入事件
+    document.getElementById('interestRate').addEventListener('input', debounce(calculateFactors, 300));
+
+    // 點擊表格單元格時打開計算器 Modal
+    document.querySelector('.factor-table').addEventListener('click', (e) => {
+      if (e.target.tagName === 'TD' && e.target.cellIndex !== 0) {
+        const modal = new bootstrap.Modal(document.getElementById('calculatorModal'));
+        const row = e.target.parentElement;
+        // 將選取的數值、期數與因子寫入 Modal 輸入框
+        document.getElementById('selectedValue').value = parseFloat(e.target.textContent).toFixed(6);
+        document.getElementById('selectedN').value = row.cells[0].textContent;
+        const headerCells = document.querySelector('.factor-table').tHead.rows[0].cells;
+        document.getElementById('selectedFactor').value = headerCells[e.target.cellIndex].textContent;
+        modal.show();
+      }
+    });
+
+    // 初始化因子表格
+    calculateFactors();
+  </script>
 </body>
 </html>

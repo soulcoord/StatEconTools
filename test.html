@@ -1,253 +1,394 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OC曲線生成器</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            background-color: #212529;
-            color: #ffffff;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            text-align: center;
-            background-color: #343a40;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-        }
-        #ocChart {
-            margin: 30px auto;
-            max-width: 900px;
-            height: 500px;
-        }
-        input, button, label {
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        input {
-            width: 150px;
-            border: 1px solid #495057;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #495057;
-            color: #ff9800;
-            transition: border-color 0.3s ease;
-        }
-        input:focus {
-            border-color: #ff9800;
-            outline: none;
-            background-color: #343a40;
-        }
-        button {
-            background-color: #ff9800;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 6px rgba(255,152,0,0.4);
-        }
-        button:hover {
-            background-color: #e68900;
-        }
-        h1 {
-            color: #ff9800;
-        }
-        p {
-            color: #ffffff;
-        }
-        @media (max-width: 600px) {
-            input {
-                width: 100px;
-            }
-            #ocChart {
-                height: 300px;
-            }
-        }
-        .btn-group {
-            display: flex;
-            justify-content: center;
-        }
-        .btn-group button {
-            flex: 1;
-            margin: 0 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OC曲線分析工具</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #FFA726;
+      --primary-hover: #FF9800;
+      --background: #2D3439;
+      --surface: #37474F;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0BEC5;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      margin: 20px;
+      background: var(--background);
+      color: var(--text-primary);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: var(--surface);
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .input-wrapper {
+      position: relative;
+      background: rgba(255,255,255,0.05);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrapper:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .input-wrapper:focus-within {
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0.5rem;
+      color: var(--primary);
+      font-size: 1.1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,167,38,0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .chart-container {
+      position: relative;
+      margin: 3rem 0;
+      padding: 1rem;
+      background: var(--background);
+      border-radius: 1rem;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 10;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .info-icon {
+      color: var(--text-secondary);
+      margin-left: 0.5rem;
+      cursor: help;
+      font-size: 0.8rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1><i class="fas fa-chart-line"></i> OC曲線生成器</h1>
-        <p>輸入抽樣檢驗參數，生成OC曲線以分析抽樣計劃的效能</p>
-        <form id="ocForm">
-            <div>
-                <label for="sampleSize">樣本大小 (n):</label>
-                <input type="number" id="sampleSize" value="50" min="1" required>
-            </div>
-            <div>
-                <label for="acceptanceNumber">允收數量 (c):</label>
-                <input type="number" id="acceptanceNumber" value="2" min="0" required>
-            </div>
-            <button type="button" onclick="generateOC()">生成曲線</button>
-        </form>
-        <div id="ocChart"></div>
+  <div class="container">
+    <h1 style="text-align: center; margin-bottom: 1rem;">
+      <i class="fas fa-chart-line" style="margin-right: 0.8rem;"></i>
+      OC曲線分析工具
+      <i class="fas fa-info-circle info-icon" 
+         title="本工具用於分析抽樣檢驗計劃的運作特性曲線（Operating Characteristic Curve）"></i>
+    </h1>
+
+    <div class="input-group">
+      <div class="input-wrapper">
+        <label for="sampleSize">
+          樣本大小 (n)
+          <i class="fas fa-info-circle info-icon" 
+             title="每次抽樣檢驗時抽取的產品數量"></i>
+        </label>
+        <input type="number" id="sampleSize" value="50" min="1" required>
+      </div>
+
+      <div class="input-wrapper">
+        <label for="acceptanceNumber">
+          允收數量 (c)
+          <i class="fas fa-info-circle info-icon" 
+             title="允許的最大不合格品數量"></i>
+        </label>
+        <input type="number" id="acceptanceNumber" value="2" min="0" required>
+      </div>
     </div>
-    <script>
-        // 儲存對數階乘結果以提高效率
-        const logFactorialCache = [];
 
-        // 計算對數階乘（log(n!)），使用緩存以提高計算穩定性和效率
-        function logFactorial(n) {
-            if (n === 0 || n === 1) return 0;
-            if (logFactorialCache[n]) return logFactorialCache[n];
+    <div style="text-align: center; margin: 2rem 0;">
+      <button onclick="generateOC()">
+        <i class="fas fa-chart-area"></i>
+        生成OC曲線
+      </button>
+    </div>
 
-            let logFact = logFactorialCache[n - 1] || 0;
-            for (let i = (logFactorialCache.length || 2); i <= n; i++) {
-                logFact += Math.log(i);
-                logFactorialCache[i] = logFact;
+    <div class="chart-container">
+      <div id="ocChart" style="height: 500px;"></div>
+      <div class="tooltip" id="chartTooltip"></div>
+    </div>
+
+    <div class="chart-info" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem;">
+      <p>※ 曲線顯示在不同不良率(p)下的接受概率(Pa)</p>
+      <p>※ 理想OC曲線應在AQL點急劇下降（生產者風險）和在LTPD點快速下降（消費者風險）</p>
+    </div>
+  </div>
+
+  <script>
+    // 儲存對數階乘結果以提高效率
+    const logFactorialCache = [];
+
+    // 計算對數階乘（log(n!)），使用緩存以提高計算穩定性和效率
+    function logFactorial(n) {
+      if (n === 0 || n === 1) return 0;
+      if (logFactorialCache[n]) return logFactorialCache[n];
+
+      let logFact = logFactorialCache[n - 1] || 0;
+      for (let i = (logFactorialCache.length || 2); i <= n; i++) {
+        logFact += Math.log(i);
+        logFactorialCache[i] = logFact;
+      }
+      return logFact;
+    }
+
+    // 計算二項分佈的機率，使用對數方法以防止溢出
+    function binomialProbability(n, x, p) {
+      if (x > n) return 0;
+      if (p === 0) return x === 0 ? 1 : 0;
+      if (p === 1) return x === n ? 1 : 0;
+
+      const logC = logFactorial(n) - logFactorial(x) - logFactorial(n - x);
+      const logP = x * Math.log(p) + (n - x) * Math.log(1 - p);
+      const logProb = logC + logP;
+
+      // 防止指數運算溢出
+      if (logProb < -700) return 0;
+      return Math.exp(logProb);
+    }
+
+    // 計算接受概率，累積 P(X=0) 到 P(X=c)
+    function acceptanceProbability(n, c, p) {
+      let Pa = 0;
+      for (let x = 0; x <= c; x++) {
+        const prob = binomialProbability(n, x, p);
+        Pa += prob;
+      }
+      return Pa > 1 ? 1 : Pa;
+    }
+
+    // 生成OC曲線，使用 ECharts 進行可視化
+    function generateOC() {
+      const button = document.querySelector('button');
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 計算中...';
+      button.disabled = true;
+
+      const sampleSize = parseInt(document.getElementById('sampleSize').value);
+      const acceptanceNumber = parseInt(document.getElementById('acceptanceNumber').value);
+
+      // 檢查用戶輸入是否合法
+      if (isNaN(sampleSize) || isNaN(acceptanceNumber) || sampleSize <= 0 || acceptanceNumber < 0) {
+        alert('請輸入合法的樣本大小和允收數量');
+        button.innerHTML = '<i class="fas fa-chart-area"></i> 生成OC曲線';
+        button.disabled = false;
+        return;
+      }
+
+      if (acceptanceNumber > sampleSize) {
+        alert('允收數量不能大於樣本大小');
+        button.innerHTML = '<i class="fas fa-chart-area"></i> 生成OC曲線';
+        button.disabled = false;
+        return;
+      }
+
+      const defectRates = [];
+      const acceptanceProbabilities = [];
+
+      for (let p = 0; p <= 0.2; p += 0.005) {
+        defectRates.push(p);
+        const pa = acceptanceProbability(sampleSize, acceptanceNumber, p);
+        acceptanceProbabilities.push(pa > 1 ? 1 : pa);
+      }
+
+      // 使用 ECharts 繪製 OC 曲線
+      const chartDom = document.getElementById('ocChart');
+      const myChart = echarts.init(chartDom);
+      const option = {
+        title: {
+          text: 'OC曲線',
+          left: 'center',
+          textStyle: {
+            color: '#ff9800'
+          }
+        },
+        tooltip: {
+          trigger: 'axis',
+          // 關閉 ECharts 內建 tooltip 顯示，改用自訂 tooltip
+          show: false
+        },
+        xAxis: {
+          type: 'value',
+          name: '不良率 (p)',
+          nameLocation: 'middle',
+          nameGap: 30,
+          axisLabel: {
+            formatter: value => (value * 100).toFixed(1) + '%',
+            color: '#ff9800'
+          },
+          min: 0,
+          max: 0.2,
+          axisLine: {
+            lineStyle: {
+              color: '#ff9800'
             }
-            return logFact;
-        }
-
-        // 使用快速冪計算 p^x
-        function fastPower(base, exponent) {
-            let result = 1;
-            while (exponent > 0) {
-                if (exponent % 2 === 1) {
-                    result *= base;
-                }
-                base *= base;
-                exponent = Math.floor(exponent / 2);
+          }
+        },
+        yAxis: {
+          type: 'value',
+          name: '接受概率 (Pa)',
+          nameLocation: 'middle',
+          nameGap: 40,
+          axisLabel: {
+            formatter: value => (value * 100).toFixed(0) + '%',
+            color: '#ff9800'
+          },
+          min: 0,
+          max: 1,
+          axisLine: {
+            lineStyle: {
+              color: '#ff9800'
             }
-            return result;
-        }
-
-        // 計算二項分佈的機率，使用對數方法和快速冪以防止溢出
-        function binomialProbability(n, x, p) {
-            if (x > n) return 0;
-            if (p === 0) return x === 0 ? 1 : 0;
-            if (p === 1) return x === n ? 1 : 0;
-
-            const logC = logFactorial(n) - logFactorial(x) - logFactorial(n - x);
-            const logP = x * Math.log(p) + (n - x) * Math.log(1 - p);
-            const logProb = logC + logP;
-
-            // 防止指數運算溢出
-            if (logProb < -700) return 0; // 因為 Math.exp(-700) 約為 5e-305，接近於 0
-            return Math.exp(logProb);
-        }
-
-        // 計算接受概率，累積 P(X=0) 到 P(X=c)
-        function acceptanceProbability(n, c, p) {
-            let Pa = 0;
-            for (let x = 0; x <= c; x++) {
-                const prob = binomialProbability(n, x, p);
-                Pa += prob;
+          }
+        },
+        series: [
+          {
+            data: defectRates.map((p, i) => [p, acceptanceProbabilities[i]]),
+            type: 'line',
+            smooth: true,
+            lineStyle: {
+              color: '#ff9800',
+              width: 2
+            },
+            areaStyle: {
+              color: 'rgba(255, 152, 0, 0.2)'
             }
-            return Pa > 1 ? 1 : Pa; // 保持在 [0, 1] 範圍內
-        }
+          }
+        ],
+        backgroundColor: '#212529'
+      };
+      myChart.setOption(option);
 
-        // 生成OC曲線，使用 ECharts 進行可視化
-        function generateOC() {
-            const sampleSize = parseInt(document.getElementById('sampleSize').value);
-            const acceptanceNumber = parseInt(document.getElementById('acceptanceNumber').value);
+      // 恢復按鈕狀態
+      button.innerHTML = '<i class="fas fa-chart-area"></i> 重新生成曲線';
+      button.disabled = false;
 
-            // 檢查用戶輸入是否合法
-            if (isNaN(sampleSize) || isNaN(acceptanceNumber) || sampleSize <= 0 || acceptanceNumber < 0) {
-                alert('請輸入合法的樣本大小和允收數量');
-                return;
-            }
+      // 初始化圖表互動
+      initChartInteractions(myChart);
+    }
 
-            if (acceptanceNumber > sampleSize) {
-                alert('允收數量不能大於樣本大小');
-                return;
-            }
+    // 增加圖表互動功能：桌面端與手機端點擊皆可顯示詳情視窗
+    function initChartInteractions(chart) {
+      const tooltip = document.getElementById('chartTooltip');
+      let hideTimeout;
+      // 判斷是否為手機裝置 (可依需求調整判斷條件)
+      const isMobile = ('ontouchstart' in window) || (window.innerWidth <= 768);
 
-            const defectRates = [];
-            const acceptanceProbabilities = [];
+      if (isMobile) {
+        // 手機端：點擊顯示 tooltip，3 秒後自動隱藏
+        chart.off('mousemove');
+        chart.off('mouseout');
+        chart.on('click', (params) => {
+          if (params.componentType === 'series') {
+            const [p, pa] = params.data;
+            tooltip.innerHTML = `不良率: ${(p * 100).toFixed(1)}%<br>接受概率: ${(pa * 100).toFixed(1)}%`;
+            tooltip.style.left = params.event.offsetX + 10 + 'px';
+            tooltip.style.top = params.event.offsetY + 10 + 'px';
+            tooltip.style.opacity = 1;
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+              tooltip.style.opacity = 0;
+            }, 3000);
+          }
+        });
+      } else {
+        // 桌面端：點擊圖表顯示 tooltip，再點擊其他地方隱藏
+        chart.off('mousemove');
+        chart.off('mouseout');
+        chart.on('click', (params) => {
+          if (params.componentType === 'series') {
+            const [p, pa] = params.data;
+            tooltip.innerHTML = `不良率: ${(p * 100).toFixed(1)}%<br>接受概率: ${(pa * 100).toFixed(1)}%`;
+            tooltip.style.left = params.event.offsetX + 10 + 'px';
+            tooltip.style.top = params.event.offsetY + 10 + 'px';
+            tooltip.style.opacity = 1;
+          }
+        });
+        // 點擊圖表區域外時隱藏 tooltip
+        document.addEventListener('click', function(e) {
+          const chartContainer = document.getElementById('ocChart');
+          if (!chartContainer.contains(e.target)) {
+            tooltip.style.opacity = 0;
+          }
+        });
+      }
+    }
 
-            for (let p = 0; p <= 0.2; p += 0.005) { // 降低取樣步長至 0.005 以提高效率
-                defectRates.push(p);
-                const pa = acceptanceProbability(sampleSize, acceptanceNumber, p);
-                acceptanceProbabilities.push(pa > 1 ? 1 : pa); // 保持在 [0, 1] 範圍內
-            }
-
-            // 使用 ECharts 繪製 OC 曲線
-            const chartDom = document.getElementById('ocChart');
-            const myChart = echarts.init(chartDom);
-            const option = {
-                title: {
-                    text: 'OC曲線',
-                    left: 'center',
-                    textStyle: {
-                        color: '#ff9800'
-                    }
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                xAxis: {
-                    type: 'value',
-                    name: '不良率 (p)',
-                    nameLocation: 'middle',
-                    nameGap: 30,
-                    axisLabel: {
-                        formatter: value => (value * 100).toFixed(1) + '%',
-                        color: '#ff9800'
-                    },
-                    min: 0,
-                    max: 0.2,
-                    axisLine: {
-                        lineStyle: {
-                            color: '#ff9800'
-                        }
-                    }
-                },
-                yAxis: {
-                    type: 'value',
-                    name: '接受概率 (Pa)',
-                    nameLocation: 'middle',
-                    nameGap: 40,
-                    axisLabel: {
-                        formatter: value => (value * 100).toFixed(0) + '%',
-                        color: '#ff9800'
-                    },
-                    min: 0,
-                    max: 1,
-                    axisLine: {
-                        lineStyle: {
-                            color: '#ff9800'
-                        }
-                    }
-                },
-                series: [
-                    {
-                        data: defectRates.map((p, i) => [p, acceptanceProbabilities[i]]),
-                        type: 'line',
-                        smooth: true,
-                        lineStyle: {
-                            color: '#ff9800',
-                            width: 2
-                        },
-                        areaStyle: {
-                            color: 'rgba(255, 152, 0, 0.2)'
-                        }
-                    }
-                ],
-                backgroundColor: '#212529'
-            };
-            myChart.setOption(option);
-        }
-
-        // 初始生成圖表
-        window.onload = generateOC;
-    </script>
+    // 初始生成圖表
+    window.onload = generateOC;
+  </script>
 </body>
 </html>
