@@ -5,91 +5,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T 檢驗表</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-            background-color: #121212;
-            color: #FFFFFF;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+            color: #e0e0e0;
             line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
         }
         nav {
-            margin-bottom: 20px;
+            background: rgba(31, 31, 31, 0.95);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            backdrop-filter: blur(5px);
         }
         nav a {
-            margin: 0 15px;
-            color: #FFFFFF;
-            text-decoration: none;
-            font-size: 18px;
-            transition: color 0.3s;
+            color: #e0e0e0;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
         }
-        nav a:hover {
+        nav a:hover, nav a.active {
             color: #ff9800;
         }
-        table {
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 2px;
+            background: #ff9800;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { width: 0; }
+            to { width: 70%; }
+        }
+        h1 {
+            text-align: center;
+            margin: 2.5rem 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-container {
+            margin: 0 auto 2rem;
+            padding: 2rem;
+            background: #1f1f1f;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+            max-width: 700px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+        .form-group {
+            flex: 1;
+            position: relative;
+        }
+        .form-group label {
+            position: absolute;
+            top: -0.75rem;
+            left: 1rem;
+            background: #1f1f1f;
+            padding: 0 0.5rem;
+            font-size: 0.9rem;
+            color: #ff9800;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            background: #2c2c2c;
+            color: #e0e0e0;
+            border: 2px solid #424242;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-container input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+            outline: none;
+        }
+        .form-container button {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #ff9800, #e68900);
+            color: #212121;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .form-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.5);
+        }
+        #message {
+            text-align: center;
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            color: #ff4444;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s ease;
+        }
+        #message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .table-container {
             width: 90%;
-            margin: 30px auto;
+            max-width: 1100px;
+            margin: 0 auto 2rem;
+            background: #1f1f1f;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
             border-collapse: collapse;
-            font-size: 16px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
         th, td {
-            border: 1px solid #424242;
-            padding: 15px;
+            padding: 1.2rem;
             text-align: center;
+            border-bottom: 1px solid #333;
+            transition: all 0.3s ease;
         }
         th {
-            background-color: #1f1f1f;
-            color: #ffffff;
+            background: #2c2c2c;
+            color: #ffcc00;
+            font-weight: 600;
             position: sticky;
             top: 0;
             z-index: 2;
         }
-        tbody tr:nth-child(odd) {
-            background-color: #2c2c2c;
+        tbody tr {
+            background: #242424;
+            transition: all 0.3s ease;
         }
         tbody tr:nth-child(even) {
-            background-color: #1e1e1e;
+            background: #1e1e1e;
         }
         tbody tr:hover {
-            background-color: #ff9800;
-            color: #212121;
+            background: rgba(255, 152, 0, 0.2);
+            cursor: default;
         }
         .highlight {
-            background-color: #ff9800 !important;
+            background: #ffd700 !important;
             color: #212121 !important;
+            animation: highlightFade 1s ease;
         }
-        .form-container {
-            margin: 20px;
-            padding: 20px;
-            background-color: #1f1f1f;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            display: inline-block;
+        @keyframes highlightFade {
+            0% { background: #ffffff; }
+            100% { background: #ffd700; }
         }
-        .form-container input {
-            padding: 10px;
-            font-size: 16px;
-            width: 200px;
-            background-color: #333333;
-            color: #FFFFFF;
-            border: 1px solid #555555;
-            border-radius: 5px;
+        .loader {
+            border: 6px solid #333;
+            border-top: 6px solid #ff9800;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
         }
-        .form-container button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin-left: 10px;
-            background-color: #ff9800;
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        #backToTop {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.2rem;
+            background: #ff9800;
             color: #212121;
             border: none;
-            border-radius: 5px;
+            border-radius: 50%;
+            font-size: 1.2rem;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
-        .form-container button:hover {
-            background-color: #e68900;
-            transform: translateY(-3px);
+        #backToTop.show {
+            opacity: 1;
+        }
+        #backToTop:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5);
+        }
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .form-container {
+                flex-direction: column;
+                padding: 1.5rem;
+                margin: 1rem auto;
+            }
+            .form-group label {
+                position: static;
+                background: none;
+                margin-bottom: 0.5rem;
+            }
+            table {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 0.8rem;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .form-container input, .form-container button {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            th, td {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
@@ -97,77 +273,117 @@
 <body>
     <nav>
         <a href="Appendix.html">常態分配標準差表</a>
-        <a href="t-distribution.html">t檢驗表</a>
+        <a href="t-distribution.html" class="active">t檢驗表</a>
         <a href="powa.html">普瓦松分配表</a>
         <a href="two.html">二項式分配表</a>
-        <a href="index.html" style="color: #ff9800;">返回首頁</a>
-    </nav>   
+        <a href="index.html">返回首頁</a>
+    </nav>
     <h1>T 檢驗表</h1>
     <div class="form-container">
-        <label for="dfSearch">搜尋自由度 (df):</label>
-        <input type="number" id="dfSearch" step="1" placeholder="輸入自由度" min="1" max="100">
+        <div class="form-group">
+            <label for="dfSearch">自由度 (df)</label>
+            <input type="number" id="dfSearch" step="1" placeholder="輸入 1-100" min="1" max="100">
+        </div>
         <button onclick="searchDF()">搜尋</button>
     </div>
-    <table id="tTable">
-        <thead>
-            <tr>
-                <th>df</th>
-                <th>0.1</th>
-                <th>0.05</th>
-                <th>0.025</th>
-                <th>0.01</th>
-                <th>0.005</th>
-            </tr>
-        </thead>
-        <tbody id="tTableBody">
-            <!-- 這裡將由 JavaScript 動態生成內容 -->
-        </tbody>
-    </table>
+    <div id="message"></div>
+    <div class="table-container">
+        <table id="tTable">
+            <thead>
+                <tr>
+                    <th>df</th>
+                    <th>α = 0.1</th>
+                    <th>α = 0.05</th>
+                    <th>α = 0.025</th>
+                    <th>α = 0.01</th>
+                    <th>α = 0.005</th>
+                </tr>
+            </thead>
+            <tbody id="tTableBody"></tbody>
+        </table>
+    </div>
+    <div class="loader" id="loader"></div>
+    <button id="backToTop" onclick="scrollToTop()">↑</button>
 
     <script>
+        const alphaValues = [0.1, 0.05, 0.025, 0.01, 0.005];
+
         function generateTable() {
-            const alphaValues = [0.1, 0.05, 0.025, 0.01, 0.005];
             const tableBody = document.getElementById('tTableBody');
+            const loader = document.getElementById('loader');
             tableBody.innerHTML = '';
+            loader.style.display = 'block';
 
-            for (let df = 1; df <= 100; df++) {
-                const tr = document.createElement('tr');
-                tr.dataset.df = df;
-                const tdDF = document.createElement('td');
-                tdDF.textContent = df;
-                tr.appendChild(tdDF);
-
-                alphaValues.forEach(alpha => {
-                    const criticalValue = jStat.studentt.inv(1 - alpha, df);
-                    const td = document.createElement('td');
-                    td.textContent = criticalValue.toFixed(3);
-                    tr.appendChild(td);
-                });
-
-                tableBody.appendChild(tr);
-            }
+            setTimeout(() => {
+                for (let df = 1; df <= 100; df++) {
+                    const tr = document.createElement('tr');
+                    tr.dataset.df = df;
+                    tr.innerHTML = `
+                        <td>${df}</td>
+                        ${alphaValues.map(alpha => `<td>${jStat.studentt.inv(1 - alpha, df).toFixed(3)}</td>`).join('')}
+                    `;
+                    tableBody.appendChild(tr);
+                }
+                loader.style.display = 'none';
+            }, 300);
         }
 
         function searchDF() {
             const df = parseInt(document.getElementById('dfSearch').value);
+            const message = document.getElementById('message');
+            const rows = document.querySelectorAll('#tTableBody tr');
+
             if (isNaN(df) || df < 1 || df > 100) {
-                alert("請輸入有效的自由度 (1-100)");
+                showMessage('請輸入有效的自由度 (1-100)');
                 return;
             }
 
-            const rows = document.querySelectorAll('#tTable tbody tr');
+            let found = false;
             rows.forEach(row => {
-                if (parseInt(row.dataset.df) === df) {
-                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const rowDF = parseInt(row.dataset.df);
+                if (rowDF === df) {
                     row.classList.add('highlight');
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    found = true;
+                    setTimeout(() => row.classList.remove('highlight'), 3000);
                 } else {
                     row.classList.remove('highlight');
                 }
             });
+
+            if (!found) {
+                showMessage(`未找到自由度 ${df}`);
+            }
         }
 
-        // 初始生成表格
-        generateTable();
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.classList.add('show');
+            setTimeout(() => message.classList.remove('show'), 2500);
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTop');
+            btn.classList.toggle('show', window.scrollY > 300);
+        });
+
+        document.getElementById('dfSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchDF();
+        });
+
+        document.getElementById('dfSearch').addEventListener('input', () => {
+            const value = document.getElementById('dfSearch').value;
+            if (value && parseInt(value) >= 1 && parseInt(value) <= 100) {
+                searchDF();
+            }
+        });
+
+        window.onload = generateTable;
     </script>
 </body>
 </html>
