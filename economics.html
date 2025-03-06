@@ -68,7 +68,7 @@
     .form-control-custom, .form-select {
       background: var(--accent-dark);
       border: 1px solid var(--border-color);
-      color: #FFFFFF;
+      color: #FFFFFF !important; /* 文字顏色設為白色 */
       border-radius: 6px;
       padding: 0.4rem 0.75rem;
       transition: all 0.3s ease;
@@ -79,6 +79,10 @@
       border-color: var(--primary-color);
       box-shadow: 0 0 0 3px rgba(255, 172, 28, 0.25);
       background: #333;
+      color: #FFFFFF !important; /* 聚焦時保持白色 */
+    }
+    .form-control-custom::placeholder {
+      color: #A0A0A0; /* Placeholder 設為淺灰色 */
     }
     .rate-group {
       display: flex;
@@ -487,7 +491,7 @@
       </div>
       <div class="rate-group mt-1">
         <span>當前利率：<span id="currentRate">0.00</span>%</span>
-        <input type="number" id="interestRate" class="form-control-custom" 
+        <input type="number" id="interestRate" class="form-control form-control-custom" 
                style="width: 90px;" step="0.25" placeholder="輸入利率">
       </div>
       <small class="text-muted">利率更新後自動重新計算</small>
@@ -915,7 +919,7 @@
 
           const prevLi = document.createElement('li');
           prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-          prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1})">&laquo;</a>`;
+          prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1})">«</a>`;
           ul.appendChild(prevLi);
 
           for (let i = 1; i <= totalPages; i++) {
@@ -927,7 +931,7 @@
 
           const nextLi = document.createElement('li');
           nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-          nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1})">&raquo;</a>`;
+          nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1})">»</a>`;
           ul.appendChild(nextLi);
 
           pagination.appendChild(ul);
