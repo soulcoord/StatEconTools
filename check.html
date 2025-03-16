@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>沖繩行程與行李清單</title>
+  <style>
+    /* 全站基本設定 */
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      color: #222;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2, h3, h4 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+    /* Sticky Navigation */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      background: #007bff;
+      padding: 10px;
+      text-align: center;
+      z-index: 1000;
+    }
+    .sticky-nav a {
+      color: white;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    .sticky-nav a:hover {
+      color: #e9ecef;
+    }
+    /* 區塊樣式 */
+    section {
+      background: #fff;
+      padding: 30px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    /* 行李清單樣式 */
+    .checklist .category {
+      margin-bottom: 20px;
+    }
+    .checklist .category h3 {
+      margin-bottom: 10px;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .checklist .progress {
+      font-size: 14px;
+      color: #666;
+    }
+    .checklist .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .checklist input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    .checklist input[type="checkbox"]:hover {
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .checklist input[type="checkbox"]:checked + label {
+      text-decoration: line-through;
+      color: #888;
+    }
+    .checklist .item label {
+      cursor: pointer;
+    }
+    .reset-btn {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .reset-btn:hover {
+      background-color: #c82333;
+    }
+    /* 表格樣式 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    table th {
+      background-color: #007bff;
+      color: white;
+    }
+    table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    /* 清單樣式 */
+    ul, ol {
+      margin-left: 20px;
+    }
+    .link-icon {
+      margin-left: 5px;
+      font-size: 14px;
+    }
+    /* 優惠券卡片樣式 */
+    .coupon-card {
+      background: #e9f7ef;
+      border-left: 5px solid #28a745;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .coupon-card h4 {
+      margin-top: 0;
+    }
+    .highlight {
+      color: #dc3545;
+      font-weight: bold;
+    }
+    .copy-btn {
+      padding: 5px 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background-color: #218838;
+    }
+    /* Accessibility */
+    input[type="checkbox"]:focus, a:focus {
+      outline: 2px solid #007bff;
+      outline-offset: 2px;
+    }
+    /* RWD */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      section {
+        padding: 20px;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .checklist .item, .coupon-card {
+        font-size: 14px;
+      }
+      .sticky-nav a {
+        margin: 0 10px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sticky-nav">
+    <a href="#checklist">行李清單</a>
+    <a href="#coupons">優惠券</a>
+    <a href="#uniqlo">UNIQLO店鋪</a>
+    <a href="#itinerary">行程清單</a>
+  </nav>
+
+  <div class="container">
+    <!-- 行李清單 -->
+    <section class="checklist" id="checklist">
+      <h2>沖繩四天三夜行李清單</h2>
+      
+      <div class="category">
+        <h3>📌 旅行文件 & 金錢 <span class="progress">(0/6)</span></h3>
+        <div class="item"><input type="checkbox" id="passport" aria-label="護照"><label for="passport"> 護照</label></div>
+        <div class="item"><input type="checkbox" id="ticket" aria-label="郵輪登船證 & 預訂確認"><label for="ticket"> 郵輪登船證 & 預訂確認</label></div>
+        <div class="item"><input type="checkbox" id="hotel" aria-label="住宿確認單"><label for="hotel"> 住宿確認單</label></div>
+        <div class="item"><input type="checkbox" id="cash" aria-label="日圓現金"><label for="cash"> 日圓現金（¥10,000～30,000）</label></div>
+        <div class="item"><input type="checkbox" id="credit" aria-label="信用卡 / 簽帳卡"><label for="credit"> 信用卡 / 簽帳卡</label></div>
+        <div class="item"><input type="checkbox" id="license" aria-label="國際駕照"><label for="license"> 國際駕照（如需租車）</label></div>
+        <button class="reset-btn">Reset Category</button>
+      </div>
+      
+      <div class="category">
+        <h3>📌 必備電子用品 <span class="progress">(0/6)</span></h3>
+        <div class="item"><input type="checkbox" id="phone" aria-label="手機 & 充電器"><label for="phone"> 手機 & 充電器</label></div>
+        <div class="item"><input type="checkbox" id="powerbank" aria-label="行動電源"><label for="powerbank"> 行動電源（10,000mAh 以上）</label></div>
+        <div class="item"><input type="checkbox" id="adapter" aria-label="轉接頭"><label for="adapter"> 轉接頭（沖繩使用 A 型插頭）</label></div>
+        <div class="item"><input type="checkbox" id="earphones" aria-label="耳機"><label for="earphones"> 耳機</label></div>
+        <div class="item"><input type="checkbox" id="camera" aria-label="相機 / GoPro"><label for="camera"> 相機 / GoPro</label></div>
+        <div class="item"><input type="checkbox" id="waterproof" aria-label="防水手機套"><label for="waterproof"> 防水手機套</label></div>
+        <button class="reset-btn">Reset Category</button>
+      </div>
+      
+      <div class="category">
+        <h3>📌 衣物 & 服飾 <span class="progress">(0/10)</span></h3>
+        <div class="item"><input type="checkbox" id="tshirt" aria-label="短袖 T-shirt"><label for="tshirt"> 短袖 T-shirt（3~4 件）</label></div>
+        <div class="item"><input type="checkbox" id="longsleeve" aria-label="長袖襯衫 / 薄外套"><label for="longsleeve"> 長袖襯衫 / 薄外套（1 件）</label></div>
+        <div class="item"><input type="checkbox" id="raincoat" aria-label="防水外套 / 輕便雨衣"><label for="raincoat"> 防水外套 / 輕便雨衣（1 件）</label></div>
+        <div class="item"><input type="checkbox" id="pants" aria-label="牛仔褲 / 運動褲"><label for="pants"> 牛仔褲 / 運動褲（2 條）</label></div>
+        <div class="item"><input type="checkbox" id="shorts" aria-label="短褲"><label for="shorts"> 短褲（1~2 條）</label></div>
+        <div class="item"><input type="checkbox" id="underwear" aria-label="內衣"><label for="underwear"> 內衣（3~4 套）</label></div>
+        <div class="item"><input type="checkbox" id="socks" aria-label="襪子"><label for="socks"> 襪子（3~4 雙）</label></div>
+        <div class="item"><input type="checkbox" id="hat" aria-label="帽子 & 太陽眼鏡"><label for="hat"> 帽子 & 太陽眼鏡</label></div>
+        <div class="item"><input type="checkbox" id="shoes" aria-label="運動鞋"><label for="shoes"> 運動鞋（1 雙）</label></div>
+        <div class="item"><input type="checkbox" id="sandals" aria-label="涼鞋 / 拖鞋"><label for="sandals"> 涼鞋 / 拖鞋（1 雙）</label></div>
+        <button class="reset-btn">Reset Category</button>
+      </div>
+      
+      <div class="category">
+        <h3>📌 盥洗用品 & 藥品 <span class="progress">(0/5)</span></h3>
+        <div class="item"><input type="checkbox" id="toiletries" aria-label="牙刷 & 牙膏"><label for="toiletries"> 牙刷 & 牙膏</label></div>
+        <div class="item"><input type="checkbox" id="sunscreen" aria-label="防曬乳 SPF50+"><label for="sunscreen"> 防曬乳 SPF50+</label></div>
+        <div class="item"><input type="checkbox" id="moisturizer" aria-label="保濕用品"><label for="moisturizer"> 保濕用品</label></div>
+        <div class="item"><input type="checkbox" id="medicine" aria-label="常用藥品"><label for="medicine"> 常用藥品（腸胃藥、感冒藥等）</label></div>
+        <div class="item"><input type="checkbox" id="motion" aria-label="暈船藥 / 口香糖"><label for="motion"> 暈船藥 / 口香糖</label></div>
+        <button class="reset-btn">Reset Category</button>
+      </div>
+    </section>
+    
+    <!-- 零售商 Alpen Group 折扣券 -->
+    <section id="coupons">
+      <h2>🎟️ 零售商 Alpen Group 95折折扣券</h2>
+      
+      <h3>🏬 店家列表</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>縣市</th>
+            <th>業者</th>
+            <th>店家名稱</th>
+            <th>地址</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>沖縄</td>
+            <td>ゴルフ５</td>
+            <td>ゴルフ５ 北谷店</td>
+            <td>沖縄県中頭郡北谷町美浜１－５－１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>ゴルフ５</td>
+            <td>ゴルフ５ バークレー浦添店</td>
+            <td>沖縄県浦添市当山二丁目２番１号</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>ゴルフ５</td>
+            <td>ゴルフ５ 豊崎店</td>
+            <td>沖縄県豊見城市豊崎１－４１１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>ゴルフ５</td>
+            <td>ゴルフ５ イオン具志川店</td>
+            <td>沖縄県うるま市字前原２７５番１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>スポーツデポ</td>
+            <td>スポーツデポ 天久店</td>
+            <td>沖縄県那覇市天久１－２－１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>スポーツデポ</td>
+            <td>スポーツデポ 豊崎店</td>
+            <td>沖縄県豊見城市字豊崎１－４１１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>スポーツデポ</td>
+            <td>スポーツデポ 具志川店</td>
+            <td>沖縄県うるま市字前原徳森原３６０</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>スポーツデポ</td>
+            <td>スポーツデポ 浦添パルコシティ店</td>
+            <td>沖縄県浦添市西洲３丁目１－１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>スポーツデポ</td>
+            <td>スポーツデポ イオンモール津南店</td>
+            <td>沖縄県豊見城市字豊崎１－４１１</td>
+          </tr>
+          <tr>
+            <td>沖縄</td>
+            <td>スポーツデポ</td>
+            <td>スポーツデポ なんばパークス店</td>
+            <td>沖縄県浦添市西洲３丁目１－１</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>📌 <a href="https://drive.google.com/file/d/1CIJEvBEKAtun1xCe8-M45PEonBxxTIHr/view" target="_blank">優惠券下載</a> <button class="copy-btn" data-link="https://drive.google.com/file/d/1CIJEvBEKAtun1xCe8-M45PEonBxxTIHr/view">Copy Link</button></p>
+    </section>
+    
+    <!-- 其他優惠券與折扣資訊 -->
+    <section>
+      <h2>🎫 其他優惠券與折扣資訊</h2>
+      
+      <div class="coupon-card">
+        <h4>GU（UNIQLO姐妹品牌）優惠券</h4>
+        <p><strong>優惠內容：</strong>消費滿10,000日圓（含稅）以上，享免稅10%＋額外5%折扣。</p>
+        <p><strong>使用方式：</strong>請於結帳時向店員出示優惠券與護照。</p>
+        <p><strong>適用店舖：</strong>日本各分店。</p>
+        <p><strong>有效期限：</strong><span class="highlight">即日起至2025年2月28日</span>。</p>
+        <p><strong>優惠券下載：</strong><a href="https://reurl.cc/VMoX1b" target="_blank">GU優惠折扣券</a> <button class="copy-btn" data-link="https://reurl.cc/VMoX1b">Copy Link</button></p>
+      </div>
+      
+      <div class="coupon-card">
+        <h4>UNIQLO感謝祭</h4>
+        <p><strong>活動內容：</strong>每年5月至6月和11月左右舉辦的大規模促銷活動，部分商品可能下殺至7折至8折，並有贈送限定單品等企劃。</p>
+        <p><strong>適用店舖：</strong>日本各分店。</p>
+        <p><strong>活動詳情：</strong><a href="https://tw.wamazing.com/media/article/a-149/" target="_blank">UNIQLO感謝祭資訊</a> <button class="copy-btn" data-link="https://tw.wamazing.com/media/article/a-149/">Copy Link</button></p>
+      </div>
+      
+      <div class="coupon-card">
+        <h4>唐吉訶德優惠券</h4>
+        <p><strong>優惠內容：</strong>提供各式購物折扣與特價活動。</p>
+        <p><strong>使用方式：</strong>請於結帳時出示優惠券頁面。</p>
+        <p><strong>適用店舖：</strong>全日本唐吉訶德分店。</p>
+        <p><strong>優惠券詳情：</strong><a href="https://japanportal.donki-global.com/coupon/cp001_zhtw.html" target="_blank">唐吉訶德優惠券</a> <button class="copy-btn" data-link="https://japanportal.donki-global.com/coupon/cp001_zhtw.html">Copy Link</button></p>
+      </div>
+      
+      <div class="coupon-card">
+        <h4>Bic Camera 沖繩優惠券</h4>
+        <p><strong>優惠內容：</strong>外國旅客專享最高7%折扣+10%免稅優惠。</p>
+        <p><strong>使用方式：</strong>請於結帳時出示優惠券頁面。</p>
+        <p><strong>適用店舖：</strong>Bic Camera 那霸店。</p>
+        <p><strong>優惠券詳情：</strong><a href="https://mimihan.tw/wp-content/uploads/20240617172324_0_4bad4a.jpg" target="_blank">Bic Camera優惠卷</a> <button class="copy-btn" data-link="https://mimihan.tw/wp-content/uploads/20240617172324_0_4bad4a.jpg">Copy Link</button></p>
+      </div>
+    </section>
+    
+    <!-- 沖繩 UNIQLO 店鋪資訊 -->
+    <section id="uniqlo">
+      <h2>👕 沖繩 UNIQLO 店鋪資訊</h2>
+      <h3>🏬 UNIQLO 店鋪列表</h3>
+      <ol>
+        <li>
+          <strong><a href="https://www.google.com/maps/search/UNIQLO+AEON%E5%90%8D%E8%AD%B7SC%E5%BA%97%2C+%E5%90%8D%E8%AD%B7%E5%B8%82%2C+%E6%97%A5%E6%9C%AC" target="_blank">UNIQLO AEON名護SC店</a></strong> <span class="link-icon">🗺️</span>
+          <br>📍 名護市, 日本
+          <br>📌 位於 AEON 名護購物中心一樓，提供各式服裝選擇。
+        </li>
+        <li>
+          <strong><a href="https://www.google.com/maps/search/UNIQLO+AEON%E5%85%B7%E5%BF%97%E5%B7%9DSC%E5%BA%97%2C+%E5%AE%87%E6%B5%81%E9%BA%BB%E5%B8%82%2C+%E6%97%A5%E6%9C%AC" target="_blank">UNIQLO AEON具志川SC店</a></strong> <span class="link-icon">🗺️</span>
+          <br>📍 宇流麻市, 日本
+          <br>📌 位於 AEON 具志川購物中心二樓，方便顧客購物。
+        </li>
+        <li>
+          <strong><a href="https://www.google.com/maps/search/UNIQLO+%E9%82%A3%E9%9C%B8+Main+Place%E5%BA%97%2C+%E9%82%A3%E9%9C%B8%E5%B8%82%2C+%E6%97%A5%E6%9C%AC" target="_blank">UNIQLO 那霸 Main Place店</a></strong> <span class="link-icon">🗺️</span>
+          <br>📍 那霸市, 日本
+          <br>📌 位於那霸 Main Place 購物中心，提供多樣化的商品。
+        </li>
+        <li>
+          <strong><a href="https://www.google.com/maps/search/UNIQLO+%E6%B5%A6%E6%B7%BB+PARCO+CITY%E5%BA%97%2C+%E6%B5%A6%E6%B7%BB%E5%B8%82%2C+%E6%97%A5%E6%9C%AC" target="_blank">UNIQLO 浦添 PARCO CITY店</a></strong> <span class="link-icon">🗺️</span>
+          <br>📍 浦添市, 日本
+          <br>📌 位於 SAN-A 浦添西海岸 PARCO CITY 購物中心三樓，環境寬敞舒適。
+        </li>
+        <li>
+          <strong><a href="https://www.google.com/maps/search/UNIQLO+%E5%AE%9C%E9%87%8E%E7%81%A3%E5%BA%97%2C+%E5%AE%9C%E9%87%8E%E7%81%A3%E5%B8%82%2C+%E6%97%A5%E6%9C%AC" target="_blank">UNIQLO 宜野灣店</a></strong> <span class="link-icon">🗺️</span>
+          <br>📍 宜野灣市, 日本
+          <br>📌 位於宜野灣市，提供各式服裝選擇。
+        </li>
+      </ol>
+    </section>
+    
+    <!-- 沖繩旅遊行程清單 -->
+    <section id="itinerary">
+      <h2>🏝️ 沖繩旅遊行程清單</h2>
+      
+      <h3>🛍️ 購物景點</h3>
+      <ul>
+        <li><a href="https://www.google.com/maps/search/那霸國際通商店街" target="_blank">那霸國際通商店街</a> <span class="link-icon">🗺️</span></li>
+        <li><a href="https://www.google.com/maps/search/唐吉訶德+那霸壺川店" target="_blank">唐吉訶德 那霸壺川店</a> <span class="link-icon">🗺️</span></li>
+        <li><a href="https://www.google.com/maps/search/MEGA唐吉訶德宜野灣店" target="_blank">MEGA唐吉訶德宜野灣店</a> <span class="link-icon">🗺️</span></li>
+        <li><a href="https://www.google.com/maps/search/DFS+沖繩T廣場" target="_blank">DFS旗下沖繩T廣場</a> <span class="link-icon">🗺️</span></li>
+      </ul>
+      
+      <h3>🍽️ 美食推薦</h3>
+      <ul>
+        <li>
+          <strong>暖暮拉麵</strong>
+          <ul>
+            <li><a href="https://www.google.com/maps/search/暖暮拉麵+名護店" target="_blank">名護店</a> <span class="link-icon">🗺️</span></li>
+            <li><a href="https://www.google.com/maps/search/暖暮拉麵+那霸店" target="_blank">那霸店</a> <span class="link-icon">🗺️</span></li>
+          </ul>
+        </li>
+        <li>
+          <strong>琉球之牛</strong>
+          <ul>
+            <li><a href="https://www.google.com/maps/search/琉球之牛+北谷店" target="_blank">北谷店</a> <span class="link-icon">🗺️</span></li>
+            <li><a href="https://www.google.com/maps/search/琉球之牛+那霸國際通店" target="_blank">那霸國際通店</a> <span class="link-icon">🗺️</span></li>
+          </ul>
+        </li>
+        <li>
+          <strong>豬肉蛋飯糰</strong>
+          <ul>
+            <li><a href="https://www.google.com/maps/search/豬肉蛋飯糰+本店" target="_blank">本店</a> <span class="link-icon">🗺️</span></li>
+            <li><a href="https://www.google.com/maps/search/豬肉蛋飯糰+北谷店" target="_blank">北谷店</a> <span class="link-icon">🗺️</span></li>
+            <li><a href="https://www.google.com/maps/search/豬肉蛋飯糰+機場店" target="_blank">機場店</a> <span class="link-icon">🗺️</span></li>
+          </ul>
+        </li>
+      </ul>
+      
+      <h3>🎡 景點與活動</h3>
+      <ul>
+        <li><a href="https://www.google.com/maps/search/teamLab+Future+Park+沖繩" target="_blank">teamLab Future Park 沖繩</a> <span class="link-icon">🗺️</span></li>
+        <li><a href="https://www.google.com/maps/search/古宇利島心形岩" target="_blank">古宇利島心形岩</a> <span class="link-icon">🗺️</span></li>
+        <li><a href="https://www.google.com/maps/search/平和通り商店街" target="_blank">平和通り商店街</a> <span class="link-icon">🗺️</span></li>
+        <li><a href="https://www.google.com/maps/search/國際通り屋台村" target="_blank">國際通り屋台村</a> <span class="link-icon">🗺️</span></li>
+      </ul>
+    </section>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']");
+      
+      function updateProgress(category) {
+        const items = category.querySelectorAll(".item input[type='checkbox']");
+        const checked = category.querySelectorAll(".item input[type='checkbox']:checked").length;
+        const total = items.length;
+        category.querySelector(".progress").textContent = `(${checked}/${total})`;
+      }
+
+      checkboxes.forEach(checkbox => {
+        const savedState = localStorage.getItem(checkbox.id);
+        if (savedState === "true") {
+          checkbox.checked = true;
+        }
+        checkbox.addEventListener("change", function () {
+          localStorage.setItem(checkbox.id, checkbox.checked);
+          updateProgress(checkbox.closest(".category"));
+        });
+      });
+
+      document.querySelectorAll(".category").forEach(category => {
+        updateProgress(category);
+      });
+
+      document.querySelectorAll(".reset-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const category = this.closest(".category");
+          category.querySelectorAll("input[type='checkbox']").forEach(cb => {
+            cb.checked = false;
+            localStorage.setItem(cb.id, false);
+          });
+          updateProgress(category);
+        });
+      });
+
+      document.querySelectorAll(".copy-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const link = this.getAttribute("data-link");
+          navigator.clipboard.writeText(link).then(() => {
+            this.textContent = "Copied!";
+            setTimeout(() => this.textContent = "Copy Link", 2000);
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
