@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字幕清理工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>字幕清理工具</h1>
+    <p>請貼上包含時間戳和編號的字幕內容，點擊「清理」後將輸出純文字結果。</p>
+    
+    <h3>輸入字幕內容：</h3>
+    <textarea id="inputText" placeholder="貼上你的字幕內容..."></textarea>
+    
+    <button onclick="cleanText()">清理</button>
+    
+    <h3>清理後的結果：</h3>
+    <textarea id="outputText" placeholder="清理後的文字會顯示在這裡..." readonly></textarea>
+
+    <script>
+        function cleanText() {
+            // 取得輸入內容
+            const input = document.getElementById('inputText').value;
+            
+            // 分行處理
+            const lines = input.split('\n');
+            let result = '';
+            
+            // 過濾掉時間戳和數字開頭的行，只保留純文字
+            for (let line of lines) {
+                // 忽略空行
+                if (line.trim() === '') continue;
+                // 忽略數字開頭的行（如 1, 2, 3...）
+                if (/^\d+$/.test(line.trim())) continue;
+                // 忽略時間戳格式（如 00:00:00.210 --> 00:00:08.542）
+                if (/^\d{2}:\d{2}:\d{2}\.\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}$/.test(line.trim())) continue;
+                
+                // 保留純文字並加上換行
+                result += line.trim() + '\n';
+            }
+            
+            // 輸出結果
+            document.getElementById('outputText').value = result.trim();
+        }
+    </script>
+</body>
+</html>
