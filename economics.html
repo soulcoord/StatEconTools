@@ -792,6 +792,263 @@
       font-size: 0.9rem;
       padding: 0.5rem 0.75rem;
     }
+
+    /* 現金流圖表模組樣式 */
+    .cashflow-container {
+      display: none;
+      background: var(--card-dark);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-top: 1rem;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-normal) ease;
+    }
+
+    .cashflow-container.active {
+      display: block;
+      animation: slideUp 0.4s ease forwards;
+    }
+
+    .cashflow-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+      background: var(--surface-dark);
+      padding: 15px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .cashflow-control-group {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .cashflow-control-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .cashflow-control-group input,
+    .cashflow-control-group select,
+    .cashflow-control-group button {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+    }
+
+    .cashflow-control-group input,
+    .cashflow-control-group select {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      transition: all var(--transition-normal) ease;
+    }
+
+    .cashflow-control-group input:focus,
+    .cashflow-control-group select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px var(--primary-faded);
+      background: #333;
+    }
+
+    .cashflow-data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      background: var(--surface-dark);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .cashflow-data-table th, 
+    .cashflow-data-table td {
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      text-align: center;
+    }
+
+    .cashflow-data-table th {
+      background: #242424;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .cashflow-data-table td input {
+      width: 80%;
+      padding: 0.5rem;
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+
+    .cashflow-data-table td input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px var(--primary-faded);
+      outline: none;
+    }
+
+    .cashflow-svg {
+      width: 100%;
+      height: auto;
+      background: var(--surface-dark);
+      border-radius: var(--radius-sm);
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      padding: 10px;
+    }
+
+    .info-panel {
+      background: var(--surface-dark);
+      padding: 15px;
+      border-left: 4px solid var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .value-positive {
+      color: var(--success-color);
+      font-weight: 600;
+    }
+
+    .value-negative {
+      color: var(--danger-color);
+      font-weight: 600;
+    }
+
+    .cashflow-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 10px;
+      background: var(--surface-dark);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-color {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+    }
+
+    @media (max-width: 768px) {
+      .cashflow-controls {
+        flex-direction: column;
+      }
+      .cashflow-control-group {
+        min-width: 100%;
+      }
+      .cashflow-svg {
+        height: 300px;
+      }
+      .cashflow-legend {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+    
+    /* 串接現金流圖表樣式擴展 */
+    .cascading-header {
+      background: var(--primary-faded);
+      color: var(--primary-color);
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .cashflow-summary {
+      margin-top: 15px;
+      background: var(--surface-dark);
+      border-radius: var(--radius-sm);
+      padding: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .summary-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    
+    .summary-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .summary-item {
+      flex: 1;
+      min-width: 200px;
+      background: var(--card-dark);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      margin-bottom: 5px;
+    }
+    
+    .summary-value {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    
+    .cascading-cashflow-svg {
+      min-height: 300px;
+      overflow-x: auto;
+    }
+    
+    /* 歷史記錄索引標記 */
+    .history-index {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: var(--background-dark);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+    
+    .record-boundary {
+      stroke-dasharray: 4;
+      stroke: var(--primary-color);
+      stroke-width: 1;
+      opacity: 0.7;
+    }
+    
+    .record-label {
+      fill: var(--text-secondary);
+      font-size: 0.8rem;
+      text-anchor: middle;
+    }
   </style>
 </head>
 <body>
@@ -868,6 +1125,28 @@
             <span class="input-group-text">%</span>
           </div>
         </div>
+      </div>
+      <div class="btn-toolbar mt-3" role="toolbar" aria-label="現金流圖工具按鈕">
+        <div class="btn-group me-2" role="group">
+          <button class="btn btn-secondary" id="cashflowToggleBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow me-2" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
+            </svg>
+            現金流圖表工具
+          </button>
+          <button class="btn btn-secondary" id="newCashflowBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-2" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg>
+            新建現金流圖
+          </button>
+        </div>
+        <button class="btn btn-primary" id="cascadingCashflowBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3 me-2" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+          </svg>
+          歷史記錄串接現金流圖
+        </button>
       </div>
     </section>
     
@@ -1016,6 +1295,100 @@
       </div>
     </div>
   </div>
+  
+  <!-- 現金流圖表模板 -->
+  <template id="cashflowTemplate">
+    <div class="cashflow-container">
+      <div class="cashflow-controls">
+        <div class="cashflow-control-group">
+          <label for="cf-project-name">專案名稱</label>
+          <input type="text" class="cf-project-name" value="工程專案A" />
+        </div>
+        <div class="cashflow-control-group">
+          <label for="cf-interest-rate">利率 (%)</label>
+          <input type="number" class="cf-interest-rate" value="5" min="0" step="0.1" />
+        </div>
+        <div class="cashflow-control-group">
+          <label for="cf-view-type">圖表類型</label>
+          <select class="cf-view-type">
+            <option value="standard">標準現金流圖</option>
+            <option value="cumulative">累計現金流圖</option>
+          </select>
+        </div>
+        <div class="cashflow-control-group">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary cf-calculate-npv">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calculator me-1" viewBox="0 0 16 16">
+              <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z"/>
+              <path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-4z"/>
+            </svg>
+            計算淨現值 (NPV)
+          </button>
+        </div>
+      </div>
+      
+      <table class="cashflow-data-table">
+        <thead>
+          <tr>
+            <th>時間 (年)</th>
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>
+              <button class="btn btn-sm btn-outline-primary cf-add-year">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cf-data-row">
+            <td>現金流量 ($)</td>
+            <td><input type="number" class="cf-flow-input" data-year="0" value="-400" /></td>
+            <td><input type="number" class="cf-flow-input" data-year="1" value="200" /></td>
+            <td><input type="number" class="cf-flow-input" data-year="2" value="200" /></td>
+            <td><input type="number" class="cf-flow-input" data-year="3" value="200" /></td>
+            <td><input type="number" class="cf-flow-input" data-year="4" value="300" /></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <svg class="cashflow-svg" width="850" height="400">
+        <defs>
+          <!-- 時間軸箭頭 -->
+          <marker id="axisArrow" markerWidth="8" markerHeight="8" refX="0" refY="4" orient="auto">
+            <path d="M0,8 L8,4 L0,0 Z" fill="#aaa" />
+          </marker>
+          <!-- 累計流量線的漸變 -->
+          <linearGradient id="cumulativeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#3498db" />
+            <stop offset="100%" stop-color="#9b59b6" />
+          </linearGradient>
+        </defs>
+      </svg>
+      
+      <div class="info-panel">
+        <div>專案淨現值 (NPV): <span class="cf-npv-value">--</span></div>
+        <div>回收期 (年): <span class="cf-payback-period">--</span></div>
+      </div>
+      
+      <div class="cashflow-legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #27ae60;"></div>
+          <span>現金流入</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #e74c3c;"></div>
+          <span>現金流出</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(to right, #3498db, #9b59b6);"></div>
+          <span>累計現金流</span>
+        </div>
+      </div>
+    </div>
+  </template>
   
   <!-- Bootstrap JS Bundle & SweetAlert2 (輕量化外部通知工具) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1307,417 +1680,1986 @@
         
         flowHTML += `<span class="flow-operator">=</span>`;
         flowHTML += `<span class="flow-item result-highlight">${finalResult.toLocaleString('zh-Hant', { maximumFractionDigits: 4 })}</span>`;
-        
         resultField.innerHTML = flowHTML;
 
-        // 儲存歷史紀錄
-        const record = {
-          id: Date.now(),
-          timestamp: new Date().toISOString(),
-          rate: rate * 100,
-          n,
-          amount,
+        // 保存到歷史記錄
+        const calculationRecord = {
+          date: new Date().toISOString(),
           factor,
-          factorValue: value,
-          compoundFactor: compoundFactor || '無',
-          compoundValue: compoundValue,
-          result: finalResult
+          n: parseInt(n),
+          rate: rate,
+          amount,
+          compoundFactor,
+          result: finalResult,
+          calculationFlow: `${amount.toLocaleString('zh-Hant')} × ${factor} (${value.toFixed(6)})${compoundFactor ? ` × ${compoundFactor} (${compoundValue.toFixed(6)})` : ''} = ${finalResult.toLocaleString('zh-Hant', { maximumFractionDigits: 4 })}`
         };
 
-        if (editingIndex === -1) {
-          historyRecords.unshift(record);
-          showNotification('計算結果已儲存至歷史記錄', 'success');
-        } else {
-          historyRecords[editingIndex] = record;
+        if (editingIndex >= 0) {
+          historyRecords[editingIndex] = calculationRecord;
           editingIndex = -1;
-          document.getElementById('calculateBtn').innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calculator me-2" viewBox="0 0 16 16">
-              <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z"/>
-              <path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-4z"/>
-            </svg>
-            立即計算`;
-          showNotification('歷史記錄已更新', 'success');
+        } else {
+          historyRecords.unshift(calculationRecord);
         }
-        
-        // 限制歷史記錄數量
-        if (historyRecords.length > 100) {
-          historyRecords = historyRecords.slice(0, 100);
+
+        if (historyRecords.length > 50) {
+          historyRecords.pop();
         }
-        
-        // 儲存至本地儲存空間
+
         localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
-        
         updateHistoryList();
+        showNotification('計算已保存至歷史記錄', 'success');
       }
 
-      // 篩選歷史紀錄
-      function filterHistory() {
-        const searchValue = document.getElementById('historySearch').value.toLowerCase();
-        const filteredRecords = historyRecords.filter(record => 
-          record.rate.toString().includes(searchValue) ||
-          record.n.toString().includes(searchValue) ||
-          record.factor.toLowerCase().includes(searchValue) ||
-          record.compoundFactor.toLowerCase().includes(searchValue)
-        );
-        updateHistoryList(filteredRecords);
+      // 打開指定因子值的計算器模組
+      function openCalculatorModal(n, factor, value) {
+        // 設定相關欄位值
+        document.getElementById('selectedFactor').value = factor;
+        document.getElementById('selectedN').value = n;
+        document.getElementById('selectedValue').value = value;
+        document.getElementById('compoundFactor').value = '';
+        document.getElementById('inputAmount').value = '';
+        document.getElementById('calculationResult').value = '';
+        document.getElementById('calculationFlow').innerHTML = `
+          <div>請輸入金額並計算以查看流程</div>
+        `;
+
+        // 打開模組
+        new bootstrap.Modal(document.getElementById('calculatorModal')).show();
+        setTimeout(() => document.getElementById('inputAmount').focus(), 500);
       }
 
-      // 格式化日期時間
-      function formatDateTime(isoString) {
-        const date = new Date(isoString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hours}:${minutes}`;
-      }
-
-      // 更新歷史紀錄列表
-      function updateHistoryList(filteredRecords = historyRecords) {
+      // 更新歷史記錄列表
+      function updateHistoryList() {
+        const searchTerm = document.getElementById('historySearch').value.toLowerCase();
         const historyList = document.getElementById('historyList');
         historyList.innerHTML = '';
+
+        const filteredRecords = historyRecords.filter(record => {
+          return record.factor.toLowerCase().includes(searchTerm) ||
+                 record.n.toString().includes(searchTerm) ||
+                 (record.rate * 100).toFixed(2).includes(searchTerm) ||
+                 (record.compoundFactor && record.compoundFactor.toLowerCase().includes(searchTerm));
+        });
 
         if (filteredRecords.length === 0) {
           historyList.innerHTML = `
             <div class="no-history">
-              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-clock-history mb-3" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock-history mb-3" viewBox="0 0 16 16">
                 <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.956 7.956 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
                 <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
                 <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
               </svg>
-              <p>尚無計算歷史記錄<br>計算後的結果將顯示在此處</p>
-            </div>`;
+              <p>${searchTerm ? '無符合的計算記錄' : '尚無計算記錄'}</p>
+              ${searchTerm ? '<button class="btn btn-sm btn-outline-primary mt-2" onclick="document.getElementById(\'historySearch\').value = \'\'; document.getElementById(\'historySearch\').dispatchEvent(new Event(\'input\'));">清除搜尋</button>' : ''}
+            </div>
+          `;
           return;
         }
 
         filteredRecords.forEach((record, index) => {
-          const item = document.createElement('div');
-          item.className = 'history-item';
-          item.setAttribute('data-record-id', record.id);
+          const recordDate = new Date(record.date);
+          const formattedDate = recordDate.toLocaleString('zh-Hant', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          const historyItem = document.createElement('div');
+          historyItem.className = 'history-item';
           
-          let timestampDisplay = '';
-          if (record.timestamp) {
-            timestampDisplay = `<div class="text-tertiary small mb-2">${formatDateTime(record.timestamp)}</div>`;
-          }
-          
-          item.innerHTML = `
-            ${timestampDisplay}
+          historyItem.innerHTML = `
             <div class="history-details">
               <div class="history-detail-item">
-                <span class="history-detail-label">利率</span>
-                <span class="history-detail-value">${record.rate.toFixed(2)}%</span>
+                <div class="history-detail-label">因子類型</div>
+                <div class="history-detail-value">${record.factor}</div>
               </div>
               <div class="history-detail-item">
-                <span class="history-detail-label">期數</span>
-                <span class="history-detail-value">${record.n}</span>
+                <div class="history-detail-label">期數 (N)</div>
+                <div class="history-detail-value">${record.n}</div>
               </div>
               <div class="history-detail-item">
-                <span class="history-detail-label">金額</span>
-                <span class="history-detail-value">${record.amount.toLocaleString('zh-Hant')}</span>
+                <div class="history-detail-label">利率</div>
+                <div class="history-detail-value">${(record.rate * 100).toFixed(2)}%</div>
               </div>
               <div class="history-detail-item">
-                <span class="history-detail-label">因子</span>
-                <span class="history-detail-value">${record.factor}</span>
+                <div class="history-detail-label">金額</div>
+                <div class="history-detail-value">$${record.amount.toLocaleString('zh-Hant')}</div>
+              </div>
+              ${record.compoundFactor ? `
+              <div class="history-detail-item">
+                <div class="history-detail-label">複合因子</div>
+                <div class="history-detail-value">${record.compoundFactor}</div>
+              </div>
+              ` : ''}
+              <div class="history-detail-item">
+                <div class="history-detail-label">日期</div>
+                <div class="history-detail-value">${formattedDate}</div>
               </div>
             </div>
-            
-            <div class="history-flow">
-              <span class="flow-item">${record.amount.toLocaleString('zh-Hant')}</span>
-              <span class="flow-operator">×</span>
-              <span class="flow-item">${record.factor} (${record.factorValue.toFixed(6)})</span>
-              ${record.compoundFactor !== '無' ? `
-                <span class="flow-operator">×</span>
-                <span class="flow-item">${record.compoundFactor} (${record.compoundValue.toFixed(6)})</span>` : ''}
-              <span class="flow-operator">=</span>
-              <span class="flow-item result-highlight">${record.result.toLocaleString('zh-Hant', { maximumFractionDigits: 4 })}</span>
-            </div>
-            
+            <div class="history-flow">${record.calculationFlow}</div>
             <div class="history-actions">
-              <button class="btn btn-sm btn-outline-primary history-edit-btn" data-index="${index}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
+              <button class="btn btn-sm btn-outline-primary edit-history" data-index="${index}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                 </svg>
                 編輯
               </button>
-              <button class="btn btn-sm btn-outline-danger history-delete-btn" data-index="${index}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash me-1" viewBox="0 0 16 16">
+              <button class="btn btn-sm btn-outline-danger delete-history" data-index="${index}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                   <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                   <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
                 </svg>
                 刪除
               </button>
+              <button class="btn btn-sm btn-outline-primary convert-to-cashflow" data-index="${index}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
+                </svg>
+                轉換為現金流圖
+              </button>
             </div>
           `;
-          historyList.appendChild(item);
           
-          // 為按鈕新增事件監聽器
-          item.querySelector('.history-edit-btn').addEventListener('click', function() {
-            editRecord(this.getAttribute('data-index'));
+          historyList.appendChild(historyItem);
+        });
+
+        // 添加編輯歷史記錄功能
+        document.querySelectorAll('.edit-history').forEach(button => {
+          button.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            const record = filteredRecords[index];
+            editingIndex = historyRecords.findIndex(r => r.date === record.date);
+            
+            document.getElementById('selectedFactor').value = record.factor;
+            document.getElementById('selectedN').value = record.n;
+            updateFactorValue();
+            document.getElementById('compoundFactor').value = record.compoundFactor || '';
+            document.getElementById('inputAmount').value = record.amount;
+            document.getElementById('calculationResult').value = record.result.toLocaleString('zh-Hant', { maximumFractionDigits: 4 });
+            document.getElementById('calculationFlow').innerHTML = `<div>${record.calculationFlow}</div>`;
+            
+            new bootstrap.Modal(document.getElementById('calculatorModal')).show();
+            setTimeout(() => document.getElementById('inputAmount').focus(), 500);
+            
+            document.getElementById('historySidebar').classList.remove('active');
           });
-          
-          item.querySelector('.history-delete-btn').addEventListener('click', function() {
-            confirmDelete(this.getAttribute('data-index'));
+        });
+
+        // 添加刪除歷史記錄功能
+        document.querySelectorAll('.delete-history').forEach(button => {
+          button.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            const record = filteredRecords[index];
+            const realIndex = historyRecords.findIndex(r => r.date === record.date);
+            
+            if (realIndex !== -1) {
+              Swal.fire({
+                title: '確定要刪除嗎？',
+                text: '此操作無法復原',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '是，刪除',
+                cancelButtonText: '取消',
+                background: '#1A1A1A',
+                color: '#FFFFFF',
+                customClass: {
+                  confirmButton: 'btn btn-danger',
+                  cancelButton: 'btn btn-secondary'
+                },
+                buttonsStyling: false
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  historyRecords.splice(realIndex, 1);
+                  localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
+                  updateHistoryList();
+                  showNotification('已成功刪除記錄', 'success');
+                }
+              });
+            }
+          });
+        });
+
+        // 添加轉換為現金流圖功能
+        document.querySelectorAll('.convert-to-cashflow').forEach(button => {
+          button.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            convertHistoryToCashflow(index);
           });
         });
       }
 
-      // 編輯歷史紀錄
-      function editRecord(index) {
-        const record = historyRecords[index];
-        editingIndex = index;
+      // 清空所有歷史記錄
+      function clearAllHistory() {
+        if (historyRecords.length === 0) {
+          showNotification('無記錄可清除', 'info');
+          return;
+        }
         
-        document.getElementById('inputAmount').value = record.amount;
-        document.getElementById('interestRate').value = record.rate;
-        document.getElementById('selectedN').value = record.n;
-        document.getElementById('selectedFactor').value = record.factor;
-        document.getElementById('compoundFactor').value = record.compoundFactor === '無' ? '' : record.compoundFactor;
-        
-        calculateFactors();
-        setTimeout(() => {
-          updateFactorValue();
-          const modal = new bootstrap.Modal(document.getElementById('calculatorModal'));
-          document.getElementById('calculateBtn').innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle me-2" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-              <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-            </svg>
-            更新記錄`;
-          modal.show();
-          document.getElementById('inputAmount').focus();
-        }, 350);
-      }
-
-      // 刪除單筆歷史紀錄
-      function confirmDelete(index) {
-        // 使用SweetAlert2提供更好的確認對話框
-        const swalWithBootstrapButtons = Swal.mixin({
+        Swal.fire({
+          title: '確定要清空所有記錄嗎？',
+          text: '此操作無法復原',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: '是，清空',
+          cancelButtonText: '取消',
+          background: '#1A1A1A',
+          color: '#FFFFFF',
           customClass: {
-            confirmButton: 'btn btn-danger ms-2',
+            confirmButton: 'btn btn-danger',
             cancelButton: 'btn btn-secondary'
           },
           buttonsStyling: false
-        });
-        
-        swalWithBootstrapButtons.fire({
-          title: '確定要刪除?',
-          text: "此操作無法復原!",
-          icon: 'warning',
-          background: '#1A1A1A',
-          color: '#FFFFFF',
-          showCancelButton: true,
-          confirmButtonText: '是，刪除!',
-          cancelButtonText: '取消',
-          reverseButtons: true
         }).then((result) => {
           if (result.isConfirmed) {
-            historyRecords.splice(index, 1);
+            historyRecords = [];
             localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
             updateHistoryList();
-            showNotification('記錄已刪除', 'success');
+            showNotification('已清空所有記錄', 'success');
           }
         });
       }
 
-      // 清空所有歷史紀錄
-      function confirmClearHistory() {
-        if (confirm('確定要清空所有歷史記錄嗎？此操作無法撤銷。')) {
-          historyRecords = [];
-          localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
-          updateHistoryList();
-          showNotification('所有歷史記錄已清空', 'success');
-        }
-      }
-// 切換側邊欄顯示
-function toggleSidebar() {
-        const sidebar = document.getElementById('historySidebar');
-        sidebar.classList.toggle('active');
-      }
-      
-      // 設置表格單元格點擊事件
-      function setupTableCellEvents() {
-        document.querySelector('.factor-table').addEventListener('click', function(e) {
-          if (e.target.tagName === 'TD' && e.target.cellIndex > 0) {
-            const n = e.target.parentElement.cells[0].textContent;
-            const headerCells = document.querySelectorAll('.factor-table thead th');
-            const factor = headerCells[e.target.cellIndex].textContent;
-            const value = parseFloat(e.target.textContent);
-            
-            document.getElementById('selectedN').value = n;
-            document.getElementById('selectedFactor').value = factor;
-            document.getElementById('selectedValue').value = value.toFixed(6);
-            
-            // 反白標示選中的單元格
-            if (currentHighlight) currentHighlight.classList.remove('highlight-cell');
-            e.target.classList.add('highlight-cell');
-            currentHighlight = e.target;
-            
-            const modal = new bootstrap.Modal(document.getElementById('calculatorModal'));
-            modal.show();
-            document.getElementById('inputAmount').focus();
-          }
-        });
-      }
-      
-      // 設置表格排序功能
-      function setupTableSort() {
-        const headerCells = document.querySelectorAll('.factor-table thead th');
+      // 排序表格功能
+      function setupTableSorting() {
+        const tableHeaders = document.querySelectorAll('.factor-table th');
         
-        headerCells.forEach((th, index) => {
-          if (index > 0) { // 跳過第一列 (N)
-            th.addEventListener('click', function() {
-              const table = th.closest('table');
-              const tbody = table.querySelector('tbody');
-              const rows = Array.from(tbody.querySelectorAll('tr'));
-              
-              // 移除所有排序指示器
-              headerCells.forEach(cell => {
-                cell.classList.remove('sort-asc', 'sort-desc');
-              });
-              
-              // 判斷排序方向
-              const isAscending = !this.classList.contains('sort-asc');
-              
-              this.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
-              
-              // 排序行
-              rows.sort((a, b) => {
-                const aValue = parseFloat(a.cells[index].textContent);
-                const bValue = parseFloat(b.cells[index].textContent);
-                return isAscending ? aValue - bValue : bValue - aValue;
-              });
-              
-              // 重建表格
-              rows.forEach(row => tbody.appendChild(row));
-            });
-          }
-        });
-      }
-      
-      // 鍵盤快捷鍵設置
-      function setupKeyboardShortcuts() {
-        document.addEventListener('keydown', function(e) {
-          // Alt + F: 聚焦於因子選擇
-          if (e.altKey && e.key === 'f') {
-            e.preventDefault();
-            document.getElementById('factorType').focus();
-          }
-          
-          // Alt + N: 聚焦於期數輸入
-          if (e.altKey && e.key === 'n') {
-            e.preventDefault();
-            document.getElementById('searchN').focus();
-          }
-          
-          // Alt + I: 聚焦於利率輸入
-          if (e.altKey && e.key === 'i') {
-            e.preventDefault();
-            document.getElementById('interestRate').focus();
-          }
-          
-          // Alt + S: 進行查詢
-          if (e.altKey && e.key === 's') {
-            e.preventDefault();
-            document.getElementById('searchFactorBtn').click();
-          }
-          
-          // Alt + H: 切換歷史紀錄側邊欄
-          if (e.altKey && e.key === 'h') {
-            e.preventDefault();
-            toggleSidebar();
-          }
-          
-          // Escape 關閉側邊欄
-          if (e.key === 'Escape') {
-            const sidebar = document.getElementById('historySidebar');
-            if (sidebar.classList.contains('active')) {
-              sidebar.classList.remove('active');
+        tableHeaders.forEach(header => {
+          header.addEventListener('click', function() {
+            // 只對數值列執行排序
+            if (this.cellIndex === 0) {
+              sortTable(this.cellIndex, 'numeric');
             }
-          }
+          });
         });
       }
-      
-      // 初始化 UI 事件
-      function initUIEvents() {
-        // 查詢按鈕點擊
-        document.getElementById('searchFactorBtn').addEventListener('click', searchFactor);
+
+      function sortTable(columnIndex, type) {
+        const table = document.querySelector('.factor-table');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const headers = table.querySelectorAll('th');
         
-        // 輸入迅速回應
-        document.getElementById('searchN').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            searchFactor();
+        // 確定排序方向
+        const currentHeader = headers[columnIndex];
+        const isAscending = !currentHeader.classList.contains('sort-asc');
+        
+        // 清除所有表頭排序狀態
+        headers.forEach(header => {
+          header.classList.remove('sort-asc', 'sort-desc');
+        });
+        
+        // 設置新的排序狀態
+        currentHeader.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+        
+        // 排序行
+        rows.sort((a, b) => {
+          let aValue = a.cells[columnIndex].textContent.trim();
+          let bValue = b.cells[columnIndex].textContent.trim();
+          
+          if (type === 'numeric') {
+            aValue = parseFloat(aValue);
+            bValue = parseFloat(bValue);
+          }
+          
+          if (isAscending) {
+            return aValue > bValue ? 1 : -1;
+          } else {
+            return aValue < bValue ? 1 : -1;
           }
         });
         
-        document.getElementById('interestRate').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            calculateFactors();
-          }
-        });
-        
-        // 利率變化時重新計算
-        document.getElementById('interestRate').addEventListener('change', calculateFactors);
-        
-        // 因子類型、期數變化時更新因子值
-        document.getElementById('selectedFactor').addEventListener('change', updateFactorValue);
-        document.getElementById('selectedN').addEventListener('change', updateFactorValue);
-        
-        // 計算按鈕點擊
-        document.getElementById('calculateBtn').addEventListener('click', performCalculation);
-        
-        // 快速回應計算金額
-        document.getElementById('inputAmount').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            performCalculation();
-          }
-        });
-        
-        // 複合因子變化時更新界面
-        document.getElementById('compoundFactor').addEventListener('change', function() {
-          if (this.value) {
-            updateFactorValue();
-          }
-        });
-        
-        // 側邊欄切換
-        document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
-        document.getElementById('closeSidebarBtn').addEventListener('click', toggleSidebar);
-        
-        // 清空歷史記錄
-        document.getElementById('clearHistoryBtn').addEventListener('click', confirmClearHistory);
-        
-        // 歷史搜索
-        document.getElementById('historySearch').addEventListener('input', filterHistory);
+        // 重新添加排序後的行
+        rows.forEach(row => tbody.appendChild(row));
       }
-      
-      // 初始化頁面
-      function initPage() {
-        initTooltips();
-        initUIEvents();
-        setupTableCellEvents();
-        setupTableSort();
-        setupKeyboardShortcuts();
+
+      // 初始化現金流圖表功能
+      function initCashflowDiagram() {
+        // 插入現金流容器
+        const template = document.getElementById('cashflowTemplate');
+        const cashflowContainer = template.content.cloneNode(true);
+        document.querySelector('main').appendChild(cashflowContainer);
         
-        // 如果 URL 有查詢參數，載入預設值
-        const urlParams = new URLSearchParams(window.location.search);
-        const defaultRate = urlParams.get('rate');
+        document.getElementById('cashflowToggleBtn').addEventListener('click', function() {
+          const cfContainer = document.querySelector('.cashflow-container');
+          cfContainer.classList.toggle('active');
+          
+          if (cfContainer.classList.contains('active')) {
+            cfContainer.scrollIntoView({ behavior: 'smooth' });
+            updateCashflowDiagram();
+          }
+        });
         
-        if (defaultRate) {
-          document.getElementById('interestRate').value = defaultRate;
-        } else {
-          // 否則使用預設值
-          document.getElementById('interestRate').value = 5;
+        // 加入年數按鈕操作
+        document.querySelector('.cf-add-year').addEventListener('click', function() {
+          const table = document.querySelector('.cashflow-data-table');
+          const headerRow = table.querySelector('thead tr');
+          const dataRow = table.querySelector('.cf-data-row');
+          
+          // 取得目前最後一列的年數
+          const lastYear = parseInt(headerRow.cells[headerRow.cells.length - 2].textContent);
+          const newYear = lastYear + 1;
+          
+          // 插入新的表頭
+          const newHeader = document.createElement('th');
+          newHeader.textContent = newYear;
+          headerRow.insertBefore(newHeader, headerRow.lastElementChild);
+          
+          // 插入新的數據輸入格
+          const newCell = document.createElement('td');
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'cf-flow-input';
+          input.dataset.year = newYear;
+          input.value = '0';
+          newCell.appendChild(input);
+          dataRow.insertBefore(newCell, dataRow.lastElementChild);
+          
+          // 更新圖表
+          updateCashflowDiagram();
+        });
+        
+        // 綁定計算 NPV 按鈕
+        document.querySelector('.cf-calculate-npv').addEventListener('click', calculateNPV);
+        
+        // 綁定圖表類型變更
+        document.querySelector('.cf-view-type').addEventListener('change', updateCashflowDiagram);
+        
+        // 綁定現金流輸入值變更
+        document.querySelectorAll('.cf-flow-input').forEach(input => {
+          input.addEventListener('change', updateCashflowDiagram);
+        });
+        
+        // 初始更新
+        updateCashflowDiagram();
+      }
+
+      // 更新現金流圖表
+      function updateCashflowDiagram() {
+        const svg = document.querySelector('.cashflow-svg');
+        const viewType = document.querySelector('.cf-view-type').value;
+        const inputs = document.querySelectorAll('.cf-flow-input');
+        
+        // 清空 SVG
+        while (svg.lastChild) {
+          svg.removeChild(svg.lastChild);
         }
         
-        // 初始化計算表格
-        calculateFactors();
+        // 獲取現金流陣列
+        const cashflows = [];
+        inputs.forEach(input => {
+          const year = parseInt(input.dataset.year);
+          const value = parseFloat(input.value) || 0;
+          cashflows[year] = value;
+        });
         
-        // 初始化歷史紀錄
-        updateHistoryList();
+        // SVG 尺寸和邊距
+        const width = 850;
+        const height = 400;
+        const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+        const graphWidth = width - margin.left - margin.right;
+        const graphHeight = height - margin.top - margin.bottom;
+        
+        // 找到最大和最小值以確定y軸比例
+        let maxValue = Math.max(...cashflows.map(val => Math.abs(val))) * 1.2;
+        maxValue = Math.max(maxValue, 10); // 確保有最小比例
+        
+        // 累計圖表專用
+        let cumulativeFlows = [];
+        if (viewType === 'cumulative') {
+          let sum = 0;
+          cumulativeFlows = cashflows.map(val => {
+            sum += val;
+            return sum;
+          });
+          maxValue = Math.max(Math.max(...cumulativeFlows.map(val => Math.abs(val))) * 1.2, 10);
+        }
+        
+        // 建立座標系統
+        const xScale = graphWidth / Math.max(cashflows.length - 1, 1);
+        const yScale = graphHeight / (maxValue * 2);
+        const yAxisCenter = margin.top + graphHeight / 2;
+        
+        // 繪製座標軸
+        const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        xAxis.setAttribute('x1', margin.left);
+        xAxis.setAttribute('y1', yAxisCenter);
+        xAxis.setAttribute('x2', margin.left + graphWidth);
+        xAxis.setAttribute('y2', yAxisCenter);
+        xAxis.setAttribute('stroke', '#AAA');
+        xAxis.setAttribute('stroke-width', 1);
+        xAxis.setAttribute('marker-end', 'url(#axisArrow)');
+        svg.appendChild(xAxis);
+        
+        const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxis.setAttribute('x1', margin.left);
+        yAxis.setAttribute('y1', margin.top + graphHeight);
+        yAxis.setAttribute('x2', margin.left);
+        yAxis.setAttribute('y2', margin.top);
+        yAxis.setAttribute('stroke', '#AAA');
+        yAxis.setAttribute('stroke-width', 1);
+        yAxis.setAttribute('marker-end', 'url(#axisArrow)');
+        svg.appendChild(yAxis);
+        
+        // 添加 Y 軸刻度和格線
+        const yTicks = 5;
+        const yTickStep = maxValue / (yTicks - 1);
+        
+        for (let i = 0; i < yTicks; i++) {
+          const yValue = maxValue - i * yTickStep;
+          const yPos = margin.top + yScale * (maxValue - yValue);
+          
+          // 添加刻度線
+          const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          tick.setAttribute('x1', margin.left - 5);
+          tick.setAttribute('y1', yPos);
+          tick.setAttribute('x2', margin.left);
+          tick.setAttribute('y2', yPos);
+          tick.setAttribute('stroke', '#AAA');
+          tick.setAttribute('stroke-width', 1);
+          svg.appendChild(tick);
+          
+          // 添加刻度值
+          const tickLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          tickLabel.setAttribute('x', margin.left - 10);
+          tickLabel.setAttribute('y', yPos + 4);
+          tickLabel.setAttribute('text-anchor', 'end');
+          tickLabel.setAttribute('fill', '#AAA');
+          tickLabel.setAttribute('font-size', '10px');
+          tickLabel.textContent = yValue.toFixed(0);
+          svg.appendChild(tickLabel);
+          
+          // 添加水平格線
+          const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          gridLine.setAttribute('x1', margin.left);
+          gridLine.setAttribute('y1', yPos);
+          gridLine.setAttribute('x2', margin.left + graphWidth);
+          gridLine.setAttribute('y2', yPos);
+          gridLine.setAttribute('stroke', '#333');
+          gridLine.setAttribute('stroke-width', 0.5);
+          gridLine.setAttribute('stroke-dasharray', '3,3');
+          svg.appendChild(gridLine);
+        }
+        
+        const yNegValue = -maxValue;
+        const yNegPos = margin.top + yScale * (maxValue - yNegValue);
+        
+        const negTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        negTick.setAttribute('x1', margin.left - 5);
+        negTick.setAttribute('y1', yNegPos);
+        negTick.setAttribute('x2', margin.left);
+        negTick.setAttribute('y2', yNegPos);
+        negTick.setAttribute('stroke', '#AAA');
+        negTick.setAttribute('stroke-width', 1);
+        svg.appendChild(negTick);
+        
+        const negTickLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        negTickLabel.setAttribute('x', margin.left - 10);
+        negTickLabel.setAttribute('y', yNegPos + 4);
+        negTickLabel.setAttribute('text-anchor', 'end');
+        negTickLabel.setAttribute('fill', '#AAA');
+        negTickLabel.setAttribute('font-size', '10px');
+        negTickLabel.textContent = yNegValue.toFixed(0);
+        svg.appendChild(negTickLabel);
+        
+        const negGridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        negGridLine.setAttribute('x1', margin.left);
+        negGridLine.setAttribute('y1', yNegPos);
+        negGridLine.setAttribute('x2', margin.left + graphWidth);
+        negGridLine.setAttribute('y2', yNegPos);
+        negGridLine.setAttribute('stroke', '#333');
+        negGridLine.setAttribute('stroke-width', 0.5);
+        negGridLine.setAttribute('stroke-dasharray', '3,3');
+        svg.appendChild(negGridLine);
+        
+        // 添加 X 軸刻度和標籤
+        cashflows.forEach((value, year) => {
+          const xPos = margin.left + year * xScale;
+          
+          // 添加刻度線
+          const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          tick.setAttribute('x1', xPos);
+          tick.setAttribute('y1', yAxisCenter);
+          tick.setAttribute('x2', xPos);
+          tick.setAttribute('y2', yAxisCenter + 5);
+          tick.setAttribute('stroke', '#AAA');
+          tick.setAttribute('stroke-width', 1);
+          svg.appendChild(tick);
+          
+          // 添加年份標籤
+          const yearLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          yearLabel.setAttribute('x', xPos);
+          yearLabel.setAttribute('y', yAxisCenter + 20);
+          yearLabel.setAttribute('text-anchor', 'middle');
+          yearLabel.setAttribute('fill', '#AAA');
+          yearLabel.setAttribute('font-size', '12px');
+          yearLabel.textContent = year;
+          svg.appendChild(yearLabel);
+          
+          // 添加垂直格線
+          const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          gridLine.setAttribute('x1', xPos);
+          gridLine.setAttribute('y1', margin.top);
+          gridLine.setAttribute('x2', xPos);
+          gridLine.setAttribute('y2', margin.top + graphHeight);
+          gridLine.setAttribute('stroke', '#333');
+          gridLine.setAttribute('stroke-width', 0.5);
+          gridLine.setAttribute('stroke-dasharray', '3,3');
+          svg.appendChild(gridLine);
+        });
+        
+        // 繪製軸標籤
+        const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xLabel.setAttribute('x', margin.left + graphWidth / 2);
+        xLabel.setAttribute('y', margin.top + graphHeight + 45);
+        xLabel.setAttribute('text-anchor', 'middle');
+        xLabel.setAttribute('fill', '#CCC');
+        xLabel.setAttribute('font-size', '14px');
+        xLabel.textContent = '時間 (年)';
+        svg.appendChild(xLabel);
+        
+        const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yLabel.setAttribute('x', margin.left - 40);
+        yLabel.setAttribute('y', margin.top + graphHeight / 2);
+        yLabel.setAttribute('text-anchor', 'middle');
+        yLabel.setAttribute('fill', '#CCC');
+        yLabel.setAttribute('font-size', '14px');
+        yLabel.setAttribute('transform', `rotate(-90, ${margin.left - 40}, ${margin.top + graphHeight / 2})`);
+        yLabel.textContent = '現金流量 ($)';
+        svg.appendChild(yLabel);
+        
+        // 繪製標準現金流圖
+        if (viewType === 'standard') {
+          cashflows.forEach((value, year) => {
+            if (value === 0) return;
+            
+            const xPos = margin.left + year * xScale;
+            const barHeight = Math.abs(value) * yScale;
+            const barWidth = 20;
+            
+            // 正負值分別使用不同顏色
+            const barColor = value > 0 ? '#27ae60' : '#e74c3c';
+            const barY = value > 0 ? yAxisCenter - barHeight : yAxisCenter;
+            
+            // 繪製現金流長條
+            const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            bar.setAttribute('x', xPos - barWidth / 2);
+            bar.setAttribute('y', barY);
+            bar.setAttribute('width', barWidth);
+            bar.setAttribute('height', barHeight);
+            bar.setAttribute('fill', barColor);
+            bar.setAttribute('rx', 3);
+            bar.setAttribute('ry', 3);
+            bar.setAttribute('opacity', 0.8);
+            svg.appendChild(bar);
+            
+            // 添加數值標籤
+            const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            valueLabel.setAttribute('x', xPos);
+            valueLabel.setAttribute('y', value > 0 ? yAxisCenter - barHeight - 10 : yAxisCenter + barHeight + 20);
+            valueLabel.setAttribute('text-anchor', 'middle');
+            valueLabel.setAttribute('fill', '#FFF');
+            valueLabel.setAttribute('font-size', '12px');
+            valueLabel.textContent = Math.abs(value);
+            svg.appendChild(valueLabel);
+          });
+        } 
+        // 繪製累計現金流圖
+        else if (viewType === 'cumulative') {
+          let pathData = '';
+          let sum = 0;
+          
+          cashflows.forEach((value, year) => {
+            sum += value;
+            const xPos = margin.left + year * xScale;
+            const yPos = yAxisCenter - sum * yScale;
+            
+            if (year === 0) {
+              pathData += `M ${xPos} ${yPos}`;
+            } else {
+              pathData += ` L ${xPos} ${yPos}`;
+            }
+            
+            // 添加累計數值點
+            const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('cx', xPos);
+            dot.setAttribute('cy', yPos);
+            dot.setAttribute('r', 5);
+            dot.setAttribute('fill', 'url(#cumulativeGradient)');
+            svg.appendChild(dot);
+            
+            // 添加累計值標籤
+            const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            valueLabel.setAttribute('x', xPos);
+            valueLabel.setAttribute('y', yPos - 15);
+            valueLabel.setAttribute('text-anchor', 'middle');
+            valueLabel.setAttribute('fill', '#FFF');
+            valueLabel.setAttribute('font-size', '12px');
+            valueLabel.textContent = sum.toFixed(0);
+            svg.appendChild(valueLabel);
+          });
+          
+          // 繪製累計線
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', pathData);
+          path.setAttribute('stroke', 'url(#cumulativeGradient)');
+          path.setAttribute('stroke-width', 3);
+          path.setAttribute('fill', 'none');
+          svg.appendChild(path);
+        }
       }
       
-      // 啟動應用程式
-      document.addEventListener('DOMContentLoaded', initPage);
+      // 計算淨現值 (NPV)
+ // 修正後的NPV計算函數
+function calculateNPV() {
+  const interestRate = parseFloat(document.querySelector('.cf-interest-rate')?.value) / 100;
+  const inputs = document.querySelectorAll('.cf-flow-input');
+  const npvDisplay = document.querySelector('.cf-npv-value');
+  const paybackDisplay = document.querySelector('.cf-payback-period');
+  
+  // 檢查必要元素是否存在
+  if (!npvDisplay || !paybackDisplay) {
+    console.warn('NPV或回收期顯示元素不存在，無法更新結果');
+    return; // 如果元素不存在則提前結束函數
+  }
+  
+  if (isNaN(interestRate) || interestRate <= 0) {
+    // 如果利率無效，不計算但也不出錯
+    npvDisplay.textContent = "--";
+    paybackDisplay.textContent = "--";
+    if (document.querySelector('.cf-interest-rate')) {
+      showNotification('請輸入有效的利率', 'warning');
+      document.querySelector('.cf-interest-rate').focus();
+    }
+    return;
+  }
+  
+  // 獲取現金流陣列
+  const cashflows = [];
+  inputs.forEach(input => {
+    const year = parseInt(input.dataset.year);
+    const value = parseFloat(input.value) || 0;
+    cashflows[year] = value;
+  });
+  
+  // 計算 NPV
+  let npv = 0;
+  cashflows.forEach((value, year) => {
+    npv += value / Math.pow(1 + interestRate, year);
+  });
+  
+  // 計算回收期
+  let cumulativeFlow = 0;
+  let paybackPeriod = -1;
+  
+  if (cashflows[0] < 0) {
+    cumulativeFlow = cashflows[0]; // 初始投資為負值
+    
+    for (let i = 1; i < cashflows.length; i++) {
+      cumulativeFlow += cashflows[i];
+      if (cumulativeFlow >= 0 && paybackPeriod === -1) {
+        paybackPeriod = i;
+        break;
+      }
+    }
+  }
+  
+  // 顯示結果
+  npvDisplay.textContent = `${npv.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+  npvDisplay.className = npv >= 0 ? 'value-positive' : 'value-negative';
+  
+  if (paybackPeriod === -1) {
+    paybackDisplay.textContent = '無法回收';
+    paybackDisplay.className = 'value-negative';
+  } else {
+    paybackDisplay.textContent = `${paybackPeriod} 年`;
+    paybackDisplay.className = 'value-positive';
+  }
+  
+  showNotification(`淨現值計算完成：${npv >= 0 ? '專案可行' : '專案不可行'}`, npv >= 0 ? 'success' : 'warning');
+}
+
+// 在現金流容器中添加NPV和回收期元素
+function ensureInfoPanelExists() {
+  let infoPanel = document.querySelector('.info-panel');
+  if (!infoPanel) {
+    const cashflowContainer = document.querySelector('.cashflow-container');
+    if (cashflowContainer) {
+      // 創建信息面板
+      infoPanel = document.createElement('div');
+      infoPanel.className = 'info-panel';
+      infoPanel.innerHTML = `
+        <div>專案淨現值 (NPV): <span class="cf-npv-value">--</span></div>
+        <div>回收期 (年): <span class="cf-payback-period">--</span></div>
+      `;
+      
+      // 找到適合的位置插入
+      const svg = cashflowContainer.querySelector('.cashflow-svg');
+      if (svg) {
+        cashflowContainer.insertBefore(infoPanel, svg.nextSibling);
+      } else {
+        cashflowContainer.appendChild(infoPanel);
+      }
+    }
+  }
+  return infoPanel !== null;
+}
+
+// 更新現金流圖表
+function updateCashflowDiagram() {
+  const svg = document.querySelector('.cashflow-svg');
+  const viewType = document.querySelector('.cf-view-type')?.value || 'standard';
+  const inputs = document.querySelectorAll('.cf-flow-input');
+  
+  if (!svg) {
+    console.warn('找不到SVG元素，無法更新圖表');
+    return;
+  }
+  
+  // 清空 SVG
+  while (svg.lastChild) {
+    svg.removeChild(svg.lastChild);
+  }
+  
+  // 確保有必要的SVG定義（marker等）
+  ensureSvgDefs(svg);
+  
+  // 獲取現金流陣列
+  const cashflows = [];
+  inputs.forEach(input => {
+    const year = parseInt(input.dataset.year);
+    const value = parseFloat(input.value) || 0;
+    cashflows[year] = value;
+  });
+  
+  // SVG 尺寸和邊距
+  const width = 850;
+  const height = 400;
+  const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+  const graphWidth = width - margin.left - margin.right;
+  const graphHeight = height - margin.top - margin.bottom;
+  
+  // 找到最大和最小值以確定y軸比例
+  let maxValue = Math.max(...cashflows.map(val => Math.abs(val || 0))) * 1.2;
+  maxValue = Math.max(maxValue, 10); // 確保有最小比例
+  
+  // 累計圖表專用
+  let cumulativeFlows = [];
+  if (viewType === 'cumulative') {
+    let sum = 0;
+    cumulativeFlows = cashflows.map(val => {
+      sum += (val || 0);
+      return sum;
+    });
+    maxValue = Math.max(Math.max(...cumulativeFlows.map(val => Math.abs(val))) * 1.2, 10);
+  }
+  
+  // 建立座標系統
+  const xScale = graphWidth / Math.max(cashflows.length - 1, 1);
+  const yScale = graphHeight / (maxValue * 2);
+  const yAxisCenter = margin.top + graphHeight / 2;
+  
+  // 繪製座標軸
+  const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  xAxis.setAttribute('x1', margin.left);
+  xAxis.setAttribute('y1', yAxisCenter);
+  xAxis.setAttribute('x2', margin.left + graphWidth);
+  xAxis.setAttribute('y2', yAxisCenter);
+  xAxis.setAttribute('stroke', '#AAA');
+  xAxis.setAttribute('stroke-width', 1);
+  xAxis.setAttribute('marker-end', 'url(#axisArrow)');
+  svg.appendChild(xAxis);
+  
+  const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  yAxis.setAttribute('x1', margin.left);
+  yAxis.setAttribute('y1', margin.top + graphHeight);
+  yAxis.setAttribute('x2', margin.left);
+  yAxis.setAttribute('y2', margin.top);
+  yAxis.setAttribute('stroke', '#AAA');
+  yAxis.setAttribute('stroke-width', 1);
+  yAxis.setAttribute('marker-end', 'url(#axisArrow)');
+  svg.appendChild(yAxis);
+  
+  // 添加 Y 軸刻度和格線
+  const yTicks = 5;
+  const yTickStep = maxValue / (yTicks - 1);
+  
+  for (let i = 0; i < yTicks; i++) {
+    const yValue = maxValue - i * yTickStep;
+    const yPos = margin.top + yScale * (maxValue - yValue);
+    
+    // 添加刻度線
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', margin.left - 5);
+    tick.setAttribute('y1', yPos);
+    tick.setAttribute('x2', margin.left);
+    tick.setAttribute('y2', yPos);
+    tick.setAttribute('stroke', '#AAA');
+    tick.setAttribute('stroke-width', 1);
+    svg.appendChild(tick);
+    
+    // 添加刻度值
+    const tickLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    tickLabel.setAttribute('x', margin.left - 10);
+    tickLabel.setAttribute('y', yPos + 4);
+    tickLabel.setAttribute('text-anchor', 'end');
+    tickLabel.setAttribute('fill', '#AAA');
+    tickLabel.setAttribute('font-size', '10px');
+    tickLabel.textContent = yValue.toFixed(0);
+    svg.appendChild(tickLabel);
+    
+    // 添加水平格線
+    const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    gridLine.setAttribute('x1', margin.left);
+    gridLine.setAttribute('y1', yPos);
+    gridLine.setAttribute('x2', margin.left + graphWidth);
+    gridLine.setAttribute('y2', yPos);
+    gridLine.setAttribute('stroke', '#333');
+    gridLine.setAttribute('stroke-width', 0.5);
+    gridLine.setAttribute('stroke-dasharray', '3,3');
+    svg.appendChild(gridLine);
+  }
+  
+  const yNegValue = -maxValue;
+  const yNegPos = margin.top + yScale * (maxValue - yNegValue);
+  
+  const negTick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  negTick.setAttribute('x1', margin.left - 5);
+  negTick.setAttribute('y1', yNegPos);
+  negTick.setAttribute('x2', margin.left);
+  negTick.setAttribute('y2', yNegPos);
+  negTick.setAttribute('stroke', '#AAA');
+  negTick.setAttribute('stroke-width', 1);
+  svg.appendChild(negTick);
+  
+  const negTickLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  negTickLabel.setAttribute('x', margin.left - 10);
+  negTickLabel.setAttribute('y', yNegPos + 4);
+  negTickLabel.setAttribute('text-anchor', 'end');
+  negTickLabel.setAttribute('fill', '#AAA');
+  negTickLabel.setAttribute('font-size', '10px');
+  negTickLabel.textContent = yNegValue.toFixed(0);
+  svg.appendChild(negTickLabel);
+  
+  const negGridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  negGridLine.setAttribute('x1', margin.left);
+  negGridLine.setAttribute('y1', yNegPos);
+  negGridLine.setAttribute('x2', margin.left + graphWidth);
+  negGridLine.setAttribute('y2', yNegPos);
+  negGridLine.setAttribute('stroke', '#333');
+  negGridLine.setAttribute('stroke-width', 0.5);
+  negGridLine.setAttribute('stroke-dasharray', '3,3');
+  svg.appendChild(negGridLine);
+  
+  // 添加 X 軸刻度和標籤
+  cashflows.forEach((value, year) => {
+    if (value === undefined) return;
+    
+    const xPos = margin.left + year * xScale;
+    
+    // 添加刻度線
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', xPos);
+    tick.setAttribute('y1', yAxisCenter);
+    tick.setAttribute('x2', xPos);
+    tick.setAttribute('y2', yAxisCenter + 5);
+    tick.setAttribute('stroke', '#AAA');
+    tick.setAttribute('stroke-width', 1);
+    svg.appendChild(tick);
+    
+    // 添加年份標籤
+    const yearLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    yearLabel.setAttribute('x', xPos);
+    yearLabel.setAttribute('y', yAxisCenter + 20);
+    yearLabel.setAttribute('text-anchor', 'middle');
+    yearLabel.setAttribute('fill', '#AAA');
+    yearLabel.setAttribute('font-size', '12px');
+    yearLabel.textContent = year;
+    svg.appendChild(yearLabel);
+    
+    // 添加垂直格線
+    const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    gridLine.setAttribute('x1', xPos);
+    gridLine.setAttribute('y1', margin.top);
+    gridLine.setAttribute('x2', xPos);
+    gridLine.setAttribute('y2', margin.top + graphHeight);
+    gridLine.setAttribute('stroke', '#333');
+    gridLine.setAttribute('stroke-width', 0.5);
+    gridLine.setAttribute('stroke-dasharray', '3,3');
+    svg.appendChild(gridLine);
+  });
+  
+  // 繪製軸標籤
+  const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  xLabel.setAttribute('x', margin.left + graphWidth / 2);
+  xLabel.setAttribute('y', margin.top + graphHeight + 45);
+  xLabel.setAttribute('text-anchor', 'middle');
+  xLabel.setAttribute('fill', '#CCC');
+  xLabel.setAttribute('font-size', '14px');
+  xLabel.textContent = '時間 (年)';
+  svg.appendChild(xLabel);
+  
+  const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  yLabel.setAttribute('x', margin.left - 40);
+  yLabel.setAttribute('y', margin.top + graphHeight / 2);
+  yLabel.setAttribute('text-anchor', 'middle');
+  yLabel.setAttribute('fill', '#CCC');
+  yLabel.setAttribute('font-size', '14px');
+  yLabel.setAttribute('transform', `rotate(-90, ${margin.left - 40}, ${margin.top + graphHeight / 2})`);
+  yLabel.textContent = '現金流量 ($)';
+  svg.appendChild(yLabel);
+  
+  // 繪製標準現金流圖
+  if (viewType === 'standard') {
+    cashflows.forEach((value, year) => {
+      if (value === undefined || value === 0) return;
+      
+      const xPos = margin.left + year * xScale;
+      const barHeight = Math.abs(value) * yScale;
+      const barWidth = 20;
+      
+      // 正負值分別使用不同顏色
+      const barColor = value > 0 ? '#27ae60' : '#e74c3c';
+      const barY = value > 0 ? yAxisCenter - barHeight : yAxisCenter;
+      
+      // 繪製現金流長條
+      const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bar.setAttribute('x', xPos - barWidth / 2);
+      bar.setAttribute('y', barY);
+      bar.setAttribute('width', barWidth);
+      bar.setAttribute('height', barHeight);
+      bar.setAttribute('fill', barColor);
+      bar.setAttribute('rx', 3);
+      bar.setAttribute('ry', 3);
+      bar.setAttribute('opacity', 0.8);
+      svg.appendChild(bar);
+      
+      // 添加數值標籤
+      const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      valueLabel.setAttribute('x', xPos);
+      valueLabel.setAttribute('y', value > 0 ? yAxisCenter - barHeight - 10 : yAxisCenter + barHeight + 20);
+      valueLabel.setAttribute('text-anchor', 'middle');
+      valueLabel.setAttribute('fill', '#FFF');
+      valueLabel.setAttribute('font-size', '12px');
+      valueLabel.textContent = Math.abs(value);
+      svg.appendChild(valueLabel);
+    });
+  } 
+  // 繪製累計現金流圖
+  else if (viewType === 'cumulative') {
+    let pathData = '';
+    let sum = 0;
+    
+    cashflows.forEach((value, year) => {
+      if (value === undefined) return;
+      
+      sum += value;
+      const xPos = margin.left + year * xScale;
+      const yPos = yAxisCenter - sum * yScale;
+      
+      if (pathData === '') {
+        pathData += `M ${xPos} ${yPos}`;
+      } else {
+        pathData += ` L ${xPos} ${yPos}`;
+      }
+      
+      // 添加累計數值點
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      dot.setAttribute('cx', xPos);
+      dot.setAttribute('cy', yPos);
+      dot.setAttribute('r', 5);
+      dot.setAttribute('fill', 'url(#cumulativeGradient)');
+      svg.appendChild(dot);
+      
+      // 添加累計值標籤
+      const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      valueLabel.setAttribute('x', xPos);
+      valueLabel.setAttribute('y', yPos - 15);
+      valueLabel.setAttribute('text-anchor', 'middle');
+      valueLabel.setAttribute('fill', '#FFF');
+      valueLabel.setAttribute('font-size', '12px');
+      valueLabel.textContent = sum.toFixed(0);
+      svg.appendChild(valueLabel);
+    });
+    
+    if (pathData !== '') {
+      // 繪製累計線
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', pathData);
+      path.setAttribute('stroke', 'url(#cumulativeGradient)');
+      path.setAttribute('stroke-width', 3);
+      path.setAttribute('fill', 'none');
+      svg.appendChild(path);
+    }
+  }
+}
+
+// 確保SVG有必要的定義
+function ensureSvgDefs(svg) {
+  let defs = svg.querySelector('defs');
+  if (!defs) {
+    defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    svg.appendChild(defs);
+    
+    // 時間軸箭頭
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', 'axisArrow');
+    marker.setAttribute('markerWidth', '8');
+    marker.setAttribute('markerHeight', '8');
+    marker.setAttribute('refX', '0');
+    marker.setAttribute('refY', '4');
+    marker.setAttribute('orient', 'auto');
+    
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M0,8 L8,4 L0,0 Z');
+    path.setAttribute('fill', '#aaa');
+    
+    marker.appendChild(path);
+    defs.appendChild(marker);
+    
+    // 累計流量線漸變
+    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    gradient.setAttribute('id', 'cumulativeGradient');
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '100%');
+    gradient.setAttribute('y2', '0%');
+    
+    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', '#3498db');
+    
+    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2.setAttribute('offset', '100%');
+    stop2.setAttribute('stop-color', '#9b59b6');
+    
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    defs.appendChild(gradient);
+  }
+}
+
+// 更新現金流後的處理應該延遲執行NPV計算
+function updateCashflowWithData(cashflows) {
+  if (!cashflows || cashflows.length === 0) {
+    return;
+  }
+  
+  const table = document.querySelector('.cashflow-data-table');
+  if (!table) {
+    console.warn('無法找到現金流資料表，無法更新');
+    return;
+  }
+  
+  const headerRow = table.querySelector('thead tr');
+  const dataRow = table.querySelector('.cf-data-row');
+  
+  // 確保面板存在
+  ensureInfoPanelExists();
+  
+  // 清除現有數據
+  clearCashflowData();
+  
+  // 找出最大年份
+  const maxYear = Math.max(...Object.keys(cashflows).filter(key => !isNaN(key)).map(Number));
+  
+  // 更新年份0的值
+  const year0Input = dataRow.querySelector('.cf-flow-input[data-year="0"]');
+  if (year0Input && cashflows[0] !== undefined) {
+    year0Input.value = cashflows[0];
+  }
+  
+  // 添加其他年份
+  for (let year = 1; year <= maxYear; year++) {
+    // 創建年份表頭
+    const yearHeader = document.createElement('th');
+    yearHeader.textContent = year;
+    headerRow.insertBefore(yearHeader, headerRow.lastElementChild);
+    
+    // 創建數據單元格
+    const yearCell = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'cf-flow-input';
+    input.dataset.year = year;
+    input.value = cashflows[year] || 0;
+    input.addEventListener('change', updateCashflowDiagram);
+    
+    yearCell.appendChild(input);
+    dataRow.insertBefore(yearCell, dataRow.lastElementChild);
+  }
+  
+  // 更新圖表
+  updateCashflowDiagram();
+  
+  // 延遲執行NPV計算，確保DOM已更新
+  setTimeout(() => {
+    try {
+      calculateNPV();
+    } catch (error) {
+      console.warn('NPV計算失敗：', error);
+    }
+  }, 100);
+}
+
+// 清除現有的現金流數據時確保面板存在
+function clearCashflowData() {
+  const table = document.querySelector('.cashflow-data-table');
+  if (!table) return;
+  
+  const headerRow = table.querySelector('thead tr');
+  const dataRow = table.querySelector('.cf-data-row');
+  
+  if (!headerRow || !dataRow) return;
+  
+  // 保留時間行和添加按鈕行
+  while (headerRow.children.length > 2) {
+    headerRow.removeChild(headerRow.children[0]);
+  }
+  
+  while (dataRow.children.length > 2) {
+    dataRow.removeChild(dataRow.children[0]);
+  }
+  
+  // 添加時間列標題
+  const timeHeader = document.createElement('th');
+  timeHeader.textContent = '時間 (年)';
+  headerRow.insertBefore(timeHeader, headerRow.firstChild);
+  
+  // 添加描述列
+  const descCell = document.createElement('td');
+  descCell.textContent = '現金流量 ($)';
+  dataRow.insertBefore(descCell, dataRow.firstChild);
+  
+  // 添加年份0列
+  const year0Header = document.createElement('th');
+  year0Header.textContent = '0';
+  headerRow.insertBefore(year0Header, headerRow.lastElementChild);
+  
+  const year0Cell = document.createElement('td');
+  const year0Input = document.createElement('input');
+  year0Input.type = 'number';
+  year0Input.className = 'cf-flow-input';
+  year0Input.dataset.year = '0';
+  year0Input.value = '0';
+  year0Input.addEventListener('change', updateCashflowDiagram);
+  year0Cell.appendChild(year0Input);
+  dataRow.insertBefore(year0Cell, dataRow.lastElementChild);
+  
+  // 確保信息面板存在
+  ensureInfoPanelExists();
+}
+
+// 從歷史記錄轉換為現金流圖
+function convertHistoryToCashflow(historyIndex) {
+  const searchTerm = document.getElementById('historySearch').value.toLowerCase();
+  const filteredRecords = historyRecords.filter(record => {
+    return record.factor.toLowerCase().includes(searchTerm) ||
+           record.n.toString().includes(searchTerm) ||
+           (record.rate * 100).toFixed(2).includes(searchTerm) ||
+           (record.compoundFactor && record.compoundFactor.toLowerCase().includes(searchTerm));
+  });
+  
+  if (!filteredRecords[historyIndex]) {
+    showNotification('無法找到相關記錄', 'warning');
+    return;
+  }
+  
+  const record = filteredRecords[historyIndex];
+  const realIndex = historyRecords.findIndex(r => r.date === record.date);
+  
+  if (realIndex === -1) {
+    showNotification('無法找到原始記錄', 'warning');
+    return;
+  }
+  
+  // 獲取現金流圖表容器
+  const cfContainer = document.querySelector('.cashflow-container');
+  if (!cfContainer) {
+    showNotification('現金流圖表容器不存在', 'warning');
+    return;
+  }
+  
+  // 顯示現金流圖表
+  cfContainer.classList.add('active');
+  cfContainer.scrollIntoView({ behavior: 'smooth' });
+  
+  // 設置項目名稱和利率
+  const projectNameInput = document.querySelector('.cf-project-name');
+  const interestRateInput = document.querySelector('.cf-interest-rate');
+  
+  if (projectNameInput) {
+    const date = new Date(record.date);
+    projectNameInput.value = `計算記錄 (${date.toLocaleDateString('zh-Hant')})`;
+  }
+  
+  if (interestRateInput) {
+    interestRateInput.value = (record.rate * 100).toFixed(2);
+  }
+  
+  // 清除現有數據
+  clearCashflowData();
+  
+  // 確保面板存在
+  ensureInfoPanelExists();
+  
+  // 添加基於計算記錄的現金流量
+  const n = record.n;
+  const amount = record.amount;
+  const factor = record.factor;
+  
+  // 根據不同的因子類型，生成不同的現金流模式
+  let cashflows = [];
+  
+  // 終值因子 (F/P): 現在投資現值 P, 未來得到終值 F
+  if (factor === 'F/P') {
+    cashflows[0] = -amount; // 現值為負的現金流出
+    cashflows[n] = record.result; // 終值為正的現金流入
+  }
+  // 現值因子 (P/F): 未來收到終值 F, 現值為 P
+  else if (factor === 'P/F') {
+    cashflows[0] = record.result; // 現值為正的現金流入
+    cashflows[n] = -amount; // 未來支付負的現金流出
+  }
+  // 資本回收因子 (A/P): 現值 P 轉換為等額年金 A
+  else if (factor === 'A/P') {
+    cashflows[0] = -amount; // 現值為負的現金流出
+    // 每年收到等額的年金
+    for (let i = 1; i <= n; i++) {
+      cashflows[i] = record.result;
+    }
+  }
+  // 現值年金因子 (P/A): 等額年金 A 的現值 P
+  else if (factor === 'P/A') {
+    cashflows[0] = record.result; // 現值為正的現金流入
+    // 每年支付等額的年金
+    for (let i = 1; i <= n; i++) {
+      cashflows[i] = -amount;
+    }
+  }
+  // 終值年金因子 (F/A): 等額年金 A 的終值 F
+  else if (factor === 'F/A') {
+    // 每年存入等額的年金
+    for (let i = 1; i <= n; i++) {
+      cashflows[i] = -amount;
+    }
+    cashflows[n] = (cashflows[n] || 0) + record.result; // 最後一年獲得終值
+  }
+  // 償債基金因子 (A/F): 將未來終值 F 轉換為等額年金 A
+  else if (factor === 'A/F') {
+    // 每年存入等額的年金
+    for (let i = 1; i <= n; i++) {
+      cashflows[i] = -record.result;
+    }
+    cashflows[n] = (cashflows[n] || 0) + amount; // 最後一年獲得終值
+  }
+  // 梯度現值因子 (P/G) 和 梯度年金因子 (A/G)
+  else if (factor === 'P/G' || factor === 'A/G') {
+    cashflows[0] = -amount; // 初始投資
+    
+    // 梯度增長的現金流
+    for (let i = 1; i <= n; i++) {
+      cashflows[i] = record.result * i / n; // 簡化處理
+    }
+  }
+  
+  // 如果有複合因子
+  if (record.compoundFactor) {
+    showNotification('複合因子現金流模擬較為複雜，顯示基本模式', 'info');
+  }
+  
+  // 更新圖表數據
+  updateCashflowWithData(cashflows);
+  
+  if (cashflows.length === 0) {
+    showNotification('無法根據此記錄生成現金流圖', 'warning');
+  } else {
+    showNotification('已將計算記錄轉換為現金流圖', 'success');
+  }
+}
+
+// 將歷史記錄串接成連續的現金流
+function generateCascadingCashflow() {
+  if (historyRecords.length === 0) {
+    showNotification('無歷史記錄可供生成現金流圖', 'warning');
+    return [];
+  }
+  
+  // 按時間順序排序歷史記錄
+  const sortedRecords = [...historyRecords].sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  // 初始化連續現金流數組
+  let cascadingCashflows = [];
+  let currentYear = 0;
+  
+  // 處理每筆記錄
+  sortedRecords.forEach((record, recordIndex) => {
+    const n = record.n;
+    const amount = record.amount;
+    const factor = record.factor;
+    const result = record.result;
+    
+    // 計算此記錄的現金流
+    let recordCashflow = [];
+    
+    // 根據不同的因子類型，生成不同的現金流模式
+    switch(factor) {
+      case 'F/P': // 終值因子：現在投資現值P, 未來得到終值F
+        recordCashflow[0] = -amount; // 現值為負的現金流出
+        recordCashflow[n] = result; // 終值為正的現金流入
+        break;
+      
+      case 'P/F': // 現值因子：未來收到終值F, 現值為P
+        recordCashflow[0] = result; // 現值為正的現金流入
+        recordCashflow[n] = -amount; // 未來支付負的現金流出
+        break;
+      
+      case 'A/P': // 資本回收因子：現值P轉換為等額年金A
+        recordCashflow[0] = -amount; // 現值為負的現金流出
+        // 每年收到等額的年金
+        for (let i = 1; i <= n; i++) {
+          recordCashflow[i] = result;
+        }
+        break;
+      
+      case 'P/A': // 現值年金因子：等額年金A的現值P
+        recordCashflow[0] = result; // 現值為正的現金流入
+        // 每年支付等額的年金
+        for (let i = 1; i <= n; i++) {
+          recordCashflow[i] = -amount;
+        }
+        break;
+      
+      case 'F/A': // 終值年金因子：等額年金A的終值F
+        // 每年存入等額的年金
+        for (let i = 1; i <= n; i++) {
+          recordCashflow[i] = -amount;
+        }
+        recordCashflow[n] = (recordCashflow[n] || 0) + result; // 最後一年獲得終值
+        break;
+      
+      case 'A/F': // 償債基金因子：將未來終值F轉換為等額年金A
+        // 每年存入等額的年金
+        for (let i = 1; i <= n; i++) {
+          recordCashflow[i] = -result;
+        }
+        recordCashflow[n] = (recordCashflow[n] || 0) + amount; // 最後一年獲得終值
+        break;
+      
+      case 'P/G': // 梯度現值因子：現值与梯度增長的現金流
+        recordCashflow[0] = -amount; // 初始投資
+        // 梯度增長的現金流
+        for (let i = 1; i <= n; i++) {
+          recordCashflow[i] = result * i / n; // 簡化處理
+        }
+        break;
+        
+      case 'A/G': // 梯度年金因子：年金与梯度增長的現金流
+        recordCashflow[0] = -amount; // 初始投資
+        // 梯度增長的現金流
+        for (let i = 1; i <= n; i++) {
+          recordCashflow[i] = result * i / n; // 簡化處理
+        }
+        break;
+    }
+    
+    // 將此記錄的現金流添加到連續現金流中
+    for (let i = 0; i < recordCashflow.length; i++) {
+      if (recordCashflow[i] !== undefined) {
+        const adjustedYear = currentYear + i;
+        cascadingCashflows[adjustedYear] = (cascadingCashflows[adjustedYear] || 0) + recordCashflow[i];
+      }
+    }
+    
+    // 將記錄索引與年份範圍儲存，用於後續標示
+    cascadingCashflows.recordBoundaries = cascadingCashflows.recordBoundaries || [];
+    cascadingCashflows.recordBoundaries.push({
+      recordIndex,
+      startYear: currentYear,
+      endYear: currentYear + n,
+      factor,
+      amount,
+      result
+    });
+    
+    // 更新下一筆記錄的起始年份
+    currentYear += n;
+  });
+  
+  return cascadingCashflows;
+}
+
+// 顯示串接的現金流圖
+function showCascadingCashflow() {
+  // 生成連續現金流
+  const cascadingCashflows = generateCascadingCashflow();
+  
+  if (!cascadingCashflows || cascadingCashflows.length === 0) {
+    showNotification('無法生成串接現金流圖', 'warning');
+    return;
+  }
+  
+  // 獲取現金流圖表容器
+  const cfContainer = document.querySelector('.cashflow-container');
+  if (!cfContainer) {
+    showNotification('現金流圖表容器不存在', 'warning');
+    return;
+  }
+  
+  // 顯示現金流圖表
+  cfContainer.classList.add('active');
+  cfContainer.scrollIntoView({ behavior: 'smooth' });
+  
+  // 設置項目名稱和利率
+  const projectNameInput = document.querySelector('.cf-project-name');
+  const interestRateInput = document.querySelector('.cf-interest-rate');
+  
+  if (projectNameInput) {
+    projectNameInput.value = '歷史記錄串接現金流圖';
+  }
+  
+  if (interestRateInput) {
+    // 使用最後一筆記錄的利率或默認值
+    const lastRecord = historyRecords[0];
+    interestRateInput.value = lastRecord ? (lastRecord.rate * 100).toFixed(2) : 5;
+  }
+  
+  // 清除現有數據
+  clearCashflowData();
+  
+  // 確保面板存在
+  ensureInfoPanelExists();
+  
+  // 更新圖表數據
+  updateCascadingCashflowWithData(cascadingCashflows);
+  
+  showNotification('已生成歷史記錄串接現金流圖', 'success');
+}
+
+// 更新串接現金流圖表
+function updateCascadingCashflowWithData(cascadingCashflows) {
+  if (!cascadingCashflows || cascadingCashflows.length === 0) {
+    return;
+  }
+  
+  const table = document.querySelector('.cashflow-data-table');
+  if (!table) {
+    console.warn('無法找到現金流資料表，無法更新');
+    return;
+  }
+  
+  const headerRow = table.querySelector('thead tr');
+  const dataRow = table.querySelector('.cf-data-row');
+  
+  // 找出最大年份
+  const maxYear = Math.max(...Object.keys(cascadingCashflows).filter(key => !isNaN(key)).map(Number));
+  
+  // 對於串接的現金流，可能有很多年份
+  // 如果年份超過25個，則每隔幾年顯示一次
+  let yearStep = 1;
+  if (maxYear > 25) {
+    yearStep = Math.ceil(maxYear / 25); // 最多顯示25個年份
+  }
+  
+  // 添加所有需要的年份
+  for (let year = 0; year <= maxYear; year += yearStep) {
+    const yearHeader = document.createElement('th');
+    yearHeader.textContent = year;
+    headerRow.insertBefore(yearHeader, headerRow.lastElementChild);
+    
+    const yearCell = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'cf-flow-input';
+    input.dataset.year = year;
+    input.value = cascadingCashflows[year] || 0;
+    input.addEventListener('change', updateCascadingCashflowDiagram);
+    
+    yearCell.appendChild(input);
+    dataRow.insertBefore(yearCell, dataRow.lastElementChild);
+  }
+  
+  // 如果最後顯示的年份不是 maxYear，則添加 maxYear
+  if (maxYear % yearStep !== 0) {
+    const yearHeader = document.createElement('th');
+    yearHeader.textContent = maxYear;
+    headerRow.insertBefore(yearHeader, headerRow.lastElementChild);
+    
+    const yearCell = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'cf-flow-input';
+    input.dataset.year = maxYear;
+    input.value = cascadingCashflows[maxYear] || 0;
+    input.addEventListener('change', updateCascadingCashflowDiagram);
+    
+    yearCell.appendChild(input);
+    dataRow.insertBefore(yearCell, dataRow.lastElementChild);
+  }
+  
+  // 添加記錄分界線標記
+  updateCascadingCashflowDiagram(cascadingCashflows);
+  
+  // 添加串接概要
+  addCascadingSummary(cascadingCashflows);
+  
+  // 延遲執行NPV計算，確保DOM已更新
+  setTimeout(() => {
+    try {
+      calculateNPV();
+    } catch (error) {
+      console.warn('NPV計算失敗：', error);
+    }
+  }, 100);
+}
+
+// 更新串接現金流圖表
+function updateCascadingCashflowDiagram(cashflows) {
+  // 獲取現有視圖上的數據
+  if (!cashflows) {
+    const inputs = document.querySelectorAll('.cf-flow-input');
+    cashflows = [];
+    inputs.forEach(input => {
+      const year = parseInt(input.dataset.year);
+      const value = parseFloat(input.value) || 0;
+      cashflows[year] = value;
+    });
+  }
+  
+  // 使用共用的更新圖表方法
+  updateCashflowDiagram();
+  
+  // 如果有記錄分界線，顯示它們
+  if (cashflows.recordBoundaries) {
+    const svg = document.querySelector('.cashflow-svg');
+    if (!svg) return;
+    
+    const width = 850;
+    const height = 400;
+    const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+    const graphWidth = width - margin.left - margin.right;
+    const graphHeight = height - margin.top - margin.bottom;
+    
+    // 按時間順序排序歷史記錄
+    const sortedRecords = cashflows.recordBoundaries.sort((a, b) => a.startYear - b.startYear);
+    
+    // 最大年份
+    const maxYear = Math.max(...sortedRecords.map(r => r.endYear));
+    
+    // 建立座標系統
+    const xScale = graphWidth / Math.max(maxYear, 1);
+    const yAxisCenter = margin.top + graphHeight / 2;
+    
+    // 添加記錄分界線和標籤
+    sortedRecords.forEach((record, idx) => {
+      // 開始點垂直線
+      const startX = margin.left + record.startYear * xScale;
+      const endX = margin.left + record.endYear * xScale;
+      
+      // 垂直分界線
+      const startLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      startLine.setAttribute('x1', startX);
+      startLine.setAttribute('y1', margin.top);
+      startLine.setAttribute('x2', startX);
+      startLine.setAttribute('y2', margin.top + graphHeight);
+      startLine.setAttribute('class', 'record-boundary');
+      startLine.setAttribute('stroke', '#FF9500');
+      startLine.setAttribute('stroke-width', 1);
+      startLine.setAttribute('stroke-dasharray', '4,4');
+      svg.appendChild(startLine);
+      
+      // 結束點垂直線
+      const endLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      endLine.setAttribute('x1', endX);
+      endLine.setAttribute('y1', margin.top);
+      endLine.setAttribute('x2', endX);
+      endLine.setAttribute('y2', margin.top + graphHeight);
+      endLine.setAttribute('class', 'record-boundary');
+      endLine.setAttribute('stroke', '#FF9500');
+      endLine.setAttribute('stroke-width', 1);
+      endLine.setAttribute('stroke-dasharray', '4,4');
+      svg.appendChild(endLine);
+      
+      // 水平線連接
+      const horizontalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      horizontalLine.setAttribute('x1', startX);
+      horizontalLine.setAttribute('y1', margin.top);
+      horizontalLine.setAttribute('x2', endX);
+      horizontalLine.setAttribute('y2', margin.top);
+      horizontalLine.setAttribute('class', 'record-boundary');
+      horizontalLine.setAttribute('stroke', '#FF9500');
+      horizontalLine.setAttribute('stroke-width', 1);
+      horizontalLine.setAttribute('stroke-dasharray', '4,4');
+      svg.appendChild(horizontalLine);
+      
+      // 記錄標籤
+      const labelBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      labelBg.setAttribute('x', startX + (endX - startX) / 2 - 60);
+      labelBg.setAttribute('y', margin.top - 25);
+      labelBg.setAttribute('width', 120);
+      labelBg.setAttribute('height', 20);
+      labelBg.setAttribute('rx', 5);
+      labelBg.setAttribute('ry', 5);
+      labelBg.setAttribute('fill', '#242424');
+      labelBg.setAttribute('stroke', '#333');
+      svg.appendChild(labelBg);
+      
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', startX + (endX - startX) / 2);
+      label.setAttribute('y', margin.top - 10);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('class', 'record-label');
+      label.textContent = `${idx + 1}: ${record.factor} (${record.endYear - record.startYear}年)`;
+      svg.appendChild(label);
+    });
+  }
+}
+
+// 添加串接概要
+function addCascadingSummary(cascadingCashflows) {
+  // 檢查是否已有概要
+  let summaryDiv = document.querySelector('.cashflow-summary');
+  if (!summaryDiv) {
+    // 創建概要區塊
+    summaryDiv = document.createElement('div');
+    summaryDiv.className = 'cashflow-summary';
+    
+    // 添加標題
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'summary-title';
+    titleDiv.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle me-2" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+      </svg>
+      串接現金流概要
+    `;
+    summaryDiv.appendChild(titleDiv);
+    
+    // 添加列表容器
+    const listDiv = document.createElement('div');
+    listDiv.className = 'summary-list';
+    summaryDiv.appendChild(listDiv);
+    
+    // 將概要添加到現金流圖表容器中
+    const container = document.querySelector('.cashflow-container');
+    if (container) {
+      container.appendChild(summaryDiv);
+    }
+  }
+  
+  // 清空列表
+  const listDiv = summaryDiv.querySelector('.summary-list');
+  if (!listDiv) return;
+  
+  listDiv.innerHTML = '';
+  
+  // 添加總體概要
+  const totalItem = document.createElement('div');
+  totalItem.className = 'summary-item';
+  
+  // 計算整體統計資料
+  const maxYear = Math.max(...Object.keys(cascadingCashflows).filter(key => !isNaN(key)).map(Number));
+  let totalPositive = 0;
+  let totalNegative = 0;
+  
+  for (let i = 0; i <= maxYear; i++) {
+    const value = cascadingCashflows[i] || 0;
+    if (value > 0) {
+      totalPositive += value;
+    } else if (value < 0) {
+      totalNegative += value;
+    }
+  }
+  
+  totalItem.innerHTML = `
+    <div class="summary-label">串接總覽</div>
+    <div class="summary-value">總期數: ${maxYear} 年</div>
+    <div class="summary-value">總流入: <span class="value-positive">$${totalPositive.toLocaleString('zh-Hant', { maximumFractionDigits: 0 })}</span></div>
+    <div class="summary-value">總流出: <span class="value-negative">$${totalNegative.toLocaleString('zh-Hant', { maximumFractionDigits: 0 })}</span></div>
+    <div class="summary-value">淨現金流: <span class="${totalPositive + totalNegative >= 0 ? 'value-positive' : 'value-negative'}">$${(totalPositive + totalNegative).toLocaleString('zh-Hant', { maximumFractionDigits: 0 })}</span></div>
+  `;
+  listDiv.appendChild(totalItem);
+  
+  // 添加各記錄項目概要
+  if (cascadingCashflows.recordBoundaries) {
+    cascadingCashflows.recordBoundaries.forEach((record, idx) => {
+      const recordItem = document.createElement('div');
+      recordItem.className = 'summary-item';
+      
+      recordItem.innerHTML = `
+        <div class="summary-label">
+          <span class="history-index">${idx + 1}</span>
+          ${record.factor} (${record.endYear - record.startYear}年)
+        </div>
+        <div class="summary-value">年份: ${record.startYear} ~ ${record.endYear}</div>
+        <div class="summary-value">投入: $${record.amount.toLocaleString('zh-Hant', { maximumFractionDigits: 0 })}</div>
+        <div class="summary-value">結果: $${record.result.toLocaleString('zh-Hant', { maximumFractionDigits: 0 })}</div>
+      `;
+      listDiv.appendChild(recordItem);
+    });
+  }
+}
+
+// 新建現金流圖
+function createNewCashflow() {
+  // 獲取現金流圖表容器
+  const cfContainer = document.querySelector('.cashflow-container');
+  if (!cfContainer) {
+    showNotification('現金流圖表容器不存在', 'warning');
+    return;
+  }
+  
+  // 顯示現金流圖表
+  cfContainer.classList.add('active');
+  cfContainer.scrollIntoView({ behavior: 'smooth' });
+  
+  // 重設項目名稱和利率
+  const projectNameInput = document.querySelector('.cf-project-name');
+  const interestRateInput = document.querySelector('.cf-interest-rate');
+  
+  if (projectNameInput) {
+    projectNameInput.value = '新現金流項目';
+  }
+  
+  if (interestRateInput) {
+    interestRateInput.value = document.getElementById('interestRate').value || '5';
+  }
+  
+  // 清除現有數據並創建新的空白圖表
+  clearCashflowData();
+  
+  // 確保面板存在
+  ensureInfoPanelExists();
+  
+  // 添加初始現金流
+  const cashflows = [0];
+  for (let i = 1; i <= 5; i++) {
+    const yearHeader = document.createElement('th');
+    yearHeader.textContent = i;
+    document.querySelector('.cashflow-data-table thead tr').insertBefore(yearHeader, document.querySelector('.cashflow-data-table thead tr').lastElementChild);
+    
+    const yearCell = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'cf-flow-input';
+    input.dataset.year = i;
+    input.value = i === 0 ? -1000 : 250;
+    input.addEventListener('change', updateCashflowDiagram);
+    
+    yearCell.appendChild(input);
+    document.querySelector('.cf-data-row').insertBefore(yearCell, document.querySelector('.cf-data-row').lastElementChild);
+    
+    cashflows[i] = 250;
+  }
+  
+  // 更新圖表
+  updateCashflowWithData(cashflows);
+  showNotification('已創建新的現金流圖', 'success');
+}
+
+// 初始化現金流圖表功能
+function initCashflowDiagram() {
+  // 插入現金流容器
+  const template = document.getElementById('cashflowTemplate');
+  if (!template) {
+    console.warn('找不到現金流模板，初始化失敗');
+    return;
+  }
+  
+  const cashflowContainer = template.content.cloneNode(true);
+  document.querySelector('main').appendChild(cashflowContainer);
+  
+  document.getElementById('cashflowToggleBtn')?.addEventListener('click', function() {
+    const cfContainer = document.querySelector('.cashflow-container');
+    if (cfContainer) {
+      cfContainer.classList.toggle('active');
+      
+      if (cfContainer.classList.contains('active')) {
+        cfContainer.scrollIntoView({ behavior: 'smooth' });
+        updateCashflowDiagram();
+      }
+    }
+  });
+  
+  // 加入年數按鈕操作
+  document.querySelector('.cf-add-year')?.addEventListener('click', function() {
+    const table = document.querySelector('.cashflow-data-table');
+    if (!table) return;
+    
+    const headerRow = table.querySelector('thead tr');
+    const dataRow = table.querySelector('.cf-data-row');
+    if (!headerRow || !dataRow) return;
+    
+    // 取得目前最後一列的年數
+    const lastYear = parseInt(headerRow.cells[headerRow.cells.length - 2].textContent);
+    const newYear = lastYear + 1;
+    
+    // 插入新的表頭
+    const newHeader = document.createElement('th');
+    newHeader.textContent = newYear;
+    headerRow.insertBefore(newHeader, headerRow.lastElementChild);
+    
+    // 插入新的數據輸入格
+    const newCell = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'cf-flow-input';
+    input.dataset.year = newYear;
+    input.value = '0';
+    newCell.appendChild(input);
+    dataRow.insertBefore(newCell, dataRow.lastElementChild);
+    
+    // 更新圖表
+    updateCashflowDiagram();
+  });
+  
+  // 綁定計算 NPV 按鈕
+  document.querySelector('.cf-calculate-npv')?.addEventListener('click', calculateNPV);
+  
+  // 綁定圖表類型變更
+  document.querySelector('.cf-view-type')?.addEventListener('change', updateCashflowDiagram);
+  
+  // 綁定現金流輸入值變更
+  document.querySelectorAll('.cf-flow-input').forEach(input => {
+    input.addEventListener('change', updateCashflowDiagram);
+  });
+  
+  // 初始更新
+  updateCashflowDiagram();
+}
+
+// 事件監聽器
+function setupEventListeners() {
+  // 側邊欄開關按鈕
+  document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+    document.getElementById('historySidebar')?.classList.toggle('active');
+  });
+  
+  document.getElementById('closeSidebarBtn')?.addEventListener('click', function() {
+    document.getElementById('historySidebar')?.classList.remove('active');
+  });
+  
+  // 查詢因子按鈕
+  document.getElementById('searchFactorBtn')?.addEventListener('click', searchFactor);
+  document.getElementById('searchN')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') searchFactor();
+  });
+  
+  // 當利率變更時重新計算因子
+  document.getElementById('interestRate')?.addEventListener('change', calculateFactors);
+  document.getElementById('interestRate')?.addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') calculateFactors();
+  });
+  
+  // 計算器模組中的事件
+  document.getElementById('selectedFactor')?.addEventListener('change', updateFactorValue);
+  document.getElementById('selectedN')?.addEventListener('change', updateFactorValue);
+  document.getElementById('calculateBtn')?.addEventListener('click', performCalculation);
+  document.getElementById('inputAmount')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') performCalculation();
+  });
+  
+  // 歷史記錄搜尋功能
+  document.getElementById('historySearch')?.addEventListener('input', updateHistoryList);
+  
+  // 清空歷史按鈕
+  document.getElementById('clearHistoryBtn')?.addEventListener('click', clearAllHistory);
+  
+  // 表格單元格點擊開啟計算器
+  document.querySelector('.factor-table')?.addEventListener('click', function(e) {
+    if (e.target.tagName === 'TD' && e.target.cellIndex > 0) {
+      const n = e.target.parentElement.cells[0].textContent;
+      const factor = document.querySelector('.factor-table thead')?.rows[0]?.cells[e.target.cellIndex]?.textContent.trim();
+      const value = e.target.textContent;
+      
+      if (n && factor && value) {
+        openCalculatorModal(n, factor, value);
+      }
+    }
+  });
+  
+  // 現金流圖表按鈕
+  document.getElementById('cashflowToggleBtn')?.addEventListener('click', function() {
+    const cfContainer = document.querySelector('.cashflow-container');
+    if (cfContainer) {
+      cfContainer.classList.toggle('active');
+      
+      if (cfContainer.classList.contains('active')) {
+        cfContainer.scrollIntoView({ behavior: 'smooth' });
+        updateCashflowDiagram();
+      }
+    }
+  });
+  
+  // 新建現金流圖按鈕
+  document.getElementById('newCashflowBtn')?.addEventListener('click', createNewCashflow);
+  
+  // 串接現金流圖按鈕
+  document.getElementById('cascadingCashflowBtn')?.addEventListener('click', showCascadingCashflow);
+}
+
+// 初始化程序
+function init() {
+  try {
+    // 設定預設值
+    const defaultInterestRate = 5;
+    const interestRateInput = document.getElementById('interestRate');
+    if (interestRateInput) {
+      interestRateInput.value = defaultInterestRate;
+    }
+    
+    // 初始化工具提示
+    initTooltips();
+    
+    // 計算因子並填充表格
+    calculateFactors();
+    
+    // 設置表格排序
+    setupTableSorting();
+    
+    // 初始化現金流圖表
+    initCashflowDiagram();
+    
+    // 設置事件監聽器
+    setupEventListeners();
+    
+    // 更新歷史記錄列表
+    updateHistoryList();
+    
+    // 添加鍵盤快捷鍵
+    document.addEventListener('keydown', function(e) {
+      // Alt + S 打開側邊欄
+      if (e.altKey && e.key === 's') {
+        e.preventDefault();
+        document.getElementById('historySidebar')?.classList.toggle('active');
+      }
+      
+      // Alt + F 聚焦到查詢框
+      if (e.altKey && e.key === 'f') {
+        e.preventDefault();
+        document.getElementById('searchN')?.focus();
+      }
+      
+      // Alt + R 聚焦到利率輸入框
+      if (e.altKey && e.key === 'r') {
+        e.preventDefault();
+        document.getElementById('interestRate')?.focus();
+      }
+      
+      // Esc 關閉側邊欄
+      if (e.key === 'Escape' && document.getElementById('historySidebar')?.classList.contains('active')) {
+        document.getElementById('historySidebar')?.classList.remove('active');
+      }
+    });
+  } catch (error) {
+    console.error('初始化錯誤:', error);
+  }
+}
+
+// 網頁載入完成後執行初始化
+document.addEventListener('DOMContentLoaded', init);
     })();
   </script>
 </body>
