@@ -1,1011 +1,512 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OC曲線分析工具</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>工程經濟現金流圖 - 優化版</title>
   <style>
-    :root {
-      --primary: #FF9800;
-      --primary-light: #FFB74D;
-      --primary-dark: #F57C00;
-      --background: #1E2329;
-      --surface: #2D3439;
-      --surface-hover: #37474F;
-      --text-primary: #FFFFFF;
-      --text-secondary: #B0BEC5;
-      --error: #EF5350;
-      --success: #66BB6A;
-    }
-
+    /* Reset */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
-
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: var(--background);
-      color: var(--text-primary);
+      font-family: 'Microsoft JhengHei', 'PingFang TC', 'Heiti TC', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
       line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
+      padding: 20px;
     }
-
+    
     .container {
-      max-width: 1200px;
-      width: 95%;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: var(--surface);
-      border-radius: 1rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      position: relative;
-      padding-bottom: 1rem;
-    }
-
-    .header:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 3px;
-    }
-
-    .header h1 {
-      font-size: 2.2rem;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .header p {
-      color: var(--text-secondary);
-      max-width: 700px;
-      margin: 1rem auto;
-      font-size: 1rem;
-    }
-
-    .input-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-
-    .input-wrapper {
-      position: relative;
-      background: rgba(255,255,255,0.05);
-      border-radius: 0.75rem;
-      padding: 1.2rem;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-    }
-
-    .input-wrapper:hover {
-      background: var(--surface-hover);
-      transform: translateY(-2px);
-    }
-
-    .input-wrapper:focus-within {
-      box-shadow: 0 0 0 2px var(--primary);
-      border-color: var(--primary);
-    }
-
-    .input-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.8rem;
-    }
-
-    .input-header label {
-      font-weight: 500;
-      font-size: 1rem;
-      color: var(--text-primary);
-    }
-
-    .info-icon {
-      color: var(--primary-light);
-      margin-left: 0.5rem;
-      cursor: help;
-      font-size: 0.9rem;
-      transition: color 0.2s ease;
-    }
-
-    .info-icon:hover {
-      color: var(--primary);
-    }
-
-    .tooltip-text {
-      visibility: hidden;
-      background-color: rgba(0,0,0,0.9);
-      color: #fff;
-      text-align: center;
-      border-radius: 6px;
-      padding: 0.8rem;
-      position: absolute;
-      z-index: 10;
-      bottom: 125%;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      width: 220px;
-      font-size: 0.9rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .tooltip-text::after {
-      content: "";
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: rgba(0,0,0,0.9) transparent transparent transparent;
-    }
-
-    .info-icon:hover + .tooltip-text {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .input-field {
-      position: relative;
-    }
-
-    input {
-      width: 100%;
-      padding: 1rem;
-      background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 0.5rem;
-      color: var(--primary);
-      font-size: 1.2rem;
-      transition: all 0.3s ease;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(0,0,0,0.3);
-    }
-
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input[type=number] {
-      -moz-appearance: textfield;
-    }
-
-    .input-field .unit {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-secondary);
-      pointer-events: none;
-    }
-
-    .error-message {
-      color: var(--error);
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      display: none;
-    }
-
-    .button-group {
-      text-align: center;
-      margin: 2.5rem 0;
-    }
-
-    button {
-      background: var(--primary);
-      color: white;
-      padding: 1rem 2.5rem;
-      border: none;
-      border-radius: 0.75rem;
-      font-size: 1.1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.8rem;
-      box-shadow: 0 4px 12px rgba(255,152,0,0.3);
-    }
-
-    button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 15px rgba(255,152,0,0.4);
-    }
-
-    button:active {
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      background: #666;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .chart-section {
-      position: relative;
-      margin: 2rem 0;
-      padding: 1.5rem;
-      background: var(--background);
-      border-radius: 1rem;
-      box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
       overflow: hidden;
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
-
-    .chart-section:hover {
-      box-shadow: inset 0 2px 15px rgba(0,0,0,0.3);
-    }
-
-    .chart-container {
-      height: 500px;
-      width: 100%;
-    }
-
-    .custom-tooltip {
-      position: absolute;
-      background: rgba(0,0,0,0.85);
-      color: white;
-      padding: 0.8rem 1.2rem;
-      border-radius: 0.5rem;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
-      z-index: 10;
-      font-size: 0.95rem;
-      border-left: 3px solid var(--primary);
-      max-width: 250px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .chart-info {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background: rgba(0,0,0,0.2);
-      border-radius: 0.5rem;
-      border-left: 3px solid var(--primary);
-    }
-
-    .chart-info p {
-      margin-bottom: 0.5rem;
-    }
-
-    .chart-info p:last-child {
-      margin-bottom: 0;
-    }
-
-    .key-points {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-      animation: fadeIn 0.5s ease-in-out;
-      animation-delay: 0.3s;
-      animation-fill-mode: both;
-    }
-
-    .key-point {
-      background: rgba(255,255,255,0.05);
-      padding: 1.2rem;
-      border-radius: 0.75rem;
+    
+    header {
+      background: #3498db;
+      color: #fff;
+      padding: 20px;
       text-align: center;
-      transition: all 0.3s ease;
     }
-
-    .key-point:hover {
-      background: rgba(255,255,255,0.08);
-      transform: translateY(-3px);
+    
+    header h1 {
+      font-size: 24px;
     }
-
-    .key-point-title {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+    
+    .content {
+      padding: 20px;
     }
-
-    .key-point-value {
-      font-size: 1.5rem;
-      color: var(--primary);
+    
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+      background: #f1f8ff;
+      padding: 15px;
+      border-radius: 6px;
+    }
+    
+    .control-group {
+      flex: 1;
+      min-width: 150px;
+    }
+    
+    .control-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    
+    .control-group input, 
+    .control-group select, 
+    .control-group button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .control-group button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .control-group button:hover {
+      background: #2980b9;
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    .data-table th, .data-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    
+    .data-table th {
+      background: #f2f2f2;
+    }
+    
+    .data-table td input {
+      width: 80%;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    .data-row:hover {
+      background-color: #f5f5f5;
+    }
+    
+    svg {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    
+    .info-panel {
+      background: #f9f9f9;
+      padding: 15px;
+      border-left: 5px solid #3498db;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    
+    .info-panel div {
+      margin-bottom: 10px;
+    }
+    
+    .value-positive {
+      color: #27ae60;
       font-weight: bold;
     }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-top: auto;
+    
+    .value-negative {
+      color: #e74c3c;
+      font-weight: bold;
     }
-
+    
+    .legend {
+      display: flex;
+      gap: 20px;
+      padding: 10px 0;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+    }
+    
+    .legend-color {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+    }
+    
     @media (max-width: 768px) {
-      .container {
-        padding: 1.5rem;
-        margin: 1rem auto;
-        width: 92%;
+      .controls {
+        flex-direction: column;
       }
-      
-      .header h1 {
-        font-size: 1.8rem;
+      .control-group {
+        min-width: 100%;
       }
-      
-      button {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .chart-container {
-        height: 350px;
-      }
-    }
-
-    /* Animation for chart points on hover */
-    .point-highlight {
-      transform: scale(1.5);
-      transition: transform 0.2s ease;
-    }
-    
-    /* Loader animation */
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .loader {
-      animation: spin 1s linear infinite;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>
-        <i class="fas fa-chart-line" style="color: var(--primary);"></i>
-        OC曲線分析工具
-      </h1>
-      <p>分析抽樣檢驗計劃的運作特性曲線（Operating Characteristic Curve），評估品質檢驗計劃的效能。</p>
-    </div>
-
-    <div class="input-section">
-      <div class="input-wrapper">
-        <div class="input-header">
-          <label for="sampleSize">樣本大小 (n)</label>
-          <i class="fas fa-info-circle info-icon"></i>
-          <div class="tooltip-text">每次抽樣檢驗時抽取的產品數量。增加樣本大小可提高檢測能力，但會增加檢驗成本。</div>
+    <header>
+      <h1>工程經濟現金流圖</h1>
+    </header>
+    <div class="content">
+      <div class="controls">
+        <div class="control-group">
+          <label for="project-name">專案名稱</label>
+          <input type="text" id="project-name" value="工程專案A" />
         </div>
-        <div class="input-field">
-          <input type="number" id="sampleSize" value="50" min="1" step="1" required>
-          <span class="unit">件</span>
+        <div class="control-group">
+          <label for="interest-rate">利率 (%)</label>
+          <input type="number" id="interest-rate" value="5" min="0" step="0.1" />
         </div>
-        <div class="error-message" id="sampleSizeError"></div>
-      </div>
-
-      <div class="input-wrapper">
-        <div class="input-header">
-          <label for="acceptanceNumber">允收數量 (c)</label>
-          <i class="fas fa-info-circle info-icon"></i>
-          <div class="tooltip-text">允許的最大不合格品數量。超過此數量將拒收整批產品。较小的允收數會使檢驗更嚴格。</div>
+        <div class="control-group">
+          <label for="view-type">圖表類型</label>
+          <select id="view-type">
+            <option value="standard">標準現金流圖</option>
+            <option value="cumulative">累計現金流圖</option>
+          </select>
         </div>
-        <div class="input-field">
-          <input type="number" id="acceptanceNumber" value="2" min="0" step="1" required>
-          <span class="unit">件</span>
+        <div class="control-group">
+          <label>&nbsp;</label>
+          <button id="calculate-npv">計算淨現值 (NPV)</button>
         </div>
-        <div class="error-message" id="acceptanceNumberError"></div>
-      </div>
-    </div>
-
-    <div class="button-group">
-      <button id="generateButton" onclick="generateOC()">
-        <i class="fas fa-chart-area"></i>
-        生成OC曲線
-      </button>
-    </div>
-
-    <div class="chart-section">
-      <div id="ocChart" class="chart-container"></div>
-      <div class="custom-tooltip" id="chartTooltip"></div>
-      
-      <div class="chart-info">
-        <p><i class="fas fa-info-circle" style="color: var(--primary-light);"></i> OC曲線顯示在不同不良率(p)下的接受概率(Pa)。</p>
-        <p><i class="fas fa-lightbulb" style="color: var(--primary-light);"></i> 理想的OC曲線應在可接受品質水平(AQL)點保持高接受概率，並在限制性不良品率(LTPD)點快速下降。</p>
       </div>
       
-      <div class="key-points" id="keyPointsContainer" style="display: none;">
-        <div class="key-point">
-          <div class="key-point-title">生產者風險點 (α)</div>
-          <div class="key-point-value" id="producerRisk">--</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>時間 (年)</th>
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th><button id="add-year">+</button></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="data-row">
+            <td>現金流量 ($)</td>
+            <td><input type="number" class="flow-input" data-year="0" value="-400" /></td>
+            <td><input type="number" class="flow-input" data-year="1" value="200" /></td>
+            <td><input type="number" class="flow-input" data-year="2" value="200" /></td>
+            <td><input type="number" class="flow-input" data-year="3" value="200" /></td>
+            <td><input type="number" class="flow-input" data-year="4" value="300" /></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <svg id="cashflowSvg" width="850" height="400">
+        <defs>
+          <!-- 時間軸箭頭 -->
+          <marker id="axisArrow" markerWidth="8" markerHeight="8" refX="0" refY="4" orient="auto">
+            <path d="M0,8 L8,4 L0,0 Z" fill="#333" />
+          </marker>
+          <!-- 累計流量線的漸變 -->
+          <linearGradient id="cumulativeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#3498db" />
+            <stop offset="100%" stop-color="#9b59b6" />
+          </linearGradient>
+        </defs>
+      </svg>
+      
+      <div id="results" class="info-panel">
+        <div>專案淨現值 (NPV): <span id="npv-value">--</span></div>
+        <div>回收期 (年): <span id="payback-period">--</span></div>
+      </div>
+      
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #27ae60;"></div>
+          <span>現金流入</span>
         </div>
-        <div class="key-point">
-          <div class="key-point-title">消費者風險點 (β)</div>
-          <div class="key-point-value" id="consumerRisk">--</div>
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #e74c3c;"></div>
+          <span>現金流出</span>
         </div>
-        <div class="key-point">
-          <div class="key-point-title">檢驗辨別力 (pd₅₀)</div>
-          <div class="key-point-value" id="discriminationPower">--</div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(to right, #3498db, #9b59b6);"></div>
+          <span>累計現金流</span>
         </div>
       </div>
     </div>
   </div>
-
-  <footer>
-    <p>© 2025 OC曲線分析工具 | 版本 2.0</p>
-  </footer>
-
+  
   <script>
-    // 優化：使用一個統一的狀態管理
-    const state = {
-      sampleSize: 50,
-      acceptanceNumber: 2,
-      isCalculating: false,
-      chartInstance: null,
-      logFactorialCache: [],
-      defectRates: [],
-      acceptanceProbabilities: []
-    };
-
-    // 初始化輸入欄位驗證
-    function initInputValidation() {
-      const sampleSizeInput = document.getElementById('sampleSize');
-      const acceptanceNumberInput = document.getElementById('acceptanceNumber');
-      
-      sampleSizeInput.addEventListener('input', validateInputs);
-      acceptanceNumberInput.addEventListener('input', validateInputs);
-      
-      // 初始驗證
-      validateInputs();
+    // 初始資料
+    let times = [0, 1, 2, 3, 4];
+    let flows = [-400, 200, 200, 200, 300];
+    
+    // 主要繪圖參數
+    const svg = document.getElementById("cashflowSvg");
+    const xStart = 70, xEnd = 800, baseY = 200;
+    const scale = 0.25; // 縮放比例
+    
+    // DOM 元素綁定
+    const npvButton = document.getElementById("calculate-npv");
+    const interestRateInput = document.getElementById("interest-rate");
+    const addYearButton = document.getElementById("add-year");
+    const viewTypeSelect = document.getElementById("view-type");
+    const npvValue = document.getElementById("npv-value");
+    const paybackPeriod = document.getElementById("payback-period");
+    
+    // 初始繪製圖表
+    drawCashflowDiagram();
+    
+    // 事件監聽器
+    npvButton.addEventListener("click", calculateNPV);
+    addYearButton.addEventListener("click", addYear);
+    viewTypeSelect.addEventListener("change", drawCashflowDiagram);
+    document.querySelectorAll('.flow-input').forEach(input => {
+      input.addEventListener('change', updateFlow);
+    });
+    
+    // 更新現金流資料
+    function updateFlow(e) {
+      const year = parseInt(e.target.dataset.year);
+      const value = parseFloat(e.target.value);
+      flows[year] = value;
+      drawCashflowDiagram();
     }
     
-    // 驗證輸入參數
-    function validateInputs() {
-      const sampleSizeInput = document.getElementById('sampleSize');
-      const acceptanceNumberInput = document.getElementById('acceptanceNumber');
-      const generateButton = document.getElementById('generateButton');
+    // 增加年份
+    function addYear() {
+      const newYear = times.length;
+      times.push(newYear);
+      flows.push(0);
       
-      const sampleSize = parseInt(sampleSizeInput.value);
-      const acceptanceNumber = parseInt(acceptanceNumberInput.value);
+      // 更新表格
+      const headerRow = document.querySelector('.data-table thead tr');
+      const dataRow = document.querySelector('.data-table tbody tr');
       
-      const sampleSizeError = document.getElementById('sampleSizeError');
-      const acceptanceNumberError = document.getElementById('acceptanceNumberError');
+      const th = document.createElement('th');
+      th.textContent = newYear;
+      headerRow.insertBefore(th, headerRow.lastElementChild);
       
-      // 重置錯誤訊息
-      sampleSizeError.style.display = 'none';
-      acceptanceNumberError.style.display = 'none';
-      sampleSizeInput.style.borderColor = '';
-      acceptanceNumberInput.style.borderColor = '';
+      const td = document.createElement('td');
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'flow-input';
+      input.dataset.year = newYear;
+      input.value = '0';
+      input.addEventListener('change', updateFlow);
+      td.appendChild(input);
+      dataRow.insertBefore(td, dataRow.lastElementChild);
       
-      let hasError = false;
-      
-      // 驗證樣本大小
-      if (isNaN(sampleSize) || sampleSize <= 0) {
-        sampleSizeError.textContent = '請輸入大於0的整數';
-        sampleSizeError.style.display = 'block';
-        sampleSizeInput.style.borderColor = 'var(--error)';
-        hasError = true;
-      }
-      
-      // 驗證允收數量
-      if (isNaN(acceptanceNumber) || acceptanceNumber < 0) {
-        acceptanceNumberError.textContent = '請輸入非負整數';
-        acceptanceNumberError.style.display = 'block';
-        acceptanceNumberInput.style.borderColor = 'var(--error)';
-        hasError = true;
-      } else if (acceptanceNumber > sampleSize) {
-        acceptanceNumberError.textContent = '允收數量不能大於樣本大小';
-        acceptanceNumberError.style.display = 'block';
-        acceptanceNumberInput.style.borderColor = 'var(--error)';
-        hasError = true;
-      }
-      
-      // 更新按鈕狀態
-      generateButton.disabled = hasError;
-      
-      return !hasError;
-    }
-
-    // 計算對數階乘（log(n!)），使用緩存以提高計算穩定性和效率
-    function logFactorial(n) {
-      if (n === 0 || n === 1) return 0;
-      if (state.logFactorialCache[n]) return state.logFactorialCache[n];
-
-      let logFact = state.logFactorialCache[n - 1] || 0;
-      for (let i = (state.logFactorialCache.length || 2); i <= n; i++) {
-        logFact += Math.log(i);
-        state.logFactorialCache[i] = logFact;
-      }
-      return logFact;
-    }
-
-    // 計算二項分佈的機率，使用對數方法以防止溢出
-    function binomialProbability(n, x, p) {
-      if (x > n) return 0;
-      if (p === 0) return x === 0 ? 1 : 0;
-      if (p === 1) return x === n ? 1 : 0;
-
-      const logC = logFactorial(n) - logFactorial(x) - logFactorial(n - x);
-      const logP = x * Math.log(p) + (n - x) * Math.log(1 - p);
-      const logProb = logC + logP;
-
-      // 防止指數運算溢出
-      if (logProb < -700) return 0;
-      return Math.exp(logProb);
-    }
-
-    // 計算接受概率，累積 P(X=0) 到 P(X=c)
-    function acceptanceProbability(n, c, p) {
-      let Pa = 0;
-      for (let x = 0; x <= c; x++) {
-        const prob = binomialProbability(n, x, p);
-        Pa += prob;
-      }
-      return Pa > 1 ? 1 : Pa;
-    }
-
-    // 計算重要參數
-    function calculateKeyPoints(sampleSize, acceptanceNumber, defectRates, acceptanceProbabilities) {
-      // 生產者風險點：在 AQL 處的拒收概率
-      // 假設 AQL = 1%
-      const aqlIndex = defectRates.findIndex(p => p >= 0.01);
-      const producerRisk = 1 - acceptanceProbabilities[aqlIndex];
-      
-      // 消費者風險點：在 LTPD 處的接受概率
-      // 假設 LTPD = 10%
-      const ltpdIndex = defectRates.findIndex(p => p >= 0.10);
-      const consumerRisk = acceptanceProbabilities[ltpdIndex];
-      
-      // 檢驗辨別力：Pa = 50% 時的不良率
-      const pd50Index = acceptanceProbabilities.findIndex(pa => pa <= 0.5);
-      const discriminationPower = defectRates[pd50Index];
-      
-      return {
-        producerRisk: (producerRisk * 100).toFixed(1) + '%',
-        consumerRisk: (consumerRisk * 100).toFixed(1) + '%',
-        discriminationPower: (discriminationPower * 100).toFixed(2) + '%'
-      };
+      drawCashflowDiagram();
     }
     
-    // 更新關鍵點資訊
-    function updateKeyPoints(keyPoints) {
-      document.getElementById('producerRisk').textContent = keyPoints.producerRisk;
-      document.getElementById('consumerRisk').textContent = keyPoints.consumerRisk;
-      document.getElementById('discriminationPower').textContent = keyPoints.discriminationPower;
-      document.getElementById('keyPointsContainer').style.display = 'grid';
-    }
-
-    // 生成OC曲線，使用 ECharts 進行可視化
-    function generateOC() {
-      if (!validateInputs()) return;
+    // 繪製現金流圖
+    function drawCashflowDiagram() {
+      // 清空 SVG (保留 defs)
+      while (svg.lastChild) {
+        if (svg.lastChild.tagName === 'defs') break;
+        svg.removeChild(svg.lastChild);
+      }
       
-      // 更新按鈕狀態
-      const button = document.getElementById('generateButton');
-      button.innerHTML = '<i class="fas fa-spinner fa-spin loader"></i> 計算中...';
-      button.disabled = true;
-      state.isCalculating = true;
-
-      // 獲取參數
-      state.sampleSize = parseInt(document.getElementById('sampleSize').value);
-      state.acceptanceNumber = parseInt(document.getElementById('acceptanceNumber').value);
-
-      // 在非阻塞的方式中使用 setTimeout 進行計算
-      setTimeout(() => {
-        try {
-          state.defectRates = [];
-          state.acceptanceProbabilities = [];
-
-          // 以更細的步長計算曲線 (0.005 -> 0.002)
-          for (let p = 0; p <= 0.2; p += 0.002) {
-            state.defectRates.push(p);
-            const pa = acceptanceProbability(state.sampleSize, state.acceptanceNumber, p);
-            state.acceptanceProbabilities.push(pa > 1 ? 1 : pa);
-          }
-
-          // 繪製曲線
-          drawChart();
+      const maxTime = times[times.length - 1];
+      const viewType = viewTypeSelect.value;
+      let maxFlow = Math.max(...flows.map(Math.abs));
+      
+      // 基準線與網格
+      createLine(xStart, baseY, xEnd, baseY, "#333", 1.5, "axisArrow");
+      createText("時間 (年)", xEnd + 15, baseY + 5, 14);
+      createLine(xStart, 50, xStart, baseY + 150, "#333", 1.5);
+      createText("現金流量 ($)", xStart - 10, 35, 14, "#333", "middle");
+      
+      const stepSize = Math.ceil(maxFlow / 5) * 100;
+      for (let i = -3; i <= 3; i++) {
+        const yPos = baseY - i * stepSize * scale;
+        if (yPos >= 50 && yPos <= baseY + 150) {
+          createLine(xStart - 5, yPos, xStart, yPos, "#333", 1);
+          createText(i * stepSize, xStart - 10, yPos + 5, 12, "#666", "end");
+        }
+      }
+      
+      // 垂直網格與刻度
+      times.forEach(t => {
+        const xPos = xStart + (t / maxTime) * (xEnd - xStart);
+        createLine(xPos, 50, xPos, baseY + 150, "#ddd", 1);
+        createText(t, xPos, baseY + 25, 12, "#333", "middle");
+      });
+      
+      // 累計現金流圖
+      if (viewType === "cumulative") {
+        let cumulativeFlows = [];
+        let sum = 0;
+        for (let flow of flows) {
+          sum += flow;
+          cumulativeFlows.push(sum);
+        }
+        let points = times.map((t, i) => {
+          const xPos = xStart + (t / maxTime) * (xEnd - xStart);
+          const yPos = baseY - cumulativeFlows[i] * scale;
+          return `${xPos},${yPos}`;
+        }).join(" ");
+        
+        const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        polyline.setAttribute("points", points);
+        polyline.setAttribute("fill", "none");
+        polyline.setAttribute("stroke", "url(#cumulativeGradient)");
+        polyline.setAttribute("stroke-width", 3);
+        svg.appendChild(polyline);
+        
+        times.forEach((t, i) => {
+          const xPos = xStart + (t / maxTime) * (xEnd - xStart);
+          const yPos = baseY - cumulativeFlows[i] * scale;
           
-          // 計算並顯示重要參數
-          const keyPoints = calculateKeyPoints(
-            state.sampleSize, 
-            state.acceptanceNumber, 
-            state.defectRates, 
-            state.acceptanceProbabilities
-          );
-          updateKeyPoints(keyPoints);
-
-          // 重置按鈕狀態
-          button.innerHTML = '<i class="fas fa-chart-area"></i> 重新生成曲線';
-          button.disabled = false;
-          state.isCalculating = false;
-        } catch (error) {
-          console.error('計算錯誤：', error);
-          button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 重新嘗試';
-          button.disabled = false;
-          state.isCalculating = false;
-          alert('計算過程中發生錯誤，請調整參數後重試。');
-        }
-      }, 50);
-    }
-
-    // 使用 ECharts 繪製 OC 曲線
-    function drawChart() {
-      const chartDom = document.getElementById('ocChart');
-      
-      // 如果已有圖表實例，則銷毀
-      if (state.chartInstance) {
-        state.chartInstance.dispose();
-      }
-      
-      state.chartInstance = echarts.init(chartDom);
-      
-      // 創建兩條曲線：一條主曲線和一條輔助曲線用來標示關鍵點
-      const option = {
-        title: {
-          text: 'OC曲線分析',
-          subtext: `樣本數: ${state.sampleSize}, 允收數: ${state.acceptanceNumber}`,
-          left: 'center',
-          textStyle: {
-            color: '#FF9800',
-            fontSize: 18
-          },
-          subtextStyle: {
-            color: '#B0BEC5'
-          }
-        },
-        tooltip: {
-          trigger: 'axis',
-          show: false // 關閉內建提示，使用自訂提示
-        },
-        grid: {
-          left: '5%',
-          right: '5%',
-          bottom: '8%',
-          top: '15%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'value',
-          name: '不良率 (p)',
-          nameLocation: 'middle',
-          nameGap: 35,
-          axisLabel: {
-            formatter: value => (value * 100).toFixed(1) + '%',
-            color: '#B0BEC5'
-          },
-          min: 0,
-          max: 0.2,
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: 'rgba(255,255,255,0.1)',
-              type: 'dashed'
-            }
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#FF9800'
-            }
-          }
-        },
-        yAxis: {
-          type: 'value',
-          name: '接受概率 (Pa)',
-          nameLocation: 'middle',
-          nameGap: 45,
-          axisLabel: {
-            formatter: value => (value * 100).toFixed(0) + '%',
-            color: '#B0BEC5'
-          },
-          min: 0,
-          max: 1,
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: 'rgba(255,255,255,0.1)',
-              type: 'dashed'
-            }
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#FF9800'
-            }
-          }
-        },
-        series: [
-          {
-            name: 'OC曲線',
-            type: 'line',
-            smooth: true,
-            showSymbol: false,
-            emphasis: {
-              focus: 'series',
-              lineStyle: {
-                width: 3
-              }
-            },
-            data: state.defectRates.map((p, i) => [p, state.acceptanceProbabilities[i]]),
-            lineStyle: {
-              color: '#FF9800',
-              width: 2.5
-            },
-            areaStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: 'rgba(255, 152, 0, 0.5)' },
-                { offset: 1, color: 'rgba(255, 152, 0, 0.05)' }
-              ])
-            },
-            markPoint: {
-              symbolSize: 60,
-              data: [
-                { type: 'max', name: '最大值', symbolOffset: [0, -20] },
-                { 
-                  name: '接受概率50%',
-                  coord: [state.defectRates.find((_, i) => state.acceptanceProbabilities[i] <= 0.5), 0.5],
-                  itemStyle: { color: '#FF9800' }
-                }
-              ],
-              label: {
-                formatter: (params) => {
-                  if (params.name === '接受概率50%') {
-                    const p = params.data.coord[0];
-                    return `pd₅₀\n${(p * 100).toFixed(1)}%`;
-                  }
-                  return params.name;
-                },
-                fontSize: 12
-              }
-            },
-            markLine: {
-              symbol: ['none', 'none'],
-              label: { show: true },
-              data: [
-                { 
-                  name: 'AQL',
-                  xAxis: 0.01,
-                  lineStyle: { color: '#66BB6A' },
-                  label: { position: 'middle', formatter: 'AQL (1%)', color: '#66BB6A' }
-                },
-                {
-                  name: 'LTPD',
-                  xAxis: 0.10,
-                  lineStyle: { color: '#EF5350' },
-                  label: { position: 'middle', formatter: 'LTPD (10%)', color: '#EF5350' }
-                },
-                {
-                  name: '50%接受率',
-                  yAxis: 0.5,
-                  lineStyle: { type: 'dashed', color: '#B0BEC5' }
-                }
-              ]
-            }
-          }
-        ],
-        animation: true,
-        animationDuration: 1000,
-        animationEasing: 'cubicOut',
-        backgroundColor: '#1E2329'
-      };
-      
-      state.chartInstance.setOption(option);
-      
-      // 圖表互動功能
-      initChartInteraction();
-    }
-    
-    // 初始化圖表互動功能
-    function initChartInteraction() {
-      const chartDom = document.getElementById('ocChart');
-      const tooltip = document.getElementById('chartTooltip');
-      
-      // 設備類型檢測
-      const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-      
-      // 滑鼠懸停效果
-      state.chartInstance.on('mouseover', function() {
-        chartDom.style.cursor = 'pointer';
-      });
-      
-      state.chartInstance.on('mouseout', function() {
-        chartDom.style.cursor = 'default';
-      });
-      
-      if (isMobile) {
-        // 手機端點擊顯示提示框
-        state.chartInstance.on('click', function(params) {
-          if (params.componentType === 'series') {
-            const [p, pa] = params.data;
-            
-            // 計算提示位置
-            const x = params.event.offsetX;
-            const y = params.event.offsetY;
-            
-            // 顯示提示內容
-            tooltip.innerHTML = `
-              <div style="margin-bottom: 5px; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">
-                點位資訊
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                <span>不良率 (p):</span>
-                <span style="font-weight: bold; color: #FF9800;">${(p * 100).toFixed(2)}%</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>接受概率 (Pa):</span>
-                <span style="font-weight: bold; color: #FF9800;">${(pa * 100).toFixed(2)}%</span>
-              </div>
-            `;
-            
-            // 設置提示框位置
-            tooltip.style.left = (x + 10) + 'px';
-            tooltip.style.top = (y - 10) + 'px';
-            tooltip.style.opacity = 1;
-            
-            // 3秒後自動隱藏
-            setTimeout(() => {
-              tooltip.style.opacity = 0;
-            }, 3000);
-          }
-        });
-      } else {
-        // 桌面端滑鼠移動顯示提示框
-        let hideTimeout;
-        
-        state.chartInstance.on('mousemove', function(params) {
-          if (params.componentType === 'series') {
-            clearTimeout(hideTimeout);
-            
-            const [p, pa] = params.data;
-            
-            // 計算提示位置
-            const x = params.event.offsetX;
-            const y = params.event.offsetY;
-            
-            // 顯示提示內容
-            tooltip.innerHTML = `
-              <div style="margin-bottom: 5px; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">
-                點位資訊
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                <span>不良率 (p):</span>
-                <span style="font-weight: bold; color: #FF9800;">${(p * 100).toFixed(2)}%</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>接受概率 (Pa):</span>
-                <span style="font-weight: bold; color: #FF9800;">${(pa * 100).toFixed(2)}%</span>
-              </div>
-            `;
-            
-            // 設置提示框位置（避免超出邊界）
-            const tooltipWidth = 200; // 預估寬度
-            const tooltipHeight = 100; // 預估高度
-            const chartRect = chartDom.getBoundingClientRect();
-            
-            let posX = (x + tooltipWidth > chartRect.width) ? (x - tooltipWidth - 10) : (x + 10);
-            let posY = (y + tooltipHeight > chartRect.height) ? (y - tooltipHeight - 10) : (y + 10);
-            
-            posX = Math.max(10, posX);
-            posY = Math.max(10, posY);
-            
-            tooltip.style.left = posX + 'px';
-            tooltip.style.top = posY + 'px';
-            tooltip.style.opacity = 1;
-          }
-        });
-        
-        state.chartInstance.on('mouseout', function() {
-          hideTimeout = setTimeout(() => {
-            tooltip.style.opacity = 0;
-          }, 200);
+          const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          circle.setAttribute("cx", xPos);
+          circle.setAttribute("cy", yPos);
+          circle.setAttribute("r", 5);
+          circle.setAttribute("fill", cumulativeFlows[i] >= 0 ? "#27ae60" : "#e74c3c");
+          svg.appendChild(circle);
+          
+          createText(cumulativeFlows[i].toFixed(0), xPos, yPos - 15, 12, cumulativeFlows[i] >= 0 ? "#27ae60" : "#e74c3c", "middle");
         });
       }
+      
+      // 個別現金流直線
+      times.forEach((t, i) => {
+        const flow = flows[i];
+        const xPos = xStart + (t / maxTime) * (xEnd - xStart);
+        
+        if (flow !== 0) {
+          const lineLen = Math.min(Math.abs(flow) * scale, 120);
+          
+          if (flow > 0) {
+            createLine(xPos, baseY, xPos, baseY - lineLen, "#27ae60", 2);
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", xPos);
+            circle.setAttribute("cy", baseY - lineLen);
+            circle.setAttribute("r", 4);
+            circle.setAttribute("fill", "#27ae60");
+            svg.appendChild(circle);
+            
+            const textY = baseY - lineLen - 10;
+            createRect(xPos - 25, textY - 15, 50, 20, "white", 0.7);
+            createText(flow.toFixed(0), xPos, textY, 12, "#27ae60", "middle", "bold");
+          } else {
+            createLine(xPos, baseY, xPos, baseY + lineLen, "#e74c3c", 2);
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", xPos);
+            circle.setAttribute("cy", baseY + lineLen);
+            circle.setAttribute("r", 4);
+            circle.setAttribute("fill", "#e74c3c");
+            svg.appendChild(circle);
+            
+            const textY = baseY + lineLen + 20;
+            createRect(xPos - 25, textY - 15, 50, 20, "white", 0.7);
+            createText(Math.abs(flow).toFixed(0), xPos, textY, 12, "#e74c3c", "middle", "bold");
+          }
+        }
+      });
+      
+      calculatePaybackPeriod();
     }
     
-    // 導出圖表為圖片
-    function exportChart() {
-      if (!state.chartInstance) return;
+    // 計算淨現值 (NPV)
+    function calculateNPV() {
+      const rate = parseFloat(interestRateInput.value) / 100;
+      let npv = 0;
       
-      try {
-        // 獲取圖表的 DataURL
-        const dataURL = state.chartInstance.getDataURL({
-          type: 'png',
-          pixelRatio: 2,
-          backgroundColor: '#1E2329'
-        });
-        
-        // 創建下載連結
-        const link = document.createElement('a');
-        link.href = dataURL;
-        link.download = `OC曲線_n${state.sampleSize}_c${state.acceptanceNumber}_${new Date().toISOString().slice(0, 10)}.png`;
-        
-        // 觸發下載
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error('匯出圖表時發生錯誤：', error);
-        alert('匯出圖表失敗，請稍後再試。');
+      flows.forEach((flow, i) => {
+        npv += flow / Math.pow(1 + rate, i);
+      });
+      
+      npvValue.textContent = `$${npv.toFixed(2)}`;
+      npvValue.className = npv >= 0 ? "value-positive" : "value-negative";
+    }
+    
+    // 計算回收期
+    function calculatePaybackPeriod() {
+      let cumulative = 0;
+      let paybackYear = null;
+      
+      for (let i = 0; i < flows.length; i++) {
+        cumulative += flows[i];
+        if (cumulative >= 0 && paybackYear === null) {
+          paybackYear = i;
+        }
       }
-    }
-    
-    // 添加鍵盤快捷鍵
-    function setupKeyboardShortcuts() {
-      document.addEventListener('keydown', function(e) {
-        // Ctrl+Enter 生成圖表
-        if (e.ctrlKey && e.key === 'Enter') {
-          e.preventDefault();
-          generateOC();
-        }
-        
-        // Ctrl+S 導出圖表
-        if (e.ctrlKey && e.key === 's') {
-          e.preventDefault();
-          exportChart();
-        }
-      });
-    }
-    
-    // 調整圖表大小以適應窗口變化
-    function handleResize() {
-      window.addEventListener('resize', function() {
-        if (state.chartInstance) {
-          state.chartInstance.resize();
-        }
-      });
-    }
-    
-    // 初始化所有事件監聽
-    function initEvents() {
-      // 初始化輸入欄位驗證
-      initInputValidation();
       
-      // 設置鍵盤快捷鍵
-      setupKeyboardShortcuts();
-      
-      // 處理窗口大小變化
-      handleResize();
+      paybackPeriod.textContent = (paybackYear !== null) ? paybackYear.toString() : "超過專案期限";
     }
     
-    // 網頁載入完成後執行初始化
-    window.onload = function() {
-      // 初始化所有事件監聽
-      initEvents();
+    // 建立 SVG 線條元素
+    function createLine(x1, y1, x2, y2, color, strokeWidth, markerId) {
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", y2);
+      line.setAttribute("stroke", color);
+      line.setAttribute("stroke-width", strokeWidth);
       
-      // 生成初始圖表
-      generateOC();
-    };
+      if (markerId) {
+        line.setAttribute("marker-end", `url(#${markerId})`);
+      }
+      
+      svg.appendChild(line);
+      return line;
+    }
+    
+    // 建立 SVG 文字元素
+    function createText(text, x, y, fontSize = 12, color = "black", anchor = "start", fontWeight = "normal") {
+      const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      txt.setAttribute("x", x);
+      txt.setAttribute("y", y);
+      txt.setAttribute("fill", color);
+      txt.setAttribute("font-size", fontSize);
+      txt.setAttribute("text-anchor", anchor);
+      txt.setAttribute("font-weight", fontWeight);
+      txt.textContent = text;
+      svg.appendChild(txt);
+      return txt;
+    }
+    
+    // 建立 SVG 矩形元素（用作文字背景）
+    function createRect(x, y, width, height, fill, opacity = 1) {
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("x", x);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", width);
+      rect.setAttribute("height", height);
+      rect.setAttribute("fill", fill);
+      rect.setAttribute("opacity", opacity);
+      rect.setAttribute("rx", "3");
+      svg.appendChild(rect);
+      return rect;
+    }
   </script>
 </body>
 </html>
