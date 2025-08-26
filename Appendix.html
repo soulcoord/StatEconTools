@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>常態分配標準差表 | 統計工具包（極致優化版）</title>
+  <title>常態分配標準差表</title>
 
-  <!-- Chart.js CDN -->
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" defer></script>
 
   <style>
@@ -57,7 +57,7 @@
       overflow-x: hidden;
     }
 
-    /* 動態背景效果 */
+    
     body::before {
       content: '';
       position: fixed;
@@ -79,7 +79,7 @@
       66% { transform: translate(30px, -30px) rotate(240deg); }
     }
 
-    /* 頂部導覽 - 增強玻璃效果 */
+    
     nav{
       position: sticky;
       top: 1rem;
@@ -138,7 +138,7 @@
       box-shadow: 0 0 20px rgba(255, 107, 53, 0.15);
     }
 
-    /* 主容器 - 增強深度感 */
+    
     .container{
       max-width: 1280px;
       margin: 0 auto;
@@ -152,7 +152,7 @@
       z-index: 1;
     }
 
-    /* 標題區塊 - 更有層次感 */
+    
     .header-section {
       text-align: center;
       margin-bottom: 2.5rem;
@@ -175,7 +175,7 @@
       font-weight: 400;
     }
 
-    /* 控制面板 - 優化卡片設計 */
+    
     .control-panel{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -251,7 +251,7 @@
       color: var(--text-muted);
     }
 
-    /* 輸入元件 - 現代化設計 */
+    
     label{ 
       color: var(--text-muted);
       font-size: 0.9rem;
@@ -285,7 +285,7 @@
       background: rgba(255, 255, 255, 0.05);
     }
 
-    /* 範圍滑桿 - 客製化設計 */
+    
     .range-container {
       position: relative;
       margin: 1.5rem 0;
@@ -339,7 +339,7 @@
       transition: var(--transition);
     }
 
-    /* 按鈕 - 增強互動感 */
+    
     .btn{
       padding: 0.75rem 1.5rem;
       border-radius: var(--radius-xs);
@@ -383,7 +383,7 @@
       color: var(--primary);
     }
 
-    /* 訊息提示 - 更優雅的動畫 */
+    
     .toast {
       position: fixed;
       top: 2rem;
@@ -427,7 +427,7 @@
       font-size: 1.5rem;
     }
 
-    /* 表格 - 現代化設計 */
+    
     .table-container{
       background: var(--surface);
       border-radius: var(--radius);
@@ -462,7 +462,7 @@
       overflow-y: auto;
     }
 
-    /* 自訂滾動條 */
+    
     .table-wrapper::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -533,7 +533,7 @@
       50% { background: rgba(255, 107, 53, 0.25); }
     }
 
-    /* 圖表模態 - 更精緻的設計 */
+    
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -612,7 +612,7 @@
       height: 100% !important;
     }
 
-    /* 載入動畫 - 更流暢 */
+    
     .loader-overlay {
       position: fixed;
       inset: 0;
@@ -663,7 +663,7 @@
       to { transform: rotate(360deg); }
     }
 
-    /* 回到頂部按鈕 - 更優雅 */
+    
     .back-to-top {
       position: fixed;
       right: 2rem;
@@ -696,7 +696,7 @@
       box-shadow: var(--shadow-lg);
     }
 
-    /* 快速操作按鈕組 */
+    
     .quick-actions {
       display: flex;
       gap: 0.5rem;
@@ -720,7 +720,7 @@
       border-color: var(--primary);
     }
 
-    /* 統計摘要卡片 */
+    
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -748,7 +748,7 @@
       color: var(--text-muted);
     }
 
-    /* 響應式設計 */
+    
     @media (max-width: 768px) {
       body { padding: 1rem; }
       
@@ -784,7 +784,7 @@
       }
     }
 
-    /* 進階動畫 */
+    
     @keyframes slideInUp {
       from {
         opacity: 0;
@@ -800,7 +800,7 @@
       animation: slideInUp 0.5s ease forwards;
     }
 
-    /* 工具提示 */
+    
     .tooltip {
       position: relative;
     }
@@ -828,14 +828,14 @@
       opacity: 1;
     }
 
-    /* 鍵盤導航焦點樣式 */
+    
     *:focus-visible {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
       border-radius: var(--radius-xs);
     }
 
-    /* 列印樣式 */
+    
     @media print {
       body {
         background: white;
@@ -855,27 +855,18 @@
 </head>
 
 <body>
-  <!-- 導航列 -->
-  <nav role="navigation" aria-label="主要導航">
-    <a href="#" class="active" aria-current="page">常態分配</a>
-    <a href="#">t 檢驗</a>
-    <a href="#">卡方分配</a>
-    <a href="#">F 分配</a>
-    <a href="#">二項分配</a>
-    <a href="#">卜瓦松分配</a>
-  </nav>
 
-  <!-- 主容器 -->
+  
   <div class="container" role="main">
-    <!-- 標題區 -->
+    
     <div class="header-section">
       <h1>常態分配標準差表</h1>
       <p class="subtitle">互動式統計工具 · 即時計算 · 視覺化呈現</p>
     </div>
 
-    <!-- 控制面板 -->
+    
     <div class="control-panel">
-      <!-- Z 值範圍控制 -->
+      
       <section class="card animate-in" style="animation-delay: 0.1s">
         <div class="card-header">
           <div class="icon">📊</div>
@@ -921,7 +912,7 @@
         </div>
       </section>
 
-      <!-- 快速搜尋 -->
+      
       <section class="card animate-in" style="animation-delay: 0.2s">
         <div class="card-header">
           <div class="icon">🔍</div>
@@ -942,7 +933,7 @@
         </div>
 
         <div id="searchResult" style="min-height: 60px;">
-          <!-- 搜尋結果會顯示在這裡 -->
+          
         </div>
 
         <div class="quick-actions">
@@ -953,7 +944,7 @@
         </div>
       </section>
 
-      <!-- 機率計算器 -->
+      
       <section class="card animate-in" style="animation-delay: 0.3s">
         <div class="card-header">
           <div class="icon">🧮</div>
@@ -979,7 +970,7 @@
         </button>
 
         <div id="intervalResult" style="margin-top: 1rem; min-height: 60px;">
-          <!-- 計算結果會顯示在這裡 -->
+          
         </div>
 
         <div class="quick-actions">
@@ -990,7 +981,7 @@
       </section>
     </div>
 
-    <!-- 資料表格 -->
+    
     <div class="table-container">
       <div class="table-header">
         <div>
@@ -1012,14 +1003,14 @@
             </tr>
           </thead>
           <tbody id="zTableBody">
-            <!-- 表格內容會動態生成 -->
+            
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- 圖表模態視窗 -->
+  
   <div class="modal-overlay" id="chartModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
       <div class="modal-header">
@@ -1032,7 +1023,7 @@
     </div>
   </div>
 
-  <!-- 載入動畫 -->
+  
   <div class="loader-overlay" id="loader">
     <div class="loader">
       <div class="loader-circle"></div>
@@ -1041,18 +1032,15 @@
     </div>
   </div>
 
-  <!-- 提示訊息 -->
+  
   <div id="toast" class="toast" role="alert" aria-live="polite"></div>
 
-  <!-- 回到頂部按鈕 -->
+  
   <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="回到頂部">
     ↑
   </button>
 
   <script>
-    // ========== 核心資料與函數 ==========
-    
-    // 誤差函數近似計算
     function erf(x) {
       const a1 = 0.254829592;
       const a2 = -0.284496736;
@@ -1069,18 +1057,12 @@
       
       return sign * y;
     }
-
-    // 標準常態分配累積分配函數
     function cdf(z) {
       return 0.5 * (1 + erf(z / Math.sqrt(2)));
     }
-
-    // 標準常態分配機率密度函數
     function pdf(z) {
       return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
     }
-
-    // 生成資料表
     const zData = [];
     function generateData() {
       zData.length = 0;
@@ -1094,12 +1076,8 @@
         });
       }
     }
-
-    // ========== DOM 工具函數 ==========
     
     const $ = id => document.getElementById(id);
-    
-    // 顯示提示訊息
     function showToast(message, type = 'info', duration = 3000) {
       const toast = $('toast');
       toast.className = `toast ${type}`;
@@ -1116,8 +1094,6 @@
         toast.classList.remove('show');
       }, duration);
     }
-
-    // 顯示載入動畫
     function showLoader() {
       $('loader').classList.add('show');
     }
@@ -1125,20 +1101,12 @@
     function hideLoader() {
       $('loader').classList.remove('show');
     }
-
-    // ========== 表格渲染 ==========
     
     function renderTable(minZ = -4, maxZ = 4) {
       const tbody = $('zTableBody');
       const fragment = document.createDocumentFragment();
-      
-      // 清空現有內容
       tbody.innerHTML = '';
-      
-      // 篩選資料
       const filteredData = zData.filter(item => item.z >= minZ && item.z <= maxZ);
-      
-      // 建立表格行
       filteredData.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -1153,12 +1121,8 @@
       });
       
       tbody.appendChild(fragment);
-      
-      // 更新統計資訊
       updateStats(minZ, maxZ, filteredData.length);
     }
-
-    // 更新統計資訊
     function updateStats(minZ, maxZ, count) {
       $('tableInfo').textContent = `顯示 ${minZ.toFixed(2)} 至 ${maxZ.toFixed(2)}`;
       $('rangeCount').textContent = count;
@@ -1166,27 +1130,17 @@
       const coverage = (cdf(maxZ) - cdf(minZ)) * 100;
       $('rangeCoverage').textContent = `${coverage.toFixed(1)}%`;
     }
-
-    // ========== 範圍控制 ==========
     
     function updateRange() {
       const minZ = parseFloat($('minZ').value);
       const maxZ = parseFloat($('maxZ').value);
-      
-      // 確保最小值不大於最大值
       if (minZ > maxZ) {
         $('minZ').value = maxZ;
         $('maxZ').value = minZ;
       }
-      
-      // 同步輸入框
       $('minZValue').value = $('minZ').value;
       $('maxZValue').value = $('maxZ').value;
-      
-      // 更新範圍軌道視覺效果
       updateRangeTrack();
-      
-      // 延遲渲染以提升效能
       clearTimeout(window.rangeTimer);
       window.rangeTimer = setTimeout(() => {
         renderTable(parseFloat($('minZ').value), parseFloat($('maxZ').value));
@@ -1204,8 +1158,6 @@
       track.style.left = `${minPercent}%`;
       track.style.width = `${maxPercent - minPercent}%`;
     }
-
-    // 預設範圍按鈕
     function setPresetRange(min, max) {
       $('minZ').value = min;
       $('maxZ').value = max;
@@ -1215,8 +1167,6 @@
       renderTable(min, max);
       showToast(`已設定範圍為 ${min} 至 ${max}`, 'success');
     }
-
-    // ========== 搜尋功能 ==========
     
     function searchZValue() {
       const searchInput = $('searchValue').value.trim();
@@ -1239,7 +1189,6 @@
       const data = zData.find(item => Math.abs(item.z - zRounded) < 0.005);
       
       if (data) {
-        // 顯示結果
         const resultDiv = $('searchResult');
         resultDiv.innerHTML = `
           <div class="stat-card" style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));">
@@ -1255,8 +1204,6 @@
             </div>
           </div>
         `;
-        
-        // 自動調整範圍以顯示該值
         const currentMin = parseFloat($('minZ').value);
         const currentMax = parseFloat($('maxZ').value);
         
@@ -1265,11 +1212,7 @@
           const newMax = Math.min(4, z + 0.5);
           setPresetRange(newMin, newMax);
         }
-        
-        // 高亮表格中的對應行
         highlightTableRow(zRounded);
-        
-        // 顯示圖表
         showChart(zRounded);
         
         showToast(`找到 Z = ${zRounded.toFixed(2)}`, 'success');
@@ -1287,8 +1230,6 @@
         }
       });
     }
-
-    // ========== 區間機率計算 ==========
     
     function calculateInterval() {
       const lower = parseFloat($('lowerZ').value);
@@ -1314,8 +1255,6 @@
           <div class="stat-label" style="margin-top: 0.5rem;">機率值：${prob.toFixed(4)}</div>
         </div>
       `;
-      
-      // 顯示區間圖表
       showIntervalChart(lower, upper);
       
       showToast('區間機率計算完成', 'success');
@@ -1326,16 +1265,12 @@
       $('upperZ').value = upper;
       calculateInterval();
     }
-
-    // ========== 圖表功能 ==========
     
     let chartInstance = null;
 
     function showChart(z) {
       const modal = $('chartModal');
       const ctx = $('zChart').getContext('2d');
-      
-      // 準備資料
       const xValues = [];
       const yValues = [];
       const fillValues = [];
@@ -1345,13 +1280,9 @@
         yValues.push(pdf(x));
         fillValues.push(x <= z ? pdf(x) : 0);
       }
-      
-      // 銷毀舊圖表
       if (chartInstance) {
         chartInstance.destroy();
       }
-      
-      // 建立新圖表
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1430,16 +1361,12 @@
           }
         }
       });
-      
-      // 顯示模態視窗
       modal.classList.add('show');
     }
 
     function showIntervalChart(lower, upper) {
       const modal = $('chartModal');
       const ctx = $('zChart').getContext('2d');
-      
-      // 準備資料
       const xValues = [];
       const yValues = [];
       const fillValues = [];
@@ -1449,13 +1376,9 @@
         yValues.push(pdf(x));
         fillValues.push(x >= lower && x <= upper ? pdf(x) : 0);
       }
-      
-      // 銷毀舊圖表
       if (chartInstance) {
         chartInstance.destroy();
       }
-      
-      // 建立新圖表
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1534,16 +1457,12 @@
           }
         }
       });
-      
-      // 顯示模態視窗
       modal.classList.add('show');
     }
 
     function closeChart() {
       $('chartModal').classList.remove('show');
     }
-
-    // ========== 匯出功能 ==========
     
     function exportTable() {
       const minZ = parseFloat($('minZ').value);
@@ -1554,8 +1473,6 @@
       filteredData.forEach(item => {
         csv += `${item.z.toFixed(2)},${item.cdf.toFixed(4)},${item.pdf.toFixed(4)},${item.rightTail.toFixed(4)}\n`;
       });
-      
-      // 建立下載連結
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
@@ -1568,8 +1485,6 @@
       
       showToast('資料已匯出', 'success');
     }
-
-    // ========== 回到頂部 ==========
     
     function scrollToTop() {
       window.scrollTo({
@@ -1577,8 +1492,6 @@
         behavior: 'smooth'
       });
     }
-
-    // 監聽滾動事件
     window.addEventListener('scroll', () => {
       const backToTop = $('backToTop');
       if (window.pageYOffset > 300) {
@@ -1587,19 +1500,12 @@
         backToTop.classList.remove('show');
       }
     });
-
-    // ========== 初始化 ==========
     
     document.addEventListener('DOMContentLoaded', () => {
-      // 生成資料
       showLoader();
       generateData();
-      
-      // 初始化表格
       renderTable();
       updateRangeTrack();
-      
-      // 綁定事件監聽器
       $('minZ').addEventListener('input', updateRange);
       $('maxZ').addEventListener('input', updateRange);
       
@@ -1612,8 +1518,6 @@
         $('maxZ').value = this.value;
         updateRange();
       });
-      
-      // Enter 鍵快捷操作
       $('searchValue').addEventListener('keypress', e => {
         if (e.key === 'Enter') searchZValue();
       });
@@ -1625,25 +1529,17 @@
       $('upperZ').addEventListener('keypress', e => {
         if (e.key === 'Enter') calculateInterval();
       });
-      
-      // 點擊模態背景關閉
       $('chartModal').addEventListener('click', e => {
         if (e.target === e.currentTarget) closeChart();
       });
-      
-      // ESC 鍵關閉模態
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeChart();
       });
-      
-      // 隱藏載入動畫
       setTimeout(() => {
         hideLoader();
         showToast('資料載入完成，點擊表格行可查看圖表', 'success');
       }, 500);
     });
-
-    // ========== 全域函數暴露 ==========
     
     window.searchZValue = searchZValue;
     window.quickSearch = quickSearch;

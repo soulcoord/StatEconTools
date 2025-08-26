@@ -36,7 +36,7 @@
             line-height: 1.6;
         }
 
-        /* Header */
+        
         .header {
             background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
@@ -81,14 +81,14 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Container */
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Hero */
+        
         .hero {
             text-align: center;
             padding: 3rem 0;
@@ -109,7 +109,7 @@
             font-size: 1.125rem;
         }
 
-        /* Card */
+        
         .card {
             background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(10px);
@@ -149,7 +149,7 @@
             padding: 1.5rem;
         }
 
-        /* Form */
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -183,7 +183,7 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        /* Button */
+        
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -206,7 +206,7 @@
             box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
         }
 
-        /* Alert */
+        
         .alert {
             padding: 1rem;
             border-radius: 8px;
@@ -233,7 +233,7 @@
             color: var(--success);
         }
 
-        /* Stats Grid */
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -266,7 +266,7 @@
             color: var(--text-primary);
         }
 
-        /* Tabs */
+        
         .tabs {
             display: flex;
             gap: 0.5rem;
@@ -306,7 +306,7 @@
             animation: fadeIn 0.3s ease;
         }
 
-        /* Table */
+        
         .table-wrapper {
             overflow-x: auto;
             background: rgba(15, 23, 42, 0.6);
@@ -352,7 +352,7 @@
             font-weight: 500;
         }
 
-        /* Chart */
+        
         .chart-container {
             position: relative;
             height: 400px;
@@ -413,7 +413,7 @@
             opacity: 1;
         }
 
-        /* Pagination */
+        
         .pagination {
             display: flex;
             justify-content: center;
@@ -452,7 +452,7 @@
             cursor: not-allowed;
         }
 
-        /* Loading */
+        
         .loading {
             display: none;
             position: fixed;
@@ -479,7 +479,7 @@
             animation: spin 0.8s linear infinite;
         }
 
-        /* Animations */
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -494,7 +494,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
+        
         @media (max-width: 768px) {
             .hero-title { font-size: 2rem; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -622,13 +622,10 @@
     </div>
 
     <script>
-        // Configuration
         const ROWS_PER_PAGE = 10;
         let currentPage = 1;
         let poissonData = [];
         let selectedK = null;
-
-        // DOM Elements
         const elements = {
             lambdaInput: document.getElementById('lambdaInput'),
             generateBtn: document.getElementById('generateBtn'),
@@ -645,21 +642,15 @@
             totalProbValue: document.getElementById('totalProbValue'),
             barContainer: document.getElementById('barContainer')
         };
-
-        // Factorial cache
         const factorialCache = { 0: 1, 1: 1 };
         function factorial(n) {
             if (factorialCache[n] !== undefined) return factorialCache[n];
             factorialCache[n] = n * factorial(n - 1);
             return factorialCache[n];
         }
-
-        // Calculate Poisson probability
         function poissonProbability(lambda, k) {
             return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
         }
-
-        // Generate Poisson data
         function generatePoissonData(lambda) {
             const data = [];
             const maxK = Math.max(30, Math.ceil(lambda + 6 * Math.sqrt(lambda)));
@@ -682,8 +673,6 @@
 
             return data;
         }
-
-        // Update statistics
         function updateStatistics(lambda) {
             const total = poissonData.reduce((sum, item) => sum + item.probability, 0);
             
@@ -694,8 +683,6 @@
             
             elements.statsCard.style.display = 'block';
         }
-
-        // Render table
         function renderTable() {
             const start = (currentPage - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
@@ -724,13 +711,9 @@
                 elements.tableBody.appendChild(row);
             });
         }
-
-        // Render pagination
         function renderPagination() {
             const totalPages = Math.ceil(poissonData.length / ROWS_PER_PAGE);
             elements.pagination.innerHTML = '';
-
-            // Previous button
             const prevBtn = document.createElement('button');
             prevBtn.innerHTML = '←';
             prevBtn.disabled = currentPage === 1;
@@ -742,8 +725,6 @@
                 }
             });
             elements.pagination.appendChild(prevBtn);
-
-            // Page numbers
             const maxVisible = 5;
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + maxVisible - 1);
@@ -765,8 +746,6 @@
                 });
                 elements.pagination.appendChild(pageBtn);
             }
-
-            // Next button
             const nextBtn = document.createElement('button');
             nextBtn.innerHTML = '→';
             nextBtn.disabled = currentPage === totalPages;
@@ -779,8 +758,6 @@
             });
             elements.pagination.appendChild(nextBtn);
         }
-
-        // Render chart
         function renderChart() {
             elements.barContainer.innerHTML = '';
             
@@ -821,8 +798,6 @@
                 elements.barContainer.appendChild(bar);
             });
         }
-
-        // Highlight chart bar
         function highlightChartBar(k) {
             document.querySelectorAll('.chart-bar').forEach(bar => {
                 bar.classList.remove('highlighted');
@@ -833,8 +808,6 @@
                 bar.classList.add('highlighted');
             }
         }
-
-        // Generate distribution
         function generateDistribution() {
             const lambda = parseFloat(elements.lambdaInput.value);
 
@@ -860,8 +833,6 @@
                 showAlert(`成功生成 λ = ${lambda} 的普瓦松分配表`, 'success');
             }, 300);
         }
-
-        // Show alert
         function showAlert(message, type = 'error') {
             elements.alertText.textContent = message;
             elements.alert.className = `alert alert-${type} show`;
@@ -869,13 +840,9 @@
                 elements.alert.classList.remove('show');
             }, 3000);
         }
-
-        // Show/hide loading
         function showLoading(show) {
             elements.loading.classList.toggle('show', show);
         }
-
-        // Tab switching
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -891,8 +858,6 @@
                 setTimeout(() => renderChart(), 100);
             }
         }
-
-        // Event listeners
         elements.generateBtn.addEventListener('click', generateDistribution);
         
         elements.lambdaInput.addEventListener('keypress', (e) => {
@@ -906,13 +871,9 @@
                 openTab(btn.dataset.tab);
             });
         });
-
-        // Initialize
         window.addEventListener('load', () => {
             generateDistribution();
         });
-
-        // Responsive chart
         window.addEventListener('resize', () => {
             if (document.getElementById('chart').classList.contains('active') && poissonData.length > 0) {
                 renderChart();

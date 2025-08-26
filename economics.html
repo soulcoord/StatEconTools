@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>工程經濟因子速查表</title>
-  <!-- Bootstrap 5 & Google Fonts -->
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <style>
-    /* CSS 變數 */
+    
     :root {
       --primary-color: #FF9500;
       --primary-hover: #FFB44C;
@@ -39,7 +39,7 @@
       --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
-    /* 全局樣式 */
+    
     html, body {
       height: 100%;
       margin: 0;
@@ -61,7 +61,7 @@
       color: var(--primary-hover);
     }
 
-    /* 捲軸樣式 */
+    
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
@@ -82,7 +82,7 @@
       background: #555;
     }
 
-    /* 導覽列 */
+    
     .navbar-custom {
       background: var(--surface-dark);
       box-shadow: var(--shadow-md);
@@ -130,7 +130,7 @@
       transform: translateY(1px);
     }
 
-    /* 主要內容容器 */
+    
     .main-container {
       max-width: 1400px;
       margin: auto;
@@ -152,7 +152,7 @@
       border-color: #444;
     }
 
-    /* 表單與輸入元件 */
+    
     .form-label {
       color: var(--text-secondary);
       font-size: 0.85rem;
@@ -205,7 +205,7 @@
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
     }
 
-    /* 區塊標題 */
+    
     .section-title {
       font-size: 1.2rem;
       font-weight: 600;
@@ -220,7 +220,7 @@
       color: var(--primary-color);
     }
 
-    /* 按鈕樣式 */
+    
     .btn {
       border-radius: var(--radius-md);
       font-weight: 500;
@@ -415,7 +415,7 @@
       100% { box-shadow: 0 0 16px rgba(255, 149, 0, 0.6); }
     }
 
-    /* 側邊欄 */
+    
     .sidebar {
       position: fixed;
       top: 0;
@@ -472,7 +472,7 @@
       padding-left: 2.5rem;
     }
 
-    /* 歷史紀錄項目 */
+    
     .history-list {
       flex-grow: 1;
       overflow-y: auto;
@@ -542,7 +542,7 @@
       border: 1px dashed var(--border-color);
     }
 
-    /* Modal 快速計算器 */
+    
     .modal-backdrop {
       backdrop-filter: blur(4px);
       background-color: rgba(0, 0, 0, 0.5);
@@ -647,7 +647,7 @@
       font-weight: 600;
     }
 
-    /* 警告訊息 */
+    
     .alert-custom {
       border-radius: var(--radius-md);
       padding: 1rem;
@@ -664,8 +664,8 @@
       color: #0091EA;
     }
 
-    /* 行動裝置相容 */
-    /* 鍵盤快捷鍵提示 */
+    
+    
     .shortcut-badge {
       display: inline-flex;
       align-items: center;
@@ -679,7 +679,7 @@
       border: 1px solid rgba(255,255,255,0.15);
     }
     
-    /* 浮動通知容器 */
+    
     .notification-container {
       position: fixed;
       bottom: 20px;
@@ -709,7 +709,7 @@
       to { transform: translateX(100%); opacity: 0; }
     }
     
-    /* 媒體查詢 - 行動裝置 */
+    
     @media (max-width: 768px) {
       .input-group-dynamic {
         flex-direction: column;
@@ -759,7 +759,7 @@
       }
     }
 
-    /* 動畫效果 */
+    
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -778,13 +778,13 @@
       animation: slideUp 0.4s ease forwards;
     }
 
-    /* 暗黑主題元素修正 */
+    
     .form-check-input:checked {
       background-color: var(--primary-color);
       border-color: var(--primary-color);
     }
     
-    /* 浮動工具提示 */
+    
     .tooltip-inner {
       background-color: var(--surface-dark);
       border: 1px solid var(--border-color);
@@ -795,7 +795,7 @@
   </style>
 </head>
 <body>
-  <!-- 導覽區塊 -->
+  
   <header>
     <nav class="navbar navbar-custom sticky-top" role="navigation" aria-label="主要導航">
       <div class="container d-flex justify-content-between align-items-center">
@@ -817,9 +817,9 @@
     </nav>
   </header>
   
-  <!-- 主要內容 -->
+  
   <main class="main-container">
-    <!-- 標題與查詢表單 -->
+    
     <section class="header-section slide-up" aria-labelledby="mainTitle">
       <h1 class="section-title" id="mainTitle">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calculator" viewBox="0 0 16 16">
@@ -871,7 +871,7 @@
       </div>
     </section>
     
-    <!-- 因子速查表 -->
+    
     <section class="table-container fade-in" aria-label="因子速查表">
       <div class="table-responsive">
         <table class="factor-table table table-dark table-bordered align-middle m-0">
@@ -895,7 +895,7 @@
     </section>
   </main>
   
-  <!-- 側邊欄：計算歷史 -->
+  
   <aside class="sidebar" id="historySidebar" aria-label="計算歷史記錄">
     <div class="sidebar-header">
       <h5 class="sidebar-title">
@@ -922,7 +922,7 @@
     <div class="history-list" id="historyList"></div>
   </aside>
   
-  <!-- 快速計算器 Modal -->
+  
   <div class="modal fade calculator-modal" id="calculatorModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -1017,18 +1017,15 @@
     </div>
   </div>
   
-  <!-- Bootstrap JS Bundle & SweetAlert2 (輕量化外部通知工具) -->
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <script>
     (function(){
-      // 全域變數
       let currentHighlight = null;
       let historyRecords = JSON.parse(localStorage.getItem('calcHistory')) || [];
       let editingIndex = -1;
       let tooltipList = [];
-      
-      // 初始化工具提示
       function initTooltips() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
@@ -1037,8 +1034,6 @@
           });
         });
       }
-      
-      // 計算各因子，並更新表格與期數下拉選單
       function calculateFactors() {
         const rateInput = document.getElementById('interestRate').value;
         const rate = parseFloat(rateInput) / 100;
@@ -1059,8 +1054,6 @@
             </tr>`;
           return;
         }
-
-        // 動態新增加載效果
         tbody.innerHTML = `
           <tr>
             <td colspan="9" class="text-center py-4">
@@ -1070,8 +1063,6 @@
               <p class="mt-2">計算中...</p>
             </td>
           </tr>`;
-
-        // 使用setTimeout來允許UI更新
         setTimeout(() => {
           tbody.innerHTML = '';
           for (let n = 1; n <= 60; n++) {
@@ -1098,8 +1089,6 @@
             `;
             tbody.appendChild(row);
           }
-
-          // 更新「期數 (N)」下拉選單
           const nSelect = document.getElementById('selectedN');
           nSelect.innerHTML = '';
           for (let i = 1; i <= 60; i++) {
@@ -1110,8 +1099,6 @@
           }
         }, 300);
       }
-
-      // 查詢並高亮指定期數及因子欄位
       function searchFactor() {
         const factor = document.getElementById('factorType').value;
         const nValue = document.getElementById('searchN').value;
@@ -1139,18 +1126,13 @@
               cells[headerIndex].classList.add('highlight-cell');
               currentHighlight = cells[headerIndex];
               cells[headerIndex].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-              
-              // 提供視覺反饋
               showNotification(`已找到 ${factor} 在期數 ${nValue} 的值：${cells[headerIndex].textContent}`, 'success');
             }
             break;
           }
         }
       }
-      
-      // 顯示通知訊息
       function showNotification(message, type = 'info') {
-        // 檢查是否已存在通知容器
         let notificationContainer = document.getElementById('notificationContainer');
         if (!notificationContainer) {
           notificationContainer = document.createElement('div');
@@ -1164,8 +1146,6 @@
           `;
           document.body.appendChild(notificationContainer);
         }
-        
-        // 建立通知元素
         const notification = document.createElement('div');
         notification.className = `alert alert-${type} fade-in`;
         notification.style.cssText = `
@@ -1180,8 +1160,6 @@
           align-items: center;
           gap: 10px;
         `;
-        
-        // 根據類型添加圖標
         let icon = '';
         switch(type) {
           case 'success':
@@ -1210,8 +1188,6 @@
         `;
         
         notificationContainer.appendChild(notification);
-        
-        // 自動消失
         setTimeout(() => {
           notification.style.opacity = '0';
           notification.style.transform = 'translateX(100%)';
@@ -1219,8 +1195,6 @@
           setTimeout(() => notification.remove(), 500);
         }, 4000);
       }
-
-      // 根據選取的期數及因子更新計算器中的因子值
       function updateFactorValue() {
         const n = document.getElementById('selectedN').value;
         const factor = document.getElementById('selectedFactor').value;
@@ -1242,8 +1216,6 @@
           }
         }
       }
-
-      // 執行計算並顯示計算流程，同時保存到歷史紀錄
       function performCalculation() {
         const value = parseFloat(document.getElementById('selectedValue').value);
         const amount = parseFloat(document.getElementById('inputAmount').value);
@@ -1309,8 +1281,6 @@
         flowHTML += `<span class="flow-item result-highlight">${finalResult.toLocaleString('zh-Hant', { maximumFractionDigits: 4 })}</span>`;
         
         resultField.innerHTML = flowHTML;
-
-        // 儲存歷史紀錄
         const record = {
           id: Date.now(),
           timestamp: new Date().toISOString(),
@@ -1338,19 +1308,13 @@
             立即計算`;
           showNotification('歷史記錄已更新', 'success');
         }
-        
-        // 限制歷史記錄數量
         if (historyRecords.length > 100) {
           historyRecords = historyRecords.slice(0, 100);
         }
-        
-        // 儲存至本地儲存空間
         localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
         
         updateHistoryList();
       }
-
-      // 篩選歷史紀錄
       function filterHistory() {
         const searchValue = document.getElementById('historySearch').value.toLowerCase();
         const filteredRecords = historyRecords.filter(record => 
@@ -1361,8 +1325,6 @@
         );
         updateHistoryList(filteredRecords);
       }
-
-      // 格式化日期時間
       function formatDateTime(isoString) {
         const date = new Date(isoString);
         const year = date.getFullYear();
@@ -1372,8 +1334,6 @@
         const minutes = String(date.getMinutes()).padStart(2, '0');
         return `${year}-${month}-${day} ${hours}:${minutes}`;
       }
-
-      // 更新歷史紀錄列表
       function updateHistoryList(filteredRecords = historyRecords) {
         const historyList = document.getElementById('historyList');
         historyList.innerHTML = '';
@@ -1450,8 +1410,6 @@
             </div>
           `;
           historyList.appendChild(item);
-          
-          // 為按鈕新增事件監聽器
           item.querySelector('.history-edit-btn').addEventListener('click', function() {
             editRecord(this.getAttribute('data-index'));
           });
@@ -1461,8 +1419,6 @@
           });
         });
       }
-
-      // 編輯歷史紀錄
       function editRecord(index) {
         const record = historyRecords[index];
         editingIndex = index;
@@ -1487,10 +1443,7 @@
           document.getElementById('inputAmount').focus();
         }, 350);
       }
-
-      // 刪除單筆歷史紀錄
       function confirmDelete(index) {
-        // 使用SweetAlert2提供更好的確認對話框
         const swalWithBootstrapButtons = Swal.mixin({
           customClass: {
             confirmButton: 'btn btn-danger ms-2',
@@ -1518,8 +1471,6 @@
           }
         });
       }
-
-      // 清空所有歷史紀錄
       function confirmClearHistory() {
         if (confirm('確定要清空所有歷史記錄嗎？此操作無法撤銷。')) {
           historyRecords = [];
@@ -1528,13 +1479,10 @@
           showNotification('所有歷史記錄已清空', 'success');
         }
       }
-// 切換側邊欄顯示
 function toggleSidebar() {
         const sidebar = document.getElementById('historySidebar');
         sidebar.classList.toggle('active');
       }
-      
-      // 設置表格單元格點擊事件
       function setupTableCellEvents() {
         document.querySelector('.factor-table').addEventListener('click', function(e) {
           if (e.target.tagName === 'TD' && e.target.cellIndex > 0) {
@@ -1546,8 +1494,6 @@ function toggleSidebar() {
             document.getElementById('selectedN').value = n;
             document.getElementById('selectedFactor').value = factor;
             document.getElementById('selectedValue').value = value.toFixed(6);
-            
-            // 反白標示選中的單元格
             if (currentHighlight) currentHighlight.classList.remove('highlight-cell');
             e.target.classList.add('highlight-cell');
             currentHighlight = e.target;
@@ -1558,8 +1504,6 @@ function toggleSidebar() {
           }
         });
       }
-      
-      // 設置表格排序功能
       function setupTableSort() {
         const headerCells = document.querySelectorAll('.factor-table thead th');
         
@@ -1569,65 +1513,44 @@ function toggleSidebar() {
               const table = th.closest('table');
               const tbody = table.querySelector('tbody');
               const rows = Array.from(tbody.querySelectorAll('tr'));
-              
-              // 移除所有排序指示器
               headerCells.forEach(cell => {
                 cell.classList.remove('sort-asc', 'sort-desc');
               });
-              
-              // 判斷排序方向
               const isAscending = !this.classList.contains('sort-asc');
               
               this.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
-              
-              // 排序行
               rows.sort((a, b) => {
                 const aValue = parseFloat(a.cells[index].textContent);
                 const bValue = parseFloat(b.cells[index].textContent);
                 return isAscending ? aValue - bValue : bValue - aValue;
               });
-              
-              // 重建表格
               rows.forEach(row => tbody.appendChild(row));
             });
           }
         });
       }
-      
-      // 鍵盤快捷鍵設置
       function setupKeyboardShortcuts() {
         document.addEventListener('keydown', function(e) {
-          // Alt + F: 聚焦於因子選擇
           if (e.altKey && e.key === 'f') {
             e.preventDefault();
             document.getElementById('factorType').focus();
           }
-          
-          // Alt + N: 聚焦於期數輸入
           if (e.altKey && e.key === 'n') {
             e.preventDefault();
             document.getElementById('searchN').focus();
           }
-          
-          // Alt + I: 聚焦於利率輸入
           if (e.altKey && e.key === 'i') {
             e.preventDefault();
             document.getElementById('interestRate').focus();
           }
-          
-          // Alt + S: 進行查詢
           if (e.altKey && e.key === 's') {
             e.preventDefault();
             document.getElementById('searchFactorBtn').click();
           }
-          
-          // Alt + H: 切換歷史紀錄側邊欄
           if (e.altKey && e.key === 'h') {
             e.preventDefault();
             toggleSidebar();
           }
-          
-          // Escape 關閉側邊欄
           if (e.key === 'Escape') {
             const sidebar = document.getElementById('historySidebar');
             if (sidebar.classList.contains('active')) {
@@ -1636,13 +1559,8 @@ function toggleSidebar() {
           }
         });
       }
-      
-      // 初始化 UI 事件
       function initUIEvents() {
-        // 查詢按鈕點擊
         document.getElementById('searchFactorBtn').addEventListener('click', searchFactor);
-        
-        // 輸入迅速回應
         document.getElementById('searchN').addEventListener('keypress', function(e) {
           if (e.key === 'Enter') {
             searchFactor();
@@ -1654,69 +1572,42 @@ function toggleSidebar() {
             calculateFactors();
           }
         });
-        
-        // 利率變化時重新計算
         document.getElementById('interestRate').addEventListener('change', calculateFactors);
-        
-        // 因子類型、期數變化時更新因子值
         document.getElementById('selectedFactor').addEventListener('change', updateFactorValue);
         document.getElementById('selectedN').addEventListener('change', updateFactorValue);
-        
-        // 計算按鈕點擊
         document.getElementById('calculateBtn').addEventListener('click', performCalculation);
-        
-        // 快速回應計算金額
         document.getElementById('inputAmount').addEventListener('keypress', function(e) {
           if (e.key === 'Enter') {
             performCalculation();
           }
         });
-        
-        // 複合因子變化時更新界面
         document.getElementById('compoundFactor').addEventListener('change', function() {
           if (this.value) {
             updateFactorValue();
           }
         });
-        
-        // 側邊欄切換
         document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
         document.getElementById('closeSidebarBtn').addEventListener('click', toggleSidebar);
-        
-        // 清空歷史記錄
         document.getElementById('clearHistoryBtn').addEventListener('click', confirmClearHistory);
-        
-        // 歷史搜索
         document.getElementById('historySearch').addEventListener('input', filterHistory);
       }
-      
-      // 初始化頁面
       function initPage() {
         initTooltips();
         initUIEvents();
         setupTableCellEvents();
         setupTableSort();
         setupKeyboardShortcuts();
-        
-        // 如果 URL 有查詢參數，載入預設值
         const urlParams = new URLSearchParams(window.location.search);
         const defaultRate = urlParams.get('rate');
         
         if (defaultRate) {
           document.getElementById('interestRate').value = defaultRate;
         } else {
-          // 否則使用預設值
           document.getElementById('interestRate').value = 5;
         }
-        
-        // 初始化計算表格
         calculateFactors();
-        
-        // 初始化歷史紀錄
         updateHistoryList();
       }
-      
-      // 啟動應用程式
       document.addEventListener('DOMContentLoaded', initPage);
     })();
   </script>
