@@ -1,467 +1,143 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>離散數學中的遞迴與求解方法</title>
-    <style>
-        body {
-            font-family: "PingFang TC", "Microsoft JhengHei", "微軟正黑體", sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-            background-color: #1a237e;
-            color: white;
-            border-radius: 8px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        h2 {
-            color: #1a237e;
-            border-bottom: 2px solid #1a237e;
-            padding-bottom: 10px;
-            margin-top: 40px;
-        }
-        h3 {
-            color: #303f9f;
-            margin-top: 25px;
-        }
-        .section {
-            background-color: white;
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .example {
-            background-color: #e8eaf6;
-            padding: 15px;
-            border-left: 5px solid #3f51b5;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }
-        .math {
-            font-family: "Times New Roman", serif;
-            font-style: italic;
-        }
-        .code {
-            font-family: "Courier New", monospace;
-            background-color: #f0f0f0;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        .important {
-            color: #d32f2f;
-            font-weight: bold;
-        }
-        .visualization {
-            width: 100%;
-            min-height: 300px;
-            background-color: #fafafa;
-            border: 1px solid #ddd;
-            margin: 20px 0;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-        .step-form {
-            margin: 20px 0;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-        }
-        input, button {
-            padding: 8px 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #3f51b5;
-            color: white;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #303f9f;
-        }
-        .result {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #3f51b5;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .katex { font-size: 1.1em; }
-        .note {
-            background-color: #fff9c4;
-            padding: 15px;
-            border-left: 5px solid #ffc107;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/contrib/auto-render.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>電費計算器（含匯出 Excel）</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <header>
-        <h1>離散數學中的遞迴與求解方法</h1>
-    </header>
+<body class="bg-gray-50 text-gray-800">
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">電費計算器（含匯出 Excel）</h1>
 
-    <div class="section">
-        <h2>1. 什麼是遞迴關係式？</h2>
-        <p>遞迴關係式（Recurrence Relation）是用序列前面的項來定義後面的項的一種數學式子。它在離散數學、演算法分析和計算機科學中扮演著重要角色。</p>
-        
-        <p>一個遞迴關係式通常包含兩個部分：</p>
-        <ol>
-            <li><strong>遞迴規則</strong>：說明如何從前面的項計算當前項</li>
-            <li><strong>初始條件</strong>：提供啟動遞迴計算所需的基本值</li>
-        </ol>
-
-        <div class="example">
-            <h3>常見的遞迴關係式例子：</h3>
-            
-            <div id="fibonacci-math"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    renderMathInElement(document.getElementById("fibonacci-math"), {
-                        delimiters: [
-                            {left: "$$", right: "$$", display: true},
-                            {left: "$", right: "$", display: false}
-                        ]
-                    });
-                });
-            </script>
-            <p>費波那契數列（Fibonacci Sequence）：</p>
-            <p>$$F(n) = F(n-1) + F(n-2), \quad \text{for } n \geq 2$$</p>
-            <p>初始條件：$$F(0) = 0, \quad F(1) = 1$$</p>
-
-            <p>等比數列（Geometric Sequence）：</p>
-            <p>$$a_n = r \cdot a_{n-1}, \quad a_0 = a$$</p>
-
-            <p>漢諾塔問題（Tower of Hanoi）：</p>
-            <p>$$T(n) = 2T(n-1) + 1, \quad T(1) = 1$$</p>
+    <div class="bg-white p-4 rounded shadow-sm">
+      <form id="meterForm" class="grid grid-cols-1 gap-4">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-sm font-medium">表1 - 上期（數字）</label>
+            <input type="number" id="m1_prev" class="mt-1 block w-full rounded border p-2" value="8679">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">表1 - 本期（數字）</label>
+            <input type="number" id="m1_curr" class="mt-1 block w-full rounded border p-2" value="8702">
+          </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-sm font-medium">表2 - 上期（數字）</label>
+            <input type="number" id="m2_prev" class="mt-1 block w-full rounded border p-2" value="8979">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">表2 - 本期（數字）</label>
+            <input type="number" id="m2_curr" class="mt-1 block w-full rounded border p-2" value="9049">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-sm font-medium">單價（元/度）</label>
+            <input type="number" id="unit_price" class="mt-1 block w-full rounded border p-2" value="6">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">其他/固定費用（元）</label>
+            <input type="number" id="fixed_fee" class="mt-1 block w-full rounded border p-2" value="7350">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">小數位數（顯示）</label>
+            <input type="number" id="precision" class="mt-1 block w-full rounded border p-2" value="0">
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button type="button" id="calcBtn" class="px-4 py-2 bg-blue-600 text-white rounded">計算</button>
+          <button type="button" id="exportBtn" class="px-4 py-2 bg-green-600 text-white rounded">匯出 Excel</button>
+        </div>
+      </form>
+
+      <div id="result" class="mt-4 p-3 bg-gray-50 rounded border">
+        <div>表1 度數差: <span id="d1">-</span></div>
+        <div>表2 度數差: <span id="d2">-</span></div>
+        <div>總度數: <span id="total_kwh">-</span></div>
+        <div>電費 (總度數×單價): <span id="energy_fee">-</span></div>
+        <div>加上其他費用: <span id="total_amount">-</span></div>
+      </div>
+
+      <div class="mt-3 text-sm text-gray-600">
+        <p>說明：此頁面會計算並顯示度數差、總度數、電費與總金額。匯出的 Excel 檔案會包含原始輸入欄位以及在 Excel 中以公式計算的欄位（若使用者開啟 Excel，會看到公式而非僅數值）。</p>
+      </div>
     </div>
+  </div>
 
-    <div class="section">
-        <h2>2. 遞迴關係式的求解方法</h2>
-        <p>解決遞迴關係式的目標是找到一個<span class="important">閉合形式的解</span>（Closed-form Solution），使我們不必通過遞迴計算就能直接求出序列的任意項。</p>
+  <script>
+    function toNum(id) { return Number(document.getElementById(id).value || 0); }
+    function setText(id, v) { document.getElementById(id).innerText = v; }
 
-        <h3>2.1 迭代法（直接展開遞迴式）</h3>
-        <p>這是最直觀的方法，通過將遞迴式逐步展開，直到找到規律並推導出一般式。</p>
+    function calculate() {
+      const m1_prev = toNum('m1_prev');
+      const m1_curr = toNum('m1_curr');
+      const m2_prev = toNum('m2_prev');
+      const m2_curr = toNum('m2_curr');
+      const unit = toNum('unit_price');
+      const fee = toNum('fixed_fee');
+      const prec = Number(document.getElementById('precision').value);
 
-        <div class="example">
-            <h4>漢諾塔問題的迭代法求解：</h4>
-            <p>遞迴關係式：$$T(n) = 2T(n-1) + 1, \quad T(1) = 1$$</p>
-            
-            <p>展開過程：</p>
-            <p>$$T(n) = 2T(n-1) + 1$$</p>
-            <p>$$T(n-1) = 2T(n-2) + 1$$</p>
-            <p>$$\Rightarrow T(n) = 2(2T(n-2) + 1) + 1 = 4T(n-2) + 2 + 1$$</p>
-            
-            <p>繼續展開：</p>
-            <p>$$T(n) = 8T(n-3) + 4 + 2 + 1$$</p>
-            
-            <p>規律歸納：</p>
-            <p>$$T(n) = 2^k T(n-k) + (2^k - 1)$$</p>
-            
-            <p>當 $k = n-1$ 時，代入初始條件 $T(1) = 1$：</p>
-            <p>$$T(n) = 2^{n-1} T(1) + (2^{n-1} - 1) = 2^{n-1} \cdot 1 + 2^{n-1} - 1 = 2^n - 1$$</p>
-            
-            <p class="important">閉合解：$$T(n) = 2^n - 1$$</p>
-        </div>
+      const d1 = m1_curr - m1_prev;
+      const d2 = m2_curr - m2_prev;
+      const total = d1 + d2;
+      const energy_fee = total * unit;
+      const total_amount = energy_fee + fee;
 
-        <div class="visualization">
-            <h4>漢諾塔步驟可視化</h4>
-            <div class="step-form">
-                <label for="hanoi-input">輸入盤子數量 n：</label>
-                <input type="number" id="hanoi-input" min="1" max="10" value="3">
-                <button id="hanoi-calc">計算</button>
-            </div>
-            <div id="hanoi-result" class="result"></div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const hanoiButton = document.getElementById('hanoi-calc');
-                    hanoiButton.addEventListener('click', function() {
-                        const n = parseInt(document.getElementById('hanoi-input').value);
-                        if (n >= 1 && n <= 10) {
-                            const steps = Math.pow(2, n) - 1;
-                            document.getElementById('hanoi-result').innerHTML = 
-                                `移動 ${n} 個盤子需要的最少步驟數：<span style="color:#d32f2f">${steps}</span> 步<br>` +
-                                `驗證公式：T(${n}) = 2<sup>${n}</sup> - 1 = ${steps}`;
-                        } else {
-                            document.getElementById('hanoi-result').innerHTML = 
-                                "請輸入 1 到 10 之間的數值";
-                        }
-                    });
-                });
-            </script>
-        </div>
+      setText('d1', d1.toFixed(prec));
+      setText('d2', d2.toFixed(prec));
+      setText('total_kwh', total.toFixed(prec));
+      setText('energy_fee', energy_fee.toFixed(prec));
+      setText('total_amount', total_amount.toFixed(prec));
 
-        <h3>2.2 特徵方程法（Characteristic Equation）</h3>
-        <p>這種方法主要適用於<strong>線性齊次遞迴關係式</strong>，尤其是常係數線性遞迴關係式。</p>
+      return { m1_prev, m1_curr, m2_prev, m2_curr, d1, d2, total, unit, energy_fee, fee, total_amount };
+    }
 
-        <div class="example">
-            <h4>費波那契數列的特徵方程求解：</h4>
-            <p>遞迴關係式：$$F(n) = F(n-1) + F(n-2), \quad F(0) = 0, F(1) = 1$$</p>
-            
-            <p><strong>步驟 1：寫出特徵方程</strong></p>
-            <p>假設 $F(n) = r^n$，代入遞迴關係得：</p>
-            <p>$$r^n = r^{n-1} + r^{n-2}$$</p>
-            <p>$$r^2 = r + 1$$</p>
-            <p>$$r^2 - r - 1 = 0$$</p>
-            
-            <p><strong>步驟 2：求解特徵根</strong></p>
-            <p>$$r = \frac{1 \pm \sqrt{5}}{2}$$</p>
-            <p>兩個根分別為：</p>
-            <p>$$r_1 = \frac{1 + \sqrt{5}}{2} \approx 1.618$$ （黃金比例）</p>
-            <p>$$r_2 = \frac{1 - \sqrt{5}}{2} \approx -0.618$$</p>
-            
-            <p><strong>步驟 3：寫出通解</strong></p>
-            <p>$$F(n) = A r_1^n + B r_2^n = A \left(\frac{1+\sqrt{5}}{2}\right)^n + B \left(\frac{1-\sqrt{5}}{2}\right)^n$$</p>
-            
-            <p><strong>步驟 4：利用初始條件求解係數 A 和 B</strong></p>
-            <p>$$F(0) = 0 \Rightarrow A + B = 0 \Rightarrow B = -A$$</p>
-            <p>$$F(1) = 1 \Rightarrow A r_1 + B r_2 = 1$$</p>
-            <p>代入 $B = -A$：</p>
-            <p>$$A r_1 - A r_2 = 1$$</p>
-            <p>$$A (r_1 - r_2) = 1$$</p>
-            <p>$$A = \frac{1}{r_1 - r_2} = \frac{1}{\sqrt{5}}$$</p>
-            <p>$$B = -A = -\frac{1}{\sqrt{5}}$$</p>
-            
-            <p><strong>步驟 5：寫出閉合解</strong></p>
-            <p>$$F(n) = \frac{1}{\sqrt{5}} \left[ \left(\frac{1+\sqrt{5}}{2}\right)^n - \left(\frac{1-\sqrt{5}}{2}\right)^n \right]$$</p>
-            
-            <p class="important">這就是費波那契數列的閉合解（Binet公式）</p>
-        </div>
+    document.getElementById('calcBtn').addEventListener('click', () => {
+      calculate();
+    });
 
-        <div class="visualization">
-            <h4>費波那契數列計算器</h4>
-            <div class="step-form">
-                <label for="fib-input">計算第 n 項 (0-30)：</label>
-                <input type="number" id="fib-input" min="0" max="30" value="10">
-                <button id="fib-calc">計算</button>
-            </div>
-            <div id="fib-result" class="result"></div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const fibButton = document.getElementById('fib-calc');
-                    fibButton.addEventListener('click', function() {
-                        const n = parseInt(document.getElementById('fib-input').value);
-                        if (n >= 0 && n <= 30) {
-                            // 遞迴計算 (不適合大數)
-                            function fibRecursive(n) {
-                                if (n <= 1) return n;
-                                return fibRecursive(n-1) + fibRecursive(n-2);
-                            }
-                            
-                            // 閉合解計算
-                            function fibClosed(n) {
-                                const sqrt5 = Math.sqrt(5);
-                                const r1 = (1 + sqrt5) / 2;
-                                const r2 = (1 - sqrt5) / 2;
-                                return Math.round((Math.pow(r1, n) - Math.pow(r2, n)) / sqrt5);
-                            }
-                            
-                            // 迭代計算
-                            function fibIterative(n) {
-                                if (n <= 1) return n;
-                                let a = 0, b = 1;
-                                for (let i = 2; i <= n; i++) {
-                                    const c = a + b;
-                                    a = b;
-                                    b = c;
-                                }
-                                return b;
-                            }
-                            
-                            const closedResult = fibClosed(n);
-                            const iterResult = fibIterative(n);
-                            
-                            document.getElementById('fib-result').innerHTML = 
-                                `費波那契數列第 ${n} 項：<span style="color:#d32f2f">${iterResult}</span><br>` +
-                                `使用閉合解（Binet 公式）計算：${closedResult}`;
-                        } else {
-                            document.getElementById('fib-result').innerHTML = 
-                                "請輸入 0 到 30 之間的數值";
-                        }
-                    });
-                });
-            </script>
-        </div>
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const data = calculate();
 
-        <h3>2.3 生成函數法（Generating Function Method）</h3>
-        <p>生成函數是處理複雜遞迴關係式的強大工具，特別適用於不能用特徵方程法解決的問題。</p>
+      // 建立要放進 Excel 的 worksheet 資料（包含公式）
+      // 我們會在同一個 sheet 中放：標題 | 值或公式 | 說明
+      const ws_data = [
+        ["欄位", "輸入/公式", "說明"],
+        ["表1 - 上期", data.m1_prev, "表1 上期讀數（手動輸入）"],
+        ["表1 - 本期", data.m1_curr, "表1 本期讀數（手動輸入）"],
+        ["表1 度數差", {f: "=B3-B2"}, "Excel 公式：本期-上期"],
+        ["表2 - 上期", data.m2_prev, "表2 上期讀數（手動輸入）"],
+        ["表2 - 本期", data.m2_curr, "表2 本期讀數（手動輸入）"],
+        ["表2 度數差", {f: "=B6-B5"}, "Excel 公式：本期-上期"],
+        ["總度數", {f: "=B4+B7"}, "Excel 公式：兩表度數差相加"],
+        ["單價（元/度）", data.unit, "每度價格"],
+        ["電費（總度數×單價）", {f: "=B8*B9"}, "Excel 公式：總度數×單價"],
+        ["其他/固定費用", data.fee, "其他或固定費用（元）"],
+        ["總金額", {f: "=B10+B11"}, "Excel 公式：電費+其他費用"],
+      ];
 
-        <div class="example">
-            <h4>費波那契數列的生成函數求解：</h4>
-            <p>遞迴關係式：$$F(n) = F(n-1) + F(n-2), \quad F(0) = 0, F(1) = 1$$</p>
-            
-            <p><strong>步驟 1：定義生成函數</strong></p>
-            <p>$$G(x) = \sum_{n=0}^{\infty} F(n) x^n = F(0) + F(1)x + F(2)x^2 + F(3)x^3 + \cdots$$</p>
-            
-            <p><strong>步驟 2：利用遞迴關係建立生成函數的方程</strong></p>
-            <p>$$G(x) = F(0) + F(1)x + \sum_{n=2}^{\infty} F(n) x^n$$</p>
-            <p>$$G(x) = 0 + x + \sum_{n=2}^{\infty} [F(n-1) + F(n-2)] x^n$$</p>
-            <p>$$G(x) = x + \sum_{n=2}^{\infty} F(n-1) x^n + \sum_{n=2}^{\infty} F(n-2) x^n$$</p>
-            <p>$$G(x) = x + x \sum_{n=2}^{\infty} F(n-1) x^{n-1} + x^2 \sum_{n=2}^{\infty} F(n-2) x^{n-2}$$</p>
-            <p>$$G(x) = x + x \sum_{m=1}^{\infty} F(m) x^m + x^2 \sum_{k=0}^{\infty} F(k) x^k$$</p>
-            <p>（其中 $m = n-1$, $k = n-2$）</p>
-            <p>$$G(x) = x + x [G(x) - F(0)] + x^2 G(x)$$</p>
-            <p>$$G(x) = x + x G(x) + x^2 G(x)$$</p>
-            
-            <p><strong>步驟 3：解方程獲得生成函數表達式</strong></p>
-            <p>$$G(x) - x G(x) - x^2 G(x) = x$$</p>
-            <p>$$G(x) (1 - x - x^2) = x$$</p>
-            <p>$$G(x) = \frac{x}{1 - x - x^2}$$</p>
-            
-            <p><strong>步驟 4：展開生成函數或使用部分分數分解</strong></p>
-            <p>可以通過部分分數分解：</p>
-            <p>$$G(x) = \frac{x}{1 - x - x^2} = \frac{1}{\sqrt{5}} \left( \frac{1}{1 - \alpha x} - \frac{1}{1 - \beta x} \right)$$</p>
-            <p>其中 $\alpha = \frac{1 + \sqrt{5}}{2}$ 和 $\beta = \frac{1 - \sqrt{5}}{2}$</p>
-            
-            <p>展開後得到：</p>
-            <p>$$G(x) = \frac{1}{\sqrt{5}} \sum_{n=0}^{\infty} (\alpha^n - \beta^n) x^{n+1}$$</p>
-            
-            <p>對比係數，得到：</p>
-            <p>$$F(n) = \frac{1}{\sqrt{5}} (\alpha^{n-1} - \beta^{n-1})$$</p>
-            <p>對於 $n \geq 1$，這與特徵方程法得到的結果一致。</p>
-        </div>
-    </div>
+      // 將資料轉成 worksheet
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
 
-    <div class="section">
-        <h2>3. 遞迴在電腦科學中的應用</h2>
-        
-        <h3>3.1 遞迴算法（Recursive Algorithm）</h3>
-        <p>遞迴算法是一種通過呼叫自身來解決問題的方法，它對應著數學中的遞迴關係式。</p>
-        
-        <div class="example">
-            <h4>費波那契數列的遞迴算法：</h4>
-            <pre class="code">
-function fibonacci(n) {
-    if (n <= 1) return n;
-    return fibonacci(n-1) + fibonacci(n-2);
-}</pre>
-            <p class="note">注意：純遞迴實作的費波那契函數效率很低，因為有大量重複計算。在實際應用中，應使用動態規劃或矩陣快速冪等優化方法。</p>
-        </div>
-        
-        <h3>3.2 遞迴與時間複雜度分析</h3>
-        <p>通過解遞迴關係式，我們可以分析遞迴算法的時間複雜度。</p>
-        
-        <div class="example">
-            <h4>二分搜索的時間複雜度分析：</h4>
-            <p>二分搜索的遞迴關係式：$$T(n) = T(n/2) + c$$，其中 $c$ 是常數。</p>
-            <p>解這個遞迴關係式：</p>
-            <p>$$T(n) = T(n/2) + c$$</p>
-            <p>$$T(n/2) = T(n/4) + c$$</p>
-            <p>$$T(n) = T(n/4) + c + c$$</p>
-            <p>$$\ldots$$</p>
-            <p>$$T(n) = T(n/2^k) + kc$$</p>
-            <p>當 $n/2^k = 1$ 時，$k = \log_2 n$</p>
-            <p>$$T(n) = T(1) + c \log_2 n = O(\log n)$$</p>
-            <p class="important">所以二分搜索的時間複雜度是 $O(\log n)$</p>
-        </div>
-        
-        <div class="example">
-            <h4>歸併排序的時間複雜度分析：</h4>
-            <p>歸併排序的遞迴關係式：$$T(n) = 2T(n/2) + O(n)$$</p>
-            <p>使用遞迴樹方法或主定理（Master Theorem）可以解出：</p>
-            <p>$$T(n) = O(n \log n)$$</p>
-        </div>
-    </div>
+      // 調整欄寬（選填）
+      ws['!cols'] = [{wpx:160},{wpx:160},{wpx:220}];
 
-    <div class="section">
-        <h2>4. 遞迴問題總結與常見模式</h2>
-        
-        <h3>4.1 常見遞迴關係式與其閉合解</h3>
-        <table>
-            <tr>
-                <th>遞迴關係式</th>
-                <th>閉合解</th>
-                <th>名稱/應用</th>
-            </tr>
-            <tr>
-                <td>$a_n = a_{n-1} + d$</td>
-                <td>$a_n = a_0 + nd$</td>
-                <td>等差數列</td>
-            </tr>
-            <tr>
-                <td>$a_n = r \cdot a_{n-1}$</td>
-                <td>$a_n = a_0 \cdot r^n$</td>
-                <td>等比數列</td>
-            </tr>
-            <tr>
-                <td>$F(n) = F(n-1) + F(n-2)$</td>
-                <td>$F(n) = \frac{1}{\sqrt{5}} \left[ \left(\frac{1+\sqrt{5}}{2}\right)^n - \left(\frac{1-\sqrt{5}}{2}\right)^n \right]$</td>
-                <td>費波那契數列</td>
-            </tr>
-            <tr>
-                <td>$T(n) = 2T(n-1) + 1$</td>
-                <td>$T(n) = 2^n - 1$</td>
-                <td>漢諾塔問題</td>
-            </tr>
-            <tr>
-                <td>$T(n) = 2T(n/2) + n$</td>
-                <td>$T(n) = O(n \log n)$</td>
-                <td>歸併排序</td>
-            </tr>
-            <tr>
-                <td>$T(n) = T(n-1) + 1/n$</td>
-                <td>$T(n) = H_n = \sum_{i=1}^{n} \frac{1}{i} \approx \ln n + \gamma$</td>
-                <td>調和級數</td>
-            </tr>
-        </table>
-        
-        <h3>4.2 解遞迴關係式的方法選擇</h3>
-        <ol>
-            <li><strong>迭代法</strong>：適用於簡單遞迴關係，特別是不屬於線性遞迴的關係式</li>
-            <li><strong>特徵方程法</strong>：適用於線性齊次遞迴關係式</li>
-            <li><strong>生成函數法</strong>：適用於複雜的線性遞迴關係式，尤其適合計數問題</li>
-            <li><strong>主定理（Master Theorem）</strong>：適用於形如 $T(n) = aT(n/b) + f(n)$ 的分治遞迴關係式</li>
-        </ol>
-    </div>
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, '電費計算');
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "$", right: "$", display: false}
-                ]
-            });
-        });
-    </script>
+      // 下載檔名
+      const fname = '電費計算.xlsx';
+      XLSX.writeFile(wb, fname);
+    });
+
+    // 預設計算一次以顯示初始值
+    calculate();
+  </script>
 </body>
 </html>

@@ -4,9 +4,11 @@
     {
       "type": "pwa-msedge",
       "request": "launch",
-      "name": "Open current HTML file in Edge",
-      "url": "file://${file}",
-      "runtimeExecutable": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+      "name": "Launch Edge with current file",
+      "runtimeExecutable": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+      "url": "file:///${file}",
+      "args": ["--remote-debugging-port=9333"],
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }
