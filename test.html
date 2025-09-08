@@ -330,7 +330,8 @@
         <button class="action-btn" data-action="move-down" title="下移" ${index===currentPlaylist.length-1?'disabled':''}><i class="fa-solid fa-chevron-down"></i></button>
         <button class="action-btn" data-action="play-next" title="播放下一首"><i class="fa-solid fa-list-ol"></i></button>
         <button class="action-btn" data-action="remove" title="移除"><i class="fa-solid fa-trash"></i></button>
-      </div>`;item.addEventListener('click',e=>{if(e.target.closest('.playlist-actions'))return;// 加在 playTrack 裡面
+      </div>`;
+      item.addEventListener('click',e=>{if (e.target.closest('.action-btn')) return;playTrack(index);
 if ('mediaSession' in navigator) {
   navigator.mediaSession.metadata = new MediaMetadata({
     title: track.title,
