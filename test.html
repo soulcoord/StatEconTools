@@ -330,7 +330,23 @@
         <button class="action-btn" data-action="move-down" title="下移" ${index===currentPlaylist.length-1?'disabled':''}><i class="fa-solid fa-chevron-down"></i></button>
         <button class="action-btn" data-action="play-next" title="播放下一首"><i class="fa-solid fa-list-ol"></i></button>
         <button class="action-btn" data-action="remove" title="移除"><i class="fa-solid fa-trash"></i></button>
-      </div>`;item.addEventListener('click',e=>{if(e.target.closest('.playlist-actions'))return;playTrack(index)});item.querySelectorAll('.action-btn').forEach(btn=>{btn.addEventListener('click',e=>{e.stopPropagation();const action=btn.dataset.action;switch(action){case'move-up':if(index>0){[currentPlaylist[index-1],currentPlaylist[index]]=[currentPlaylist[index],currentPlaylist[index-1]];if(currentTrackIndex===index)currentTrackIndex=index-1;else if(currentTrackIndex===index-1)currentTrackIndex=index;updatePlaylistUI();saveState()}break;case'move-down':if(index<currentPlaylist.length-1){[currentPlaylist[index+1],currentPlaylist[index]]=[currentPlaylist[index],currentPlaylist[index+1]];if(currentTrackIndex===index)currentTrackIndex=index+1;else if(currentTrackIndex===index+1)currentTrackIndex=index;updatePlaylistUI();saveState()}break;case'play-next':if(index!==currentTrackIndex){const t=currentPlaylist.splice(index,1)[0];const insertIndex=currentTrackIndex+1;currentPlaylist.splice(insertIndex,0,t);if(index<currentTrackIndex)currentTrackIndex--;updatePlaylistUI();saveState();showNotification('已加入播放佇列下一首','success')}break;case'remove':{const was=index===currentTrackIndex;currentPlaylist.splice(index,1);if(!currentPlaylist.length){currentTrackIndex=-1;stopPlayback()}else if(was){currentTrackIndex=Math.min(currentTrackIndex,currentPlaylist.length-1);playTrack(currentTrackIndex)}else if(index<currentTrackIndex){currentTrackIndex--}updatePlaylistUI();saveState();showNotification('已移除歌曲','success')}break}})});playlist.appendChild(item)})};
+      </div>`;item.addEventListener('click',e=>{if(e.target.closest('.playlist-actions'))return;// 加在 playTrack 裡面
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.title,
+    artist: track.artist,
+    album: 'Monochrome Music Player',
+    artwork: [
+      { src: track.imageUrl || 'fallback.png', sizes: '512x512', type: 'image/png' }
+    ]
+  });
+
+  navigator.mediaSession.setActionHandler('play', () => audio.play());
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  navigator.mediaSession.setActionHandler('previoustrack', () => playPrevious());
+  navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
+}
+});item.querySelectorAll('.action-btn').forEach(btn=>{btn.addEventListener('click',e=>{e.stopPropagation();const action=btn.dataset.action;switch(action){case'move-up':if(index>0){[currentPlaylist[index-1],currentPlaylist[index]]=[currentPlaylist[index],currentPlaylist[index-1]];if(currentTrackIndex===index)currentTrackIndex=index-1;else if(currentTrackIndex===index-1)currentTrackIndex=index;updatePlaylistUI();saveState()}break;case'move-down':if(index<currentPlaylist.length-1){[currentPlaylist[index+1],currentPlaylist[index]]=[currentPlaylist[index],currentPlaylist[index+1]];if(currentTrackIndex===index)currentTrackIndex=index+1;else if(currentTrackIndex===index+1)currentTrackIndex=index;updatePlaylistUI();saveState()}break;case'play-next':if(index!==currentTrackIndex){const t=currentPlaylist.splice(index,1)[0];const insertIndex=currentTrackIndex+1;currentPlaylist.splice(insertIndex,0,t);if(index<currentTrackIndex)currentTrackIndex--;updatePlaylistUI();saveState();showNotification('已加入播放佇列下一首','success')}break;case'remove':{const was=index===currentTrackIndex;currentPlaylist.splice(index,1);if(!currentPlaylist.length){currentTrackIndex=-1;stopPlayback()}else if(was){currentTrackIndex=Math.min(currentTrackIndex,currentPlaylist.length-1);playTrack(currentTrackIndex)}else if(index<currentTrackIndex){currentTrackIndex--}updatePlaylistUI();saveState();showNotification('已移除歌曲','success')}break}})});playlist.appendChild(item)})};
 
     const stopPlayback=()=>{audio.pause();audio.removeAttribute('src');audio.load();trackTitle.textContent='請選擇歌曲';trackArtist.textContent='上傳 MP3 或拖放檔案進來';miniTitle.textContent='—';miniArtist.textContent='—';setArtwork(null,'Music');updateProgress();isPlaying=false;updateBadge('待機中');playBtn.innerHTML='<i class="fa-solid fa-play"></i>';playBtn.setAttribute('aria-pressed','false');miniPlayBtn.innerHTML='<i class="fa-solid fa-play"></i>'};
 
