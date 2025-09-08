@@ -2,19 +2,31 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]   # 改成你的主要分支
+  workflow_dispatch:
+
+permissions:
+  contents: write        # 🔑 必須要有寫入權限
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false   # 避免憑證衝突
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GH_PAGES_TOKEN }}
-        publish_dir: .  # 根目錄包含 HTML 文件
+      # 這裡放你的建置步驟，把網站輸出到 dist/ 之類的資料夾
+      - name: Build
+        run: |
+          echo "<h1>Hello Pages</h1>" > index.html
+          mkdir -p dist && mv index.html dist/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}   # 內建 token
+          publish_dir: ./dist                         # 改成你的輸出資料夾
