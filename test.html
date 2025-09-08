@@ -96,6 +96,13 @@
     .notifications{position:fixed;top:16px;right:16px;display:flex;flex-direction:column;gap:10px;z-index:200;max-width:80vw}
     .notification{padding:14px 16px;border-radius:12px;background:rgba(0,0,0,.9);border:1px solid var(--border);color:var(--text);backdrop-filter:blur(12px);transform:translateX(100%);opacity:0;animation:in .28s ease forwards;max-width:100%;word-break:break-word}
     .notification.fade-out{animation:out .22s ease forwards}
+    .art-blur {
+      background-image: url(...);
+      background-size: cover;
+      filter: blur(20px);
+      opacity: 0.4;
+      backdrop-filter: brightness(0.8) saturate(1.5);
+    }
     @keyframes in{to{transform:translateX(0);opacity:1}}
     @keyframes out{to{transform:translateX(100%);opacity:0}}
     :focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:10px}
@@ -108,6 +115,19 @@
   .control-btn { width: 44px; height: 44px; margin: 0 6px; }
   .controls { gap: 12px; padding: 6px 0; }
 }
+  input[type="range"] {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text);
+    cursor: pointer;
+  }
+
   </style>
 </head>
 <body>
@@ -718,6 +738,26 @@ if ('mediaSession' in navigator) {
       },1500);
     });
   })();
+    let touchStartX = 0;
+
+    coverElement.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    coverElement.addEventListener('touchend', e => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const delta = touchEndX - touchStartX;
+      if (delta > 50) playPrevious();
+      else if (delta < -50) playNext();
+    });
+function toggleFullscreen() {
+  const doc = document.documentElement;
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    doc.requestFullscreen();
+  }
+}
   </script>
 </body>
 </html>
