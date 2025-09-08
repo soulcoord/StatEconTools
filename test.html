@@ -172,6 +172,58 @@
   <audio id="audioPlayer" crossorigin="anonymous"></audio>
   <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
   <script>
+    // IndexedDB 工具
+const DB_NAME = "mono-player-db";
+const DB_VERSION = 1;
+const STORE_NAME = "tracks";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => resolve(req.result);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: "id", autoIncrement: true });
+      }
+    };
+  });
+}
+
+async function saveTracksToDB(tracks) {
+  const db = await openDB();
+  const tx = db.transaction(STORE_NAME, "readwrite");
+  const store = tx.objectStore(STORE_NAME);
+  await Promise.all(tracks.map(track => {
+    return new Promise(res => {
+      store.put(track);
+      res();
+    });
+  }));
+  return tx.complete;
+}
+
+async function loadTracksFromDB() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function clearDB() {
+  const db = await openDB();
+  const tx = db.transaction(STORE_NAME, "readwrite");
+  tx.objectStore(STORE_NAME).clear();
+  return tx.complete;
+}
+
+  </script>
+  <script>
   (()=>{
     'use strict';
     const $=id=>document.getElementById(id);
@@ -278,19 +330,87 @@
     const extractMetadata=(file,cb)=>{jsmediatags.read(file,{onSuccess:tag=>{const title=tag.tags.title||file.name.replace(/\.[^.]+$/,'');const artist=tag.tags.artist||'未知藝術家';let imageUrl=null;if(tag.tags.picture){const p=tag.tags.picture;const blob=new Blob([new Uint8Array(p.data)],{type:p.format});imageUrl=URL.createObjectURL(blob)}cb({title,artist,url:URL.createObjectURL(file),imageUrl})},onError:()=>{cb({title:file.name.replace(/\.[^.]+$/,''),artist:'未知藝術家',url:URL.createObjectURL(file),imageUrl:null})}})};
 
     const STORAGE_KEY='mono-player-state-v1';
-    const saveState=()=>{const s={shuffle:isShuffleMode,repeatMode,volume:audio.volume,currentTrackIndex,t:Date.now()};try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}catch(e){console.warn('保存失敗',e)}};
-    const restoreState=()=>{try{
-      const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return;
-      const s=JSON.parse(raw);
-      isShuffleMode=!!s.shuffle;
-      repeatMode = Number.isInteger(s.repeatMode) ? s.repeatMode : (s.repeat ? 1 : 0); // 舊版相容
-      savedVolume=s.volume??0.7;
-      audio.volume=savedVolume; volumeSlider.value=savedVolume;
-      shuffleBtn.setAttribute('aria-pressed',String(isShuffleMode));
-      repeatBtn.setAttribute('aria-pressed',String(repeatMode>0));
-      updateRepeatButtonUI();
-      updateVolumeIcon();
-    }catch(e){console.warn('恢復失敗',e)}};
+    const saveState = async () => {
+  const s = {
+    shuffle: isShuffleMode,
+    repeatMode,
+    volume: audio.volume,
+    currentTrackIndex
+  };
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+
+    // 存播放清單到 IndexedDB
+    const dbTracks = await Promise.all(currentPlaylist.map(async (t, idx) => {
+      let audioBlob = null;
+      let imageBlob = null;
+
+      // 把 blob:URL 轉成 blob
+      if (t.url && t.url.startsWith("blob:")) {
+        const resp = await fetch(t.url);
+        audioBlob = await resp.blob();
+      }
+      if (t.imageUrl && t.imageUrl.startsWith("blob:")) {
+        const resp = await fetch(t.imageUrl);
+        imageBlob = await resp.blob();
+      }
+
+      return {
+        id: idx, // 播放清單順序
+        title: t.title,
+        artist: t.artist,
+        audioBlob,
+        imageBlob
+      };
+    }));
+
+    await clearDB(); // 清空舊資料
+    await saveTracksToDB(dbTracks);
+
+  } catch (e) {
+    console.warn("保存失敗", e);
+  }
+};
+
+const restoreState = async () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+
+    isShuffleMode = !!s.shuffle;
+    repeatMode = Number.isInteger(s.repeatMode) ? s.repeatMode : (s.repeat ? 1 : 0); // 舊版相容
+    savedVolume = s.volume ?? 0.7;
+    audio.volume = savedVolume;
+    volumeSlider.value = savedVolume;
+
+    shuffleBtn.setAttribute('aria-pressed', String(isShuffleMode));
+    repeatBtn.setAttribute('aria-pressed', String(repeatMode > 0));
+    updateRepeatButtonUI();
+    updateVolumeIcon();
+
+    // 🚀 從 IndexedDB 撈取歌曲
+    const dbTracks = await loadTracksFromDB();
+    if (dbTracks.length) {
+      currentPlaylist = dbTracks.map(t => {
+        const audioUrl = t.audioBlob ? URL.createObjectURL(t.audioBlob) : null;
+        const imageUrl = t.imageBlob ? URL.createObjectURL(t.imageBlob) : null;
+        return {
+          title: t.title,
+          artist: t.artist,
+          url: audioUrl,
+          imageUrl
+        };
+      });
+      updatePlaylistUI();
+      currentTrackIndex = Math.min(s.currentTrackIndex ?? 0, currentPlaylist.length - 1);
+    }
+  } catch (e) {
+    console.warn("恢復失敗", e);
+  }
+};
+
     const updateVolumeIcon=()=>{const v=audio.volume;let c='fa-solid ';if(v===0)c+='fa-volume-xmark';else if(v<.3)c+='fa-volume-off';else if(v<.7)c+='fa-volume-low';else c+='fa-volume-high';volumeIcon.className=c+' volume-icon'};
 
     playBtn.addEventListener('click',togglePlayPause);
@@ -343,7 +463,17 @@
 
     document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;switch(e.key){case' ':e.preventDefault();togglePlayPause();break;case'ArrowLeft':if(audio.duration)audio.currentTime=Math.max(0,audio.currentTime-10);break;case'ArrowRight':if(audio.duration)audio.currentTime=Math.min(audio.duration,audio.currentTime+10);break;case'ArrowUp':e.preventDefault();audio.volume=Math.min(1,audio.volume+0.1);volumeSlider.value=audio.volume;updateVolumeIcon();break;case'ArrowDown':e.preventDefault();audio.volume=Math.max(0,audio.volume-0.1);volumeSlider.value=audio.volume;updateVolumeIcon();break;case'm':case'M':volumeIcon.click();break;case's':case'S':shuffleBtn.click();break;case'r':case'R':repeatBtn.click();break;case'n':case'N':playNext();break;case'p':case'P':playPrevious();break}});
 
-    const initialize=()=>{audio.volume=savedVolume;volumeSlider.value=savedVolume;updateVolumeIcon();restoreState();setArtwork(null,'Music');updateBadge('待機中');updateEqualizer(false);setTimeout(()=>showNotification('歡迎使用單色音樂播放器！','success'),800)};
+const initialize = async () => {
+  audio.volume = savedVolume;
+  volumeSlider.value = savedVolume;
+  updateVolumeIcon();
+  await restoreState();   // ✅ 等待 IndexedDB 把歌單載入
+  setArtwork(null,'Music');
+  updateBadge('待機中');
+  updateEqualizer(false);
+  setTimeout(()=>showNotification('歡迎使用單色音樂播放器！','success'),800);
+};
+
     const cleanup=()=>{currentPlaylist.forEach(t=>{if(t.url&&t.url.startsWith('blob:'))URL.revokeObjectURL(t.url);if(t.imageUrl&&t.imageUrl.startsWith('blob:'))URL.revokeObjectURL(t.imageUrl)})};
     window.addEventListener('beforeunload',cleanup);
     initialize();
