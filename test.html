@@ -258,38 +258,7 @@
     'use strict';
     const $=id=>document.getElementById(id);
     const audio=$('audioPlayer');
-    const albumCover = document.getElementById('albumCover');
-
-    let startX = 0;
-    let startY = 0;
-    let isSwiping = false;
-
-    albumCover.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      isSwiping = true;
-    });
-
-    albumCover.addEventListener('touchmove', e => {
-      if (!isSwiping) return;
-      const moveX = e.touches[0].clientX - startX;
-      albumCover.style.transition = 'none';
-      albumCover.style.transform = `translateX(${moveX}px)`;
-    });
-
-    albumCover.addEventListener('touchend', e => {
-      if (!isSwiping) return;
-      isSwiping = false;
-      const deltaX = e.changedTouches[0].clientX - startX;
-      const deltaY = e.changedTouches[0].clientY - startY;
-
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-        deltaX < 0 ? playNext() : playPrevious();
-      }
-
-      albumCover.style.transition = 'transform 0.3s ease';
-      albumCover.style.transform = 'translateX(0)';
-    });
+    const albumCover=$('albumCover');
     const bgArt=$('bgArt');
     const statusBadge=$('statusBadge');
     const trackTitle=$('trackTitle');
