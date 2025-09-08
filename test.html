@@ -316,7 +316,48 @@
 
     const setArtwork=(imageUrl,fallbackText='Music')=>{if(imageUrl){albumCover.style.backgroundImage=`url(${imageUrl})`;bgArt.style.backgroundImage=`url(${imageUrl})`;bgArt.style.opacity='.6'}else{const grad=createGradientFromText(fallbackText);albumCover.style.backgroundImage=grad;bgArt.style.backgroundImage='none';bgArt.style.opacity='.45'}};
 
-    const playTrack=async index=>{if(index<0||index>=currentPlaylist.length)return;currentTrackIndex=index;const track=currentPlaylist[index];audio.src=track.url;audio.load();trackTitle.textContent=track.title;trackArtist.textContent=track.artist;miniTitle.textContent=track.title;miniArtist.textContent=track.artist;setArtwork(track.imageUrl,track.title+track.artist);miniCover.style.backgroundImage=track.imageUrl?`url(${track.imageUrl})`:createGradientFromText(track.title);updatePlaylistUI();try{await audio.play();updateBadge('播放中')}catch(e){console.warn('播放失敗:',e);showNotification('播放失敗','error')}finally{loadLyricsSafely(track.title,track.artist)}saveState()};
+    const playTrack = async index => {
+  if (index < 0 || index >= currentPlaylist.length) return;
+  currentTrackIndex = index;
+  const track = currentPlaylist[index];
+  audio.src = track.url;
+  audio.load();
+
+  // ✅ 加上這段！
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: track.artist,
+      album: 'Monochrome Music Player',
+      artwork: [
+        { src: track.imageUrl || 'fallback.png', sizes: '512x512', type: 'image/png' },
+        { src: track.imageUrl || 'fallback.png', sizes: '256x256', type: 'image/png' }
+      ]
+    });
+  }
+
+  trackTitle.textContent = track.title;
+  trackArtist.textContent = track.artist;
+  miniTitle.textContent = track.title;
+  miniArtist.textContent = track.artist;
+  setArtwork(track.imageUrl, track.title + track.artist);
+  miniCover.style.backgroundImage = track.imageUrl
+    ? `url(${track.imageUrl})`
+    : createGradientFromText(track.title);
+  updatePlaylistUI();
+
+  try {
+    await audio.play();
+    updateBadge('播放中');
+  } catch (e) {
+    console.warn('播放失敗:', e);
+    showNotification('播放失敗', 'error');
+  } finally {
+    loadLyricsSafely(track.title, track.artist);
+  }
+
+  saveState();
+};
 
     const togglePlayPause=async()=>{if(currentPlaylist.length===0){showNotification('請先添加音樂','warning');return}if(currentTrackIndex===-1){await playTrack(0);return}if(audio.paused){try{await audio.play()}catch(_){showNotification('播放失敗','error')}}else{audio.pause()}};
 
@@ -738,26 +779,6 @@ if ('mediaSession' in navigator) {
       },1500);
     });
   })();
-    let touchStartX = 0;
-
-    coverElement.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX;
-    });
-
-    coverElement.addEventListener('touchend', e => {
-      const touchEndX = e.changedTouches[0].clientX;
-      const delta = touchEndX - touchStartX;
-      if (delta > 50) playPrevious();
-      else if (delta < -50) playNext();
-    });
-function toggleFullscreen() {
-  const doc = document.documentElement;
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  } else {
-    doc.requestFullscreen();
-  }
-}
   </script>
 </body>
 </html>
