@@ -100,8 +100,14 @@
     @keyframes out{to{transform:translateX(100%);opacity:0}}
     :focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:10px}
     @media (max-width:1024px){.player{grid-template-columns:1fr;gap:26px;padding:28px}.art-area{order:-1}.cover-container{width:280px;height:280px}}
-    @media (max-width:768px){.wrap{margin:10px auto 90px;padding:12px}.player{padding:22px}.cover-container{width:240px;height:240px}.controls{gap:14px}.control-btn{width:50px;height:50px}.control-btn.primary{width:60px;height:60px}.volume-slider{width:160px}.mini-player{display:flex}.upload-section{flex-direction:column}.drop-zone{min-width:auto}}
-    @media (max-width:480px){.progress-row{grid-template-columns:50px 1fr 50px;gap:10px}.control-btn{width:46px;height:46px;font-size:16px}.control-btn.primary{width:56px;height:56px;font-size:20px}.volume-slider{width:130px}.playlist-item{grid-template-columns:40px 1fr auto;padding:10px 12px}}
+    @media (max-width: 768px) {
+  .player { grid-template-columns: 1fr; padding: 16px; gap: 20px; }
+  .cover-container { width: 200px; height: 200px; }
+}
+    @media (max-width: 480px) {
+  .control-btn { width: 44px; height: 44px; margin: 0 6px; }
+  .controls { gap: 12px; padding: 6px 0; }
+}
   </style>
 </head>
 <body>
@@ -287,7 +293,6 @@
 
     const showNotification=(message,type='default')=>{const n=document.createElement('div');n.className=`notification ${type}`;n.textContent=message;notifications.appendChild(n);setTimeout(()=>{n.classList.add('fade-out');setTimeout(()=>n.remove(),220)},2800)};
     const updateBadge=t=>{statusBadge.textContent='';const icon=document.createElement('i');icon.className='fa-solid fa-circle';icon.style.fontSize='6px';statusBadge.appendChild(icon);statusBadge.insertAdjacentText('beforeend',' '+t)};
-    // 已移除 updateEqualizer 函數
 
     const setArtwork=(imageUrl,fallbackText='Music')=>{if(imageUrl){albumCover.style.backgroundImage=`url(${imageUrl})`;bgArt.style.backgroundImage=`url(${imageUrl})`;bgArt.style.opacity='.6'}else{const grad=createGradientFromText(fallbackText);albumCover.style.backgroundImage=grad;bgArt.style.backgroundImage='none';bgArt.style.opacity='.45'}};
 
