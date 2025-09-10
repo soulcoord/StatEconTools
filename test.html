@@ -631,7 +631,7 @@ if ('mediaSession' in navigator) {
           clearTimeout(lyricsScrollTimeout);
           lyricsScrollTimeout = setTimeout(() => {
             userIsScrollingLyrics = false;
-          }, 3000);
+          }, 200);
         });
         lyricsContent.appendChild(div);
       });
