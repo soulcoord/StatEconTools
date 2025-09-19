@@ -3,309 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T 檢驗表</title>
+    <title>t 分配臨界值查詢 - StatEcon Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        .t-hero {
+            text-align: left;
         }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
-            color: #e0e0e0;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 2rem;
+        .t-hero h1 {
+            margin-bottom: 0.5rem;
         }
-        nav {
-            background: rgba(31, 31, 31, 0.95);
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+        .t-hero p {
+            max-width: 680px;
+        }
+        .search-panel {
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            position: sticky;
-            top: 1rem;
-            z-index: 100;
-            backdrop-filter: blur(5px);
+            flex-direction: column;
+            gap: 1rem;
         }
-        nav a {
-            color: #e0e0e0;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-            position: relative;
+        .card-note {
+            margin-top: 1.25rem;
+            padding: 1rem 1.1rem;
+            border-radius: var(--radius-md);
+            background: rgba(56, 189, 248, 0.08);
+            color: var(--text-secondary);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            font-size: 0.95rem;
         }
-        nav a:hover, nav a.active {
-            color: #ff9800;
-        }
-        nav a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%;
-            height: 2px;
-            background: #ff9800;
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from { width: 0; }
-            to { width: 70%; }
-        }
-        h1 {
-            text-align: center;
-            margin: 2.5rem 0;
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #ffffff;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-            animation: fadeIn 1s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .form-container {
-            margin: 0 auto 2rem;
-            padding: 2rem;
-            background: #1f1f1f;
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-            max-width: 700px;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .form-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
-        }
-        .form-group {
-            flex: 1;
-            position: relative;
-        }
-        .form-group label {
-            position: absolute;
-            top: -0.75rem;
-            left: 1rem;
-            background: #1f1f1f;
-            padding: 0 0.5rem;
+        .table-hint {
+            margin-top: 1rem;
+            color: var(--text-muted);
             font-size: 0.9rem;
-            color: #ff9800;
-            font-weight: 500;
-            transition: all 0.3s ease;
         }
-        .form-container input {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.1rem;
-            background: #2c2c2c;
-            color: #e0e0e0;
-            border: 2px solid #424242;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        .form-container input:focus {
-            border-color: #ff9800;
-            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-            outline: none;
-        }
-        .form-container button {
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, #ff9800, #e68900);
-            color: #212121;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .form-container button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.5);
-        }
-        #message {
-            text-align: center;
-            margin: 1.5rem 0;
-            font-size: 1.2rem;
-            color: #ff4444;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.5s ease;
-        }
-        #message.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .table-container {
-            width: 90%;
-            max-width: 1100px;
-            margin: 0 auto 2rem;
-            background: #1f1f1f;
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 1.2rem;
-            text-align: center;
-            border-bottom: 1px solid #333;
-            transition: all 0.3s ease;
-        }
-        th {
-            background: #2c2c2c;
-            color: #ffcc00;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        tbody tr {
-            background: #242424;
-            transition: all 0.3s ease;
-        }
-        tbody tr:nth-child(even) {
-            background: #1e1e1e;
-        }
-        tbody tr:hover {
-            background: rgba(255, 152, 0, 0.2);
-            cursor: default;
-        }
-        .highlight {
-            background: #ffd700 !important;
-            color: #212121 !important;
-            animation: highlightFade 1s ease;
-        }
-        @keyframes highlightFade {
-            0% { background: #ffffff; }
-            100% { background: #ffd700; }
-        }
-        .loader {
-            border: 6px solid #333;
-            border-top: 6px solid #ff9800;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            display: none;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        #backToTop {
+        .back-to-top {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            padding: 1rem 1.2rem;
-            background: #ff9800;
-            color: #212121;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
             border: none;
-            border-radius: 50%;
+            background: var(--brand-gradient);
+            color: #050505;
             font-size: 1.2rem;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 24px rgba(56, 189, 248, 0.28);
             opacity: 0;
-            transition: all 0.3s ease;
+            pointer-events: none;
+            transition: transform var(--transition), opacity var(--transition), box-shadow var(--transition);
         }
-        #backToTop.show {
+        .back-to-top.show {
             opacity: 1;
+            pointer-events: all;
         }
-        #backToTop:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5);
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px rgba(56, 189, 248, 0.35);
         }
-        @media (max-width: 768px) {
-            nav {
-                padding: 1rem;
-                gap: 1rem;
-            }
-            .form-container {
-                flex-direction: column;
-                padding: 1.5rem;
-                margin: 1rem auto;
-            }
-            .form-group label {
-                position: static;
-                background: none;
-                margin-bottom: 0.5rem;
-            }
-            table {
-                font-size: 0.9rem;
-            }
-            th, td {
-                padding: 0.8rem;
-            }
-        }
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-            .form-container input, .form-container button {
-                font-size: 1rem;
-                padding: 0.8rem;
-            }
-            th, td {
-                padding: 0.6rem;
-                font-size: 0.85rem;
-            }
+        .table-wrapper {
+            max-height: 70vh;
+            overflow-y: auto;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
 </head>
-<body>
-    <h1>T 檢驗表</h1>
-    <div class="form-container">
-        <div class="form-group">
-            <label for="dfSearch">自由度 (df)</label>
-            <input type="number" id="dfSearch" step="1" placeholder="輸入 1-100" min="1" max="100">
+<body class="app-shell">
+    <header class="app-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">StatEcon Tools</a>
+            <nav class="header-nav">
+                <a href="index.html#distribution" class="active">機率分配工具</a>
+                <a href="powa.html">普瓦松分配</a>
+                <a href="economics.html">工程經濟</a>
+            </nav>
+            <div class="header-actions">
+                <a class="back-link" href="index.html">← 返回首頁</a>
+            </div>
         </div>
-        <button onclick="searchDF()">搜尋</button>
+    </header>
+
+    <main class="app-main">
+        <section class="section t-hero">
+            <span class="hero-label">Student's t Distribution</span>
+            <h1>t 分配臨界值查詢</h1>
+            <p>
+                針對 1 至 100 的自由度，快速查詢 t 分配在不同顯著水準下的臨界值。輸入自由度即可自動定位表格列，並以高亮顏色協助辨識。
+            </p>
+        </section>
+
+        <section class="section section--compact">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">🎯</span>
+                        自由度搜尋
+                    </div>
+                </div>
+                <p class="card-subtitle">輸入自由度 df（1-100），系統會自動定位對應列，並顯示各顯著水準的臨界值。</p>
+                <div class="search-panel">
+                    <label for="dfSearch">自由度 (df)</label>
+                    <div class="input-group">
+                        <input type="number" id="dfSearch" class="input-control" placeholder="輸入 1-100" min="1" max="100" step="1">
+                        <button class="btn btn-primary" id="searchBtn">定位自由度</button>
+                    </div>
+                </div>
+                <div id="message" class="alert alert--danger">
+                    <span>⚠️</span>
+                    <span id="messageText">請輸入有效的自由度 (1-100)</span>
+                </div>
+                <p class="card-note">提示：支援即時搜尋，輸入時若數值有效會自動捲動到表格中對應的位置。</p>
+            </div>
+        </section>
+
+        <section class="section section--compact">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📋</span>
+                        t 分配臨界值表
+                    </div>
+                </div>
+                <p class="card-subtitle">臨界值以雙尾檢定為例，顯著水準 α 由 0.1 至 0.005。向下滾動可瀏覽更多自由度。</p>
+                <div class="table-wrapper">
+                    <table id="tTable">
+                        <thead>
+                            <tr>
+                                <th>df</th>
+                                <th>α = 0.1</th>
+                                <th>α = 0.05</th>
+                                <th>α = 0.025</th>
+                                <th>α = 0.01</th>
+                                <th>α = 0.005</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tTableBody"></tbody>
+                    </table>
+                </div>
+                <p class="table-hint">臨界值計算使用 jStat 庫，精度至小數點第三位。若需要更高自由度，建議採用常態近似。</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
     </div>
-    <div id="message"></div>
-    <div class="table-container">
-        <table id="tTable">
-            <thead>
-                <tr>
-                    <th>df</th>
-                    <th>α = 0.1</th>
-                    <th>α = 0.05</th>
-                    <th>α = 0.025</th>
-                    <th>α = 0.01</th>
-                    <th>α = 0.005</th>
-                </tr>
-            </thead>
-            <tbody id="tTableBody"></tbody>
-        </table>
-    </div>
-    <div class="loader" id="loader"></div>
-    <button id="backToTop" onclick="scrollToTop()">↑</button>
+
+    <button class="back-to-top" id="backToTop" aria-label="返回頂部">↑</button>
+
+    <footer class="footer">
+        <div class="section">
+            <span>© 2024 StatEcon Tools</span>
+            <span>資料來源：Student's t 分配臨界值計算</span>
+        </div>
+    </footer>
 
     <script>
         const alphaValues = [0.1, 0.05, 0.025, 0.01, 0.005];
+        const elements = {
+            tableBody: document.getElementById('tTableBody'),
+            loading: document.getElementById('loading'),
+            dfInput: document.getElementById('dfSearch'),
+            searchBtn: document.getElementById('searchBtn'),
+            message: document.getElementById('message'),
+            messageText: document.getElementById('messageText'),
+            backToTop: document.getElementById('backToTop')
+        };
+
+        function toggleLoading(show) {
+            elements.loading.classList.toggle('show', show);
+        }
 
         function generateTable() {
-            const tableBody = document.getElementById('tTableBody');
-            const loader = document.getElementById('loader');
-            tableBody.innerHTML = '';
-            loader.style.display = 'block';
+            toggleLoading(true);
+            elements.tableBody.innerHTML = '';
 
             setTimeout(() => {
                 for (let df = 1; df <= 100; df++) {
@@ -315,68 +188,80 @@
                         <td>${df}</td>
                         ${alphaValues.map(alpha => `<td>${jStat.studentt.inv(1 - alpha, df).toFixed(3)}</td>`).join('')}
                     `;
-                    tableBody.appendChild(tr);
+                    elements.tableBody.appendChild(tr);
                 }
-                loader.style.display = 'none';
-            }, 300);
+                toggleLoading(false);
+            }, 250);
         }
 
-        function searchDF() {
-            const df = parseInt(document.getElementById('dfSearch').value);
-            const message = document.getElementById('message');
+        function showMessage(text, type = 'danger') {
+            elements.messageText.textContent = text;
+            elements.message.className = `alert alert--${type} show`;
+            setTimeout(() => {
+                elements.message.classList.remove('show');
+            }, 2800);
+        }
+
+        function highlightRow(df) {
             const rows = document.querySelectorAll('#tTableBody tr');
-
-            if (isNaN(df) || df < 1 || df > 100) {
-                showMessage('請輸入有效的自由度 (1-100)');
-                return;
-            }
-
             let found = false;
+
             rows.forEach(row => {
-                const rowDF = parseInt(row.dataset.df);
-                if (rowDF === df) {
-                    row.classList.add('highlight');
+                if (parseInt(row.dataset.df, 10) === df) {
+                    row.classList.add('highlighted');
                     row.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     found = true;
-                    setTimeout(() => row.classList.remove('highlight'), 3000);
+                    setTimeout(() => row.classList.remove('highlighted'), 3200);
                 } else {
-                    row.classList.remove('highlight');
+                    row.classList.remove('highlighted');
                 }
             });
 
-            if (!found) {
-                showMessage(`未找到自由度 ${df}`);
+            return found;
+        }
+
+        function searchDF() {
+            const df = parseInt(elements.dfInput.value, 10);
+
+            if (isNaN(df) || df < 1 || df > 100) {
+                showMessage('請輸入有效的自由度 (1-100)', 'danger');
+                return;
+            }
+
+            const found = highlightRow(df);
+            if (found) {
+                showMessage(`已定位自由度 ${df}`, 'success');
+            } else {
+                showMessage(`未找到自由度 ${df}`, 'danger');
             }
         }
 
-        function showMessage(text) {
-            const message = document.getElementById('message');
-            message.textContent = text;
-            message.classList.add('show');
-            setTimeout(() => message.classList.remove('show'), 2500);
-        }
+        elements.searchBtn.addEventListener('click', searchDF);
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('backToTop');
-            btn.classList.toggle('show', window.scrollY > 300);
-        });
-
-        document.getElementById('dfSearch').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchDF();
-        });
-
-        document.getElementById('dfSearch').addEventListener('input', () => {
-            const value = document.getElementById('dfSearch').value;
-            if (value && parseInt(value) >= 1 && parseInt(value) <= 100) {
+        elements.dfInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
                 searchDF();
             }
         });
 
-        window.onload = generateTable;
+        elements.dfInput.addEventListener('input', () => {
+            const value = parseInt(elements.dfInput.value, 10);
+            if (!isNaN(value) && value >= 1 && value <= 100) {
+                highlightRow(value);
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            elements.backToTop.classList.toggle('show', window.scrollY > 320);
+        });
+
+        elements.backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('load', () => {
+            generateTable();
+        });
     </script>
 </body>
 </html>
