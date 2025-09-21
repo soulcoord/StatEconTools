@@ -698,6 +698,256 @@
       box-shadow: var(--shadow-md);
       animation: slideIn 0.3s ease forwards;
     }
+
+    .cashflow-section {
+      margin-top: 2rem;
+    }
+
+    .cashflow-card {
+      background: var(--surface-dark);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      padding: 1.75rem;
+      transition: box-shadow var(--transition-normal) ease, border-color var(--transition-normal) ease;
+    }
+
+    .cashflow-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: #404040;
+    }
+
+    .cashflow-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cashflow-subtitle {
+      color: var(--text-tertiary);
+      margin: 0.25rem 0 0;
+      font-size: 0.9rem;
+    }
+
+    .cashflow-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .cashflow-form {
+      background: var(--card-dark);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cashflow-form .btn-group .btn {
+      width: 100%;
+    }
+
+    .btn-check:checked + .btn-secondary {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: var(--background-dark);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cashflow-context {
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .cashflow-context-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .cashflow-context-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+    }
+
+    .cashflow-status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+    }
+
+    .cashflow-status.pending {
+      color: var(--warning-color);
+      border-color: rgba(255, 214, 0, 0.4);
+      background: rgba(255, 214, 0, 0.12);
+    }
+
+    .cashflow-status.applied {
+      color: var(--success-color);
+      border-color: rgba(0, 200, 83, 0.4);
+      background: rgba(0, 200, 83, 0.12);
+    }
+
+    .cashflow-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      color: var(--text-tertiary);
+      background: rgba(255, 255, 255, 0.02);
+      margin-bottom: 1.25rem;
+    }
+
+    .cashflow-list {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cashflow-entry {
+      min-width: 190px;
+      position: relative;
+      padding: 1.1rem 1.1rem 1rem 1.1rem;
+      border-radius: var(--radius-md);
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: transform var(--transition-fast) ease, border-color var(--transition-fast) ease;
+    }
+
+    .cashflow-entry:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 149, 0, 0.45);
+    }
+
+    .cashflow-period {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    .cashflow-label {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-top: 0.35rem;
+    }
+
+    .cashflow-amount {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+
+    .cashflow-amount.positive {
+      color: var(--success-color);
+    }
+
+    .cashflow-amount.negative {
+      color: var(--danger-color);
+    }
+
+    .cashflow-remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cashflow-summary {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .cashflow-summary-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+
+    .cashflow-summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .cashflow-summary-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    .cashflow-summary-value {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .cashflow-summary-value.positive {
+      color: var(--success-color);
+    }
+
+    .cashflow-summary-value.negative {
+      color: var(--danger-color);
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 340px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--card-dark);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .cashflow-context-placeholder {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      color: var(--text-tertiary);
+      font-size: 0.9rem;
+    }
+
+    .cashflow-list::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .cashflow-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+    }
     
     @keyframes slideIn {
       from { transform: translateX(100%); opacity: 0; }
@@ -756,6 +1006,32 @@
         left: 20px;
         right: 20px;
         max-width: none;
+      }
+
+      .cashflow-card {
+        padding: 1.25rem;
+      }
+
+      .cashflow-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .cashflow-form {
+        padding: 1rem;
+      }
+
+      .cashflow-entry {
+        min-width: 160px;
+      }
+
+      .chart-wrapper {
+        height: 280px;
+        padding: 1rem;
+      }
+
+      .cashflow-context-meta {
+        gap: 0.75rem;
       }
     }
 
@@ -893,6 +1169,91 @@
         </table>
       </div>
     </section>
+
+    <section id="cashFlowSection" class="cashflow-section fade-in" aria-label="現金流量視覺化工具">
+      <div class="cashflow-card">
+        <div class="cashflow-header">
+          <div>
+            <h2 class="section-title mb-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0zm10 3a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm3.5 2.5a.5.5 0 0 1 .5.5v5.5a.5.5 0 0 1-.5.5H12v-1h1v-4.938l-3.243 3.244a.5.5 0 0 1-.707 0L7 7.707l-3.146 3.147-.708-.708L7 6.293l2.05 2.05L12.793 4.6A.5.5 0 0 1 13.5 5.5z"/>
+              </svg>
+              現金流量視覺化
+            </h2>
+            <p class="cashflow-subtitle">快速建立期別與金額，或套用計算結果，掌握專案的整體現金流動。</p>
+          </div>
+          <div class="cashflow-actions">
+            <button class="btn btn-outline-primary" id="importFromCalculatorBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow me-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0zm10 3a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm3.5 2.5a.5.5 0 0 1 .5.5v5.5a.5.5 0 0 1-.5.5H12v-1h1v-4.085l-3.146 3.147a.5.5 0 0 1-.708 0L7 7.707l-3.146 3.147-.708-.708L7 6.293l2.646 2.647L12.793 5.4a.5.5 0 0 1 .707.1z"/>
+              </svg>
+              套用最新計算
+            </button>
+            <button class="btn btn-outline-danger" id="clearCashFlowBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3 me-1" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5zM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 5.885 16h4.23a2 2 0 0 0 1.994-1.84L12.962 3.5h.538a.5.5 0 0 0 0-1H11zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-4.23a1 1 0 0 1-.997-.92L5.042 3.5h7.916z"/>
+                <path d="M5.5 5.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm-2.5.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0V6h-.5a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+              清空現金流
+            </button>
+          </div>
+        </div>
+
+        <div class="cashflow-context" id="cashFlowContext"></div>
+
+        <div class="cashflow-form row g-3 align-items-end">
+          <div class="col-12 col-md-3">
+            <label for="cashFlowPeriod" class="form-label">期數 (N)</label>
+            <input type="number" min="0" class="form-control form-control-custom" id="cashFlowPeriod" placeholder="例如 0 表示現值">
+          </div>
+          <div class="col-12 col-md-4">
+            <label for="cashFlowAmount" class="form-label">金額</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control form-control-custom" id="cashFlowAmount" placeholder="輸入金額" step="100">
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <label class="form-label">方向</label>
+            <div class="btn-group" role="group" aria-label="現金流方向">
+              <input type="radio" class="btn-check" name="cashFlowType" id="cashFlowIn" value="in" checked>
+              <label class="btn btn-secondary" for="cashFlowIn">流入</label>
+              <input type="radio" class="btn-check" name="cashFlowType" id="cashFlowOut" value="out">
+              <label class="btn btn-secondary" for="cashFlowOut">流出</label>
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <label for="cashFlowLabel" class="form-label">標籤 (選填)</label>
+            <input type="text" class="form-control form-control-custom" id="cashFlowLabel" placeholder="例如 設備款">
+          </div>
+          <div class="col-12 col-md-auto">
+            <label class="form-label d-none d-md-block">&nbsp;</label>
+            <button class="btn btn-primary w-100" id="addCashFlowBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+              </svg>
+              新增
+            </button>
+          </div>
+        </div>
+
+        <div class="cashflow-summary" id="cashFlowSummary"></div>
+
+        <div class="cashflow-empty" id="cashFlowEmpty">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+          </svg>
+          <div>尚未建立任何現金流節點，請先手動新增，或按「套用最新計算」。</div>
+        </div>
+
+        <div class="cashflow-list" id="cashFlowList" aria-live="polite"></div>
+
+        <div class="chart-wrapper">
+          <canvas id="cashFlowChart" role="img" aria-label="現金流量長條圖"></canvas>
+        </div>
+      </div>
+    </section>
   </main>
   
   
@@ -1020,12 +1381,17 @@
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.5/dist/chart.umd.min.js"></script>
   <script>
     (function(){
       let currentHighlight = null;
       let historyRecords = JSON.parse(localStorage.getItem('calcHistory')) || [];
       let editingIndex = -1;
       let tooltipList = [];
+      let cashFlowEntries = [];
+      let cashFlowChart = null;
+      let lastCalculationRecord = null;
+      let cashFlowCounter = 0;
       function initTooltips() {
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
@@ -1195,6 +1561,367 @@
           setTimeout(() => notification.remove(), 500);
         }, 4000);
       }
+      function formatNumber(value, options = {}) {
+        const numericValue = Number(value);
+        if (!Number.isFinite(numericValue)) {
+          return '0';
+        }
+        return numericValue.toLocaleString('zh-Hant', {
+          minimumFractionDigits: options.minimumFractionDigits ?? 0,
+          maximumFractionDigits: options.maximumFractionDigits ?? 2
+        });
+      }
+      function buildCashFlowEntry(period, amount, label) {
+        cashFlowCounter += 1;
+        return {
+          id: `cf-${cashFlowCounter}`,
+          period: Number(period),
+          amount: Number(amount),
+          label: label || ''
+        };
+      }
+      function renderCashFlowList() {
+        const list = document.getElementById('cashFlowList');
+        const emptyState = document.getElementById('cashFlowEmpty');
+
+        if (!list || !emptyState) {
+          return;
+        }
+
+        list.innerHTML = '';
+
+        if (!cashFlowEntries.length) {
+          emptyState.style.display = 'flex';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+
+        cashFlowEntries.forEach(entry => {
+          const item = document.createElement('div');
+          item.className = 'cashflow-entry';
+          const amountPositive = entry.amount >= 0;
+          const amountClass = amountPositive ? 'positive' : 'negative';
+          const amountSign = amountPositive ? '+' : '-';
+
+          item.innerHTML = `
+            <button class="btn btn-sm btn-outline-danger cashflow-remove-btn" data-id="${entry.id}" title="移除節點">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 1 .708 0L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+            <div class="cashflow-period">${entry.period === 0 ? '期初 / 當期' : `第 ${entry.period} 期`}</div>
+            <div class="cashflow-label">${entry.label || '未命名節點'}</div>
+            <div class="cashflow-amount ${amountClass}">${amountSign}$${formatNumber(Math.abs(entry.amount))}</div>
+          `;
+          list.appendChild(item);
+        });
+
+        list.querySelectorAll('.cashflow-remove-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            removeCashFlowEntry(button.getAttribute('data-id'));
+          });
+        });
+      }
+      function updateCashFlowSummary() {
+        const summary = document.getElementById('cashFlowSummary');
+
+        if (!summary) {
+          return;
+        }
+
+        if (!cashFlowEntries.length) {
+          summary.innerHTML = '<span class="text-tertiary">使用上方表單新增現金流節點，或套用最新計算結果以自動產生圖表。</span>';
+          return;
+        }
+
+        let totalInflow = 0;
+        let totalOutflow = 0;
+
+        cashFlowEntries.forEach(entry => {
+          if (entry.amount >= 0) {
+            totalInflow += entry.amount;
+          } else {
+            totalOutflow += Math.abs(entry.amount);
+          }
+        });
+
+        const net = totalInflow - totalOutflow;
+
+        summary.innerHTML = `
+          <div class="cashflow-summary-grid">
+            <div class="cashflow-summary-item">
+              <span class="cashflow-summary-label">總流入</span>
+              <span class="cashflow-summary-value positive">+$${formatNumber(totalInflow)}</span>
+            </div>
+            <div class="cashflow-summary-item">
+              <span class="cashflow-summary-label">總流出</span>
+              <span class="cashflow-summary-value negative">-$${formatNumber(totalOutflow)}</span>
+            </div>
+            <div class="cashflow-summary-item">
+              <span class="cashflow-summary-label">淨現金流</span>
+              <span class="cashflow-summary-value ${net >= 0 ? 'positive' : 'negative'}">${net >= 0 ? '+' : '-'}$${formatNumber(Math.abs(net))}</span>
+            </div>
+          </div>
+        `;
+      }
+      function updateCashFlowChart() {
+        const canvas = document.getElementById('cashFlowChart');
+        if (!canvas) {
+          return;
+        }
+
+        if (!cashFlowEntries.length) {
+          if (cashFlowChart) {
+            cashFlowChart.destroy();
+            cashFlowChart = null;
+          }
+          return;
+        }
+
+        const labels = cashFlowEntries.map(entry => entry.period === 0 ? '期初' : `第 ${entry.period} 期`);
+        const datasetValues = cashFlowEntries.map(entry => entry.amount);
+        const backgroundColors = datasetValues.map(value => value >= 0 ? 'rgba(0, 200, 83, 0.35)' : 'rgba(255, 61, 0, 0.35)');
+        const borderColors = datasetValues.map(value => value >= 0 ? 'rgba(0, 200, 83, 0.85)' : 'rgba(255, 61, 0, 0.85)');
+
+        if (!cashFlowChart) {
+          cashFlowChart = new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels,
+              datasets: [{
+                data: datasetValues,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 2,
+                borderRadius: 8,
+                maxBarThickness: 38
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: { color: '#AAAAAA' }
+                },
+                y: {
+                  grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                  ticks: {
+                    color: '#888888',
+                    callback: value => `$${formatNumber(value)}`
+                  }
+                }
+              },
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  displayColors: false,
+                  callbacks: {
+                    label(context) {
+                      const entry = cashFlowEntries[context.dataIndex];
+                      const prefix = context.parsed.y >= 0 ? '+' : '-';
+                      const entryLabel = entry.label ? `${entry.label}：` : '';
+                      return `${entryLabel}${prefix}$${formatNumber(Math.abs(context.parsed.y))}`;
+                    }
+                  }
+                }
+              },
+              animation: {
+                duration: 500,
+                easing: 'easeOutQuart'
+              }
+            }
+          });
+        } else {
+          cashFlowChart.data.labels = labels;
+          cashFlowChart.data.datasets[0].data = datasetValues;
+          cashFlowChart.data.datasets[0].backgroundColor = backgroundColors;
+          cashFlowChart.data.datasets[0].borderColor = borderColors;
+          cashFlowChart.update();
+        }
+      }
+      function refreshCashFlowUI() {
+        renderCashFlowList();
+        updateCashFlowSummary();
+        updateCashFlowChart();
+      }
+      function removeCashFlowEntry(id) {
+        const index = cashFlowEntries.findIndex(entry => entry.id === id);
+        if (index === -1) {
+          return;
+        }
+        cashFlowEntries.splice(index, 1);
+        refreshCashFlowUI();
+        showNotification('已移除現金流節點', 'success');
+      }
+      function clearCashFlowEntries() {
+        if (!cashFlowEntries.length) {
+          showNotification('目前沒有現金流資料可清空', 'info');
+          return;
+        }
+        cashFlowEntries = [];
+        refreshCashFlowUI();
+        if (lastCalculationRecord) {
+          updateCashFlowContext(lastCalculationRecord, true);
+        }
+        showNotification('現金流資料已清空', 'success');
+      }
+      function addCashFlowEntry() {
+        const periodInput = document.getElementById('cashFlowPeriod');
+        const amountInput = document.getElementById('cashFlowAmount');
+        const labelInput = document.getElementById('cashFlowLabel');
+        const typeInput = document.querySelector('input[name="cashFlowType"]:checked');
+
+        const period = parseInt(periodInput.value, 10);
+        if (Number.isNaN(period) || period < 0) {
+          showNotification('請輸入有效的期數（需為 0 或正整數）', 'warning');
+          periodInput.focus();
+          return;
+        }
+
+        const rawAmount = parseFloat(amountInput.value);
+        if (Number.isNaN(rawAmount) || rawAmount === 0) {
+          showNotification('金額需為非零數值', 'warning');
+          amountInput.focus();
+          return;
+        }
+
+        const isOutflow = typeInput && typeInput.value === 'out';
+        const signedAmount = isOutflow ? -Math.abs(rawAmount) : Math.abs(rawAmount);
+        const label = labelInput.value.trim();
+        const entry = buildCashFlowEntry(period, signedAmount, label || (period === 0 ? '期初金額' : `第 ${period} 期`));
+
+        cashFlowEntries.push(entry);
+        cashFlowEntries.sort((a, b) => a.period - b.period);
+        refreshCashFlowUI();
+        showNotification('已新增現金流節點', 'success');
+
+        periodInput.value = '';
+        amountInput.value = '';
+        labelInput.value = '';
+        periodInput.focus();
+      }
+      function scrollToCashFlowSection() {
+        const section = document.getElementById('cashFlowSection');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      function generateFlowsFromRecord(record) {
+        if (!record) {
+          return null;
+        }
+
+        const n = parseInt(record.n, 10);
+        if (Number.isNaN(n)) {
+          return null;
+        }
+
+        const flows = [];
+        const amount = Number(record.amount);
+        const result = Number(record.result);
+
+        switch (record.factor) {
+          case 'F/P':
+            flows.push(buildCashFlowEntry(0, -Math.abs(amount), '初始投入'));
+            flows.push(buildCashFlowEntry(n, Math.abs(result), '期末價值'));
+            break;
+          case 'P/F':
+            flows.push(buildCashFlowEntry(0, Math.abs(result), '現值'));
+            flows.push(buildCashFlowEntry(n, -Math.abs(amount), '未來支出'));
+            break;
+          case 'A/P':
+            flows.push(buildCashFlowEntry(0, Math.abs(amount), '現值資金'));
+            for (let i = 1; i <= n; i++) {
+              flows.push(buildCashFlowEntry(i, -Math.abs(result), `第 ${i} 期償付`));
+            }
+            break;
+          case 'P/A':
+            flows.push(buildCashFlowEntry(0, Math.abs(result), '折現金額'));
+            for (let i = 1; i <= n; i++) {
+              flows.push(buildCashFlowEntry(i, -Math.abs(amount), `第 ${i} 期付款`));
+            }
+            break;
+          case 'F/A':
+            for (let i = 1; i <= n; i++) {
+              flows.push(buildCashFlowEntry(i, -Math.abs(amount), `第 ${i} 期投入`));
+            }
+            flows.push(buildCashFlowEntry(n, Math.abs(result), '期末累積'));
+            break;
+          case 'A/F':
+            for (let i = 1; i <= n; i++) {
+              flows.push(buildCashFlowEntry(i, -Math.abs(result), `第 ${i} 期提撥`));
+            }
+            flows.push(buildCashFlowEntry(n, Math.abs(amount), '目標金額'));
+            break;
+          default:
+            return null;
+        }
+
+        return flows;
+      }
+      function applyCashFlowTemplate(flows, message) {
+        if (!flows || !flows.length) {
+          showNotification('無法取得現金流資料，請確認輸入內容。', 'warning');
+          return;
+        }
+        cashFlowEntries = [...flows].sort((a, b) => a.period - b.period);
+        refreshCashFlowUI();
+        if (message) {
+          showNotification(message, 'success');
+        }
+        scrollToCashFlowSection();
+      }
+      function importLastCalculationToCashFlow() {
+        if (!lastCalculationRecord) {
+          showNotification('尚未有可套用的計算結果', 'info');
+          return;
+        }
+        const flows = generateFlowsFromRecord(lastCalculationRecord);
+        if (!flows) {
+          showNotification('此因子類型暫不支援自動產生現金流，請改以手動新增。', 'warning');
+          return;
+        }
+        applyCashFlowTemplate(flows, '已依最新計算結果更新現金流圖表');
+        updateCashFlowContext(lastCalculationRecord, false);
+      }
+      function updateCashFlowContext(record, pending = false) {
+        const context = document.getElementById('cashFlowContext');
+        if (!context) {
+          return;
+        }
+
+        if (!record) {
+          context.innerHTML = `
+            <div class="cashflow-context-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-lightbulb" viewBox="0 0 16 16">
+                <path d="M2 6a6 6 0 1 1 10.89 3.476c-.19.36-.434.695-.725.988l-.517.518A1.75 1.75 0 0 0 11 12.707V13a1 1 0 0 1-1 1h-.5a.5.5 0 0 0-.5.5v.5h-2v-.5a.5.5 0 0 0-.5-.5H6a1 1 0 0 1-1-1v-.293c0-.464-.184-.909-.513-1.238l-.517-.518A3.506 3.506 0 0 1 1.11 9.476 6 6 0 0 1 2 6z"/>
+                <path d="M5 14h6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1zm1-2.5a.5.5 0 0 0-.5.5v.5h5v-.5a.5.5 0 0 0-.5-.5H6z"/>
+              </svg>
+              <div>可透過左側計算器取得結果，或直接新增現金流節點。</div>
+            </div>
+          `;
+          return;
+        }
+
+        const statusClass = pending ? 'pending' : 'applied';
+        const statusText = pending ? '待套用' : '已套用';
+
+        context.innerHTML = `
+          <div class="cashflow-context-header">
+            <span class="cashflow-status ${statusClass}">${statusText}</span>
+            <div>因子 ${record.factor} ・ 利率 ${Number(record.rate).toFixed(2)}% ・ N = ${record.n}</div>
+          </div>
+          <div class="cashflow-context-meta">
+            <span>金額：$${formatNumber(record.amount, { maximumFractionDigits: 2 })}</span>
+            <span>因子值：${formatNumber(record.factorValue, { maximumFractionDigits: 6, minimumFractionDigits: 2 })}</span>
+            <span>結果：$${formatNumber(record.result, { maximumFractionDigits: 4 })}</span>
+            ${record.compoundFactor && record.compoundFactor !== '無' ? `<span>複合：${record.compoundFactor}</span>` : ''}
+          </div>
+        `;
+      }
       function updateFactorValue() {
         const n = document.getElementById('selectedN').value;
         const factor = document.getElementById('selectedFactor').value;
@@ -1312,7 +2039,8 @@
           historyRecords = historyRecords.slice(0, 100);
         }
         localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
-        
+        lastCalculationRecord = record;
+        updateCashFlowContext(record, true);
         updateHistoryList();
       }
       function filterHistory() {
@@ -1394,13 +2122,19 @@
             </div>
             
             <div class="history-actions">
-              <button class="btn btn-sm btn-outline-primary history-edit-btn" data-index="${index}">
+              <button class="btn btn-sm btn-outline-success history-visualize-btn" data-record-id="${record.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-graph-up me-1" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0zm10 3a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm3.5 2.5a.5.5 0 0 1 .5.5v5.5a.5.5 0 0 1-.5.5H12v-1h1v-4.938l-3.243 3.244a.5.5 0 0 1-.707 0L7 7.707l-3.146 3.147-.708-.708L7 6.293l2.05 2.05L12.793 4.6A.5.5 0 0 1 13.5 5.5z"/>
+                </svg>
+                套用現金流
+              </button>
+              <button class="btn btn-sm btn-outline-primary history-edit-btn" data-record-id="${record.id}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                 </svg>
                 編輯
               </button>
-              <button class="btn btn-sm btn-outline-danger history-delete-btn" data-index="${index}">
+              <button class="btn btn-sm btn-outline-danger history-delete-btn" data-record-id="${record.id}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash me-1" viewBox="0 0 16 16">
                   <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                   <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -1410,19 +2144,62 @@
             </div>
           `;
           historyList.appendChild(item);
-          item.querySelector('.history-edit-btn').addEventListener('click', function() {
-            editRecord(this.getAttribute('data-index'));
-          });
-          
-          item.querySelector('.history-delete-btn').addEventListener('click', function() {
-            confirmDelete(this.getAttribute('data-index'));
-          });
+
+          const visualizeBtn = item.querySelector('.history-visualize-btn');
+          const editBtn = item.querySelector('.history-edit-btn');
+          const deleteBtn = item.querySelector('.history-delete-btn');
+          const recordId = record.id;
+          const getRecordIndex = () => historyRecords.findIndex(entry => entry.id === recordId);
+
+          if (visualizeBtn) {
+            visualizeBtn.addEventListener('click', () => {
+              const targetIndex = getRecordIndex();
+              if (targetIndex === -1) {
+                showNotification('找不到對應的歷史記錄', 'warning');
+                return;
+              }
+              const targetRecord = historyRecords[targetIndex];
+              const flows = generateFlowsFromRecord(targetRecord);
+              if (!flows) {
+                showNotification('此因子類型暫不支援自動轉換現金流，請改以手動輸入。', 'warning');
+                return;
+              }
+              applyCashFlowTemplate(flows, '已從歷史記錄載入現金流圖表');
+              lastCalculationRecord = targetRecord;
+              updateCashFlowContext(targetRecord, false);
+            });
+          }
+
+          if (editBtn) {
+            editBtn.addEventListener('click', () => {
+              const targetIndex = getRecordIndex();
+              if (targetIndex === -1) {
+                showNotification('找不到對應的歷史記錄', 'warning');
+                return;
+              }
+              editRecord(targetIndex);
+            });
+          }
+
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+              const targetIndex = getRecordIndex();
+              if (targetIndex === -1) {
+                showNotification('找不到對應的歷史記錄', 'warning');
+                return;
+              }
+              confirmDelete(targetIndex);
+            });
+          }
         });
       }
       function editRecord(index) {
         const record = historyRecords[index];
         editingIndex = index;
-        
+
+        lastCalculationRecord = record;
+        updateCashFlowContext(record, true);
+
         document.getElementById('inputAmount').value = record.amount;
         document.getElementById('interestRate').value = record.rate;
         document.getElementById('selectedN').value = record.n;
@@ -1464,10 +2241,15 @@
           reverseButtons: true
         }).then((result) => {
           if (result.isConfirmed) {
+            const deletedRecord = historyRecords[index];
             historyRecords.splice(index, 1);
             localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
             updateHistoryList();
             showNotification('記錄已刪除', 'success');
+            if (lastCalculationRecord && deletedRecord && lastCalculationRecord.id === deletedRecord.id) {
+              lastCalculationRecord = null;
+              updateCashFlowContext(null);
+            }
           }
         });
       }
@@ -1476,10 +2258,12 @@
           historyRecords = [];
           localStorage.setItem('calcHistory', JSON.stringify(historyRecords));
           updateHistoryList();
+          lastCalculationRecord = null;
+          updateCashFlowContext(null);
           showNotification('所有歷史記錄已清空', 'success');
         }
       }
-function toggleSidebar() {
+      function toggleSidebar() {
         const sidebar = document.getElementById('historySidebar');
         sidebar.classList.toggle('active');
       }
@@ -1586,6 +2370,19 @@ function toggleSidebar() {
             updateFactorValue();
           }
         });
+        document.getElementById('addCashFlowBtn').addEventListener('click', addCashFlowEntry);
+        ['cashFlowPeriod', 'cashFlowAmount', 'cashFlowLabel'].forEach(id => {
+          const input = document.getElementById(id);
+          if (input) {
+            input.addEventListener('keypress', function(e) {
+              if (e.key === 'Enter') {
+                addCashFlowEntry();
+              }
+            });
+          }
+        });
+        document.getElementById('clearCashFlowBtn').addEventListener('click', clearCashFlowEntries);
+        document.getElementById('importFromCalculatorBtn').addEventListener('click', importLastCalculationToCashFlow);
         document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
         document.getElementById('closeSidebarBtn').addEventListener('click', toggleSidebar);
         document.getElementById('clearHistoryBtn').addEventListener('click', confirmClearHistory);
@@ -1607,6 +2404,8 @@ function toggleSidebar() {
         }
         calculateFactors();
         updateHistoryList();
+        refreshCashFlowUI();
+        updateCashFlowContext(lastCalculationRecord);
       }
       document.addEventListener('DOMContentLoaded', initPage);
     })();

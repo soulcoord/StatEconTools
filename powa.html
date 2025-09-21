@@ -3,561 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>普瓦松分配表 - 統計工具</title>
+    <title>普瓦松分配表 - StatEcon Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --primary-dark: #4f46e5;
-            --secondary: #06b6d4;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --error: #ef4444;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --bg-hover: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border: rgba(148, 163, 184, 0.1);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        
-        .header {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 1.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        
-        .hero {
-            text-align: center;
-            padding: 3rem 0;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .hero-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.125rem;
-        }
-
-        
-        .card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            background: rgba(99, 102, 241, 0.05);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .card-icon {
-            width: 24px;
-            height: 24px;
-            color: var(--primary-light);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .input-group {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .form-control {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .alert.show {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            animation: slideIn 0.3s ease;
-        }
-
-        .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--error);
-        }
-
-        .alert-success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--success);
-        }
-
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stat-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 0.75rem;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover {
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        
-        .table-wrapper {
-            overflow-x: auto;
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            padding: 1rem;
+        .poisson-hero {
             text-align: left;
-            font-weight: 600;
-            color: var(--text-primary);
-            background: rgba(99, 102, 241, 0.05);
-            border-bottom: 2px solid var(--border);
         }
-
-        td {
-            padding: 1rem;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border);
+        .poisson-hero h1 {
+            margin-bottom: 0.5rem;
         }
-
-        tbody tr {
-            transition: all 0.2s ease;
-            cursor: pointer;
+        .highlight-list {
+            margin-top: 1.75rem;
+            display: grid;
+            gap: 1rem;
         }
-
-        tbody tr:hover {
-            background: rgba(99, 102, 241, 0.05);
+        .highlight-item {
+            display: flex;
+            gap: 0.85rem;
+            align-items: flex-start;
         }
-
-        tbody tr.highlighted {
-            background: rgba(99, 102, 241, 0.15);
-        }
-
-        tbody tr.highlighted td {
-            color: var(--primary-light);
-            font-weight: 500;
-        }
-
-        
-        .chart-container {
-            position: relative;
-            height: 400px;
-            background: rgba(15, 23, 42, 0.6);
+        .highlight-item span {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
             border-radius: 12px;
-            padding: 2rem;
-            border: 1px solid var(--border);
+            background: rgba(56, 189, 248, 0.12);
+            color: #bae6fd;
+            font-weight: 700;
         }
-
-        .bar-container {
-            position: absolute;
-            bottom: 3rem;
-            left: 3rem;
-            right: 2rem;
-            top: 2rem;
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
+        .split-layout {
+            display: grid;
+            gap: 2rem;
         }
-
-        .chart-bar {
-            flex: 1;
-            background: linear-gradient(to top, var(--primary) 0%, var(--primary-light) 100%);
-            border-radius: 4px 4px 0 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            min-width: 15px;
+        @media (min-width: 960px) {
+            .split-layout {
+                grid-template-columns: 0.75fr 1fr;
+                align-items: center;
+            }
         }
-
-        .chart-bar:hover {
-            opacity: 0.8;
-            transform: scaleY(1.05);
-        }
-
-        .chart-bar.highlighted {
-            background: linear-gradient(to top, var(--accent) 0%, var(--secondary) 100%);
-        }
-
-        .bar-tooltip {
-            position: absolute;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-        }
-
-        .chart-bar:hover .bar-tooltip {
-            opacity: 1;
-        }
-
-        
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .pagination button {
-            min-width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .card-note {
+            margin-top: 1.25rem;
+            padding: 1rem 1.1rem;
+            border-radius: var(--radius-md);
+            background: rgba(56, 189, 248, 0.08);
             color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .pagination button:hover:not(:disabled) {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .pagination button.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-        }
-
-        .pagination button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.9);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .loading.show {
-            display: flex;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(99, 102, 241, 0.2);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2rem; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .input-group { flex-direction: column; }
-            .tabs { flex-direction: column; }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .container { padding: 1rem; }
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            font-size: 0.95rem;
         }
     </style>
 </head>
-<body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">📊</div>
-                <div class="logo-text">統計計算工具</div>
+<body class="app-shell">
+    <header class="app-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">StatEcon Tools</a>
+            <nav class="header-nav">
+                <a href="index.html#distribution" class="active">機率分配工具</a>
+                <a href="t-distribution.html">t 分配表</a>
+                <a href="economics.html">工程經濟</a>
+            </nav>
+            <div class="header-actions">
+                <a class="back-link" href="index.html">← 返回首頁</a>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="hero">
-            <h1 class="hero-title">普瓦松分配表計算工具</h1>
-            <p class="hero-subtitle">精確計算普瓦松分配的機率值與累積機率</p>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">⚙️</span>
-                    參數設定
-                </h2>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label class="form-label">λ (Lambda) 參數值</label>
-                    <div class="input-group">
-                        <input type="number" id="lambdaInput" class="form-control" 
-                               placeholder="輸入 λ 值 (例如: 3.5)" 
-                               step="0.1" min="0.1" value="2.5">
-                        <button id="generateBtn" class="btn btn-primary">
-                            生成分配表
-                        </button>
+    <main class="app-main">
+        <section class="section poisson-hero">
+            <div class="split-layout">
+                <div>
+                    <span class="hero-label">Poisson Distribution</span>
+                    <h1>普瓦松分配表與視覺化工具</h1>
+                    <p>
+                        透過輸入 λ（平均發生率），即時計算離散事件的機率質量函數與累積機率。
+                        以高對比表格搭配互動式條狀圖呈現，協助你快速比較不同 k 值的變化。
+                    </p>
+                    <div class="hero-actions" style="justify-content: flex-start;">
+                        <button class="btn btn-primary" id="generateBtn">生成分配表</button>
+                        <a class="btn btn-outline" href="https://zh.wikipedia.org/wiki/%E6%99%AE%E7%93%A6%E6%9D%BE%E5%88%86%E4%BD%88" target="_blank" rel="noopener">了解普瓦松分配</a>
                     </div>
                 </div>
-                <div id="alert" class="alert alert-error">
+                <div>
+                    <div class="card" style="margin:0;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="icon">✨</span>
+                                功能亮點
+                            </div>
+                        </div>
+                        <div class="highlight-list">
+                            <div class="highlight-item">
+                                <span>1</span>
+                                <div>
+                                    <strong>表格與圖表同步</strong>
+                                    <p class="helper-text">點選任一列即可在圖表中同步高亮，反之亦然。</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <span>2</span>
+                                <div>
+                                    <strong>分頁顯示</strong>
+                                    <p class="helper-text">依 λ 自動調整 k 的範圍，保持可讀性與流暢操作。</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <span>3</span>
+                                <div>
+                                    <strong>統計摘要</strong>
+                                    <p class="helper-text">自動計算期望值、變異數、標準差與累積總和。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--compact">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">λ</span>
+                        參數設定
+                    </div>
+                </div>
+                <p class="card-subtitle">輸入 λ（必須為大於 0 的數值），即可生成對應的普瓦松分配表。</p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="lambdaInput">λ (Lambda) 參數值</label>
+                        <div class="input-group">
+                            <input type="number" id="lambdaInput" class="input-control" placeholder="例如：2.5" step="0.1" min="0.1" value="2.5">
+                            <button class="btn btn-outline" id="quickGenerate">快速更新</button>
+                        </div>
+                        <p class="helper-text">按下 Enter 或「快速更新」即可重新計算；若輸入為小數建議保留一位以上。</p>
+                    </div>
+                </div>
+                <div id="alert" class="alert alert--danger">
                     <span>⚠️</span>
                     <span id="alertText">請輸入有效的 λ 值</span>
                 </div>
+                <div class="card-note">
+                    建議搭配課本或教學講義，一次比較不同 λ 下的機率分布。使用鍵盤上下鍵微調 λ，可快速觀察趨勢。
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div id="statsCard" class="card" style="display: none;">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">📈</span>
-                    統計摘要
-                </h2>
-            </div>
-            <div class="card-body">
+        <section class="section section--compact" id="statsCard" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📈</span>
+                        統計摘要
+                    </div>
+                </div>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">期望值 E(X)</div>
@@ -577,21 +178,21 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="dataCard" class="card" style="display: none;">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">📊</span>
-                    資料視覺化
-                </h2>
-            </div>
-            <div class="card-body">
-                <div class="tabs">
+        <section class="section section--compact" id="dataCard" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        資料視覺化
+                    </div>
+                </div>
+                <p class="card-subtitle">切換分頁選擇表格或圖表。點選資料列或長條即可互相高亮並同步對應頁面。</p>
+                <div class="tab-nav">
                     <button class="tab-btn active" data-tab="table">資料表格</button>
                     <button class="tab-btn" data-tab="chart">分配圖表</button>
                 </div>
-
                 <div id="table" class="tab-content active">
                     <div class="table-wrapper">
                         <table>
@@ -607,19 +208,25 @@
                     </div>
                     <div class="pagination" id="pagination"></div>
                 </div>
-
                 <div id="chart" class="tab-content">
-                    <div class="chart-container">
+                    <div class="chart-surface">
                         <div class="bar-container" id="barContainer"></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <div class="loading" id="loading">
         <div class="spinner"></div>
     </div>
+
+    <footer class="footer">
+        <div class="section">
+            <span>© 2024 StatEcon Tools</span>
+            <span>最後更新：以輸入參數即時計算</span>
+        </div>
+    </footer>
 
     <script>
         const ROWS_PER_PAGE = 10;
@@ -629,6 +236,7 @@
         const elements = {
             lambdaInput: document.getElementById('lambdaInput'),
             generateBtn: document.getElementById('generateBtn'),
+            quickGenerate: document.getElementById('quickGenerate'),
             alert: document.getElementById('alert'),
             alertText: document.getElementById('alertText'),
             statsCard: document.getElementById('statsCard'),
@@ -642,15 +250,19 @@
             totalProbValue: document.getElementById('totalProbValue'),
             barContainer: document.getElementById('barContainer')
         };
+
         const factorialCache = { 0: 1, 1: 1 };
+
         function factorial(n) {
             if (factorialCache[n] !== undefined) return factorialCache[n];
             factorialCache[n] = n * factorial(n - 1);
             return factorialCache[n];
         }
+
         function poissonProbability(lambda, k) {
             return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
         }
+
         function generatePoissonData(lambda) {
             const data = [];
             const maxK = Math.max(30, Math.ceil(lambda + 6 * Math.sqrt(lambda)));
@@ -659,7 +271,7 @@
             for (let k = 0; k <= maxK; k++) {
                 const probability = poissonProbability(lambda, k);
                 cumulative += probability;
-                
+
                 data.push({
                     k,
                     probability,
@@ -673,23 +285,25 @@
 
             return data;
         }
+
         function updateStatistics(lambda) {
             const total = poissonData.reduce((sum, item) => sum + item.probability, 0);
-            
+
             elements.meanValue.textContent = lambda.toFixed(4);
             elements.varianceValue.textContent = lambda.toFixed(4);
             elements.stdDevValue.textContent = Math.sqrt(lambda).toFixed(4);
             elements.totalProbValue.textContent = total.toFixed(4);
-            
+
             elements.statsCard.style.display = 'block';
         }
+
         function renderTable() {
             const start = (currentPage - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
             const pageData = poissonData.slice(start, end);
 
             elements.tableBody.innerHTML = '';
-            
+
             pageData.forEach(item => {
                 const row = document.createElement('tr');
                 if (item.k === selectedK) {
@@ -711,9 +325,11 @@
                 elements.tableBody.appendChild(row);
             });
         }
+
         function renderPagination() {
             const totalPages = Math.ceil(poissonData.length / ROWS_PER_PAGE);
             elements.pagination.innerHTML = '';
+
             const prevBtn = document.createElement('button');
             prevBtn.innerHTML = '←';
             prevBtn.disabled = currentPage === 1;
@@ -725,6 +341,7 @@
                 }
             });
             elements.pagination.appendChild(prevBtn);
+
             const maxVisible = 5;
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + maxVisible - 1);
@@ -746,6 +363,7 @@
                 });
                 elements.pagination.appendChild(pageBtn);
             }
+
             const nextBtn = document.createElement('button');
             nextBtn.innerHTML = '→';
             nextBtn.disabled = currentPage === totalPages;
@@ -758,19 +376,20 @@
             });
             elements.pagination.appendChild(nextBtn);
         }
+
         function renderChart() {
             elements.barContainer.innerHTML = '';
-            
+
             const maxProb = Math.max(...poissonData.map(item => item.probability));
 
             poissonData.forEach(item => {
                 const barHeight = (item.probability / maxProb) * 100;
-                
+
                 const bar = document.createElement('div');
                 bar.className = 'chart-bar';
                 bar.id = `bar-${item.k}`;
                 bar.style.height = `${barHeight}%`;
-                
+
                 if (item.k === selectedK) {
                     bar.classList.add('highlighted');
                 }
@@ -783,7 +402,7 @@
                 bar.addEventListener('click', () => {
                     selectedK = item.k;
                     highlightChartBar(item.k);
-                    
+
                     const index = poissonData.findIndex(d => d.k === item.k);
                     const page = Math.floor(index / ROWS_PER_PAGE) + 1;
                     if (page !== currentPage) {
@@ -791,28 +410,30 @@
                         renderTable();
                         renderPagination();
                     }
-                    
+
                     openTab('table');
                 });
 
                 elements.barContainer.appendChild(bar);
             });
         }
+
         function highlightChartBar(k) {
             document.querySelectorAll('.chart-bar').forEach(bar => {
                 bar.classList.remove('highlighted');
             });
-            
+
             const bar = document.getElementById(`bar-${k}`);
             if (bar) {
                 bar.classList.add('highlighted');
             }
         }
+
         function generateDistribution() {
             const lambda = parseFloat(elements.lambdaInput.value);
 
             if (isNaN(lambda) || lambda <= 0) {
-                showAlert('請輸入有效的 λ 值（必須大於 0）', 'error');
+                showAlert('請輸入有效的 λ 值（必須大於 0）', 'danger');
                 return;
             }
 
@@ -822,27 +443,30 @@
             setTimeout(() => {
                 poissonData = generatePoissonData(lambda);
                 currentPage = 1;
-                
+
                 updateStatistics(lambda);
                 renderTable();
                 renderPagination();
                 renderChart();
-                
+
                 elements.dataCard.style.display = 'block';
                 showLoading(false);
                 showAlert(`成功生成 λ = ${lambda} 的普瓦松分配表`, 'success');
-            }, 300);
+            }, 250);
         }
-        function showAlert(message, type = 'error') {
+
+        function showAlert(message, type = 'danger') {
             elements.alertText.textContent = message;
-            elements.alert.className = `alert alert-${type} show`;
+            elements.alert.className = `alert alert--${type} show`;
             setTimeout(() => {
                 elements.alert.classList.remove('show');
-            }, 3000);
+            }, 3200);
         }
+
         function showLoading(show) {
             elements.loading.classList.toggle('show', show);
         }
+
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -858,8 +482,14 @@
                 setTimeout(() => renderChart(), 100);
             }
         }
-        elements.generateBtn.addEventListener('click', generateDistribution);
-        
+
+        function handleGenerate() {
+            generateDistribution();
+        }
+
+        elements.generateBtn.addEventListener('click', handleGenerate);
+        elements.quickGenerate.addEventListener('click', handleGenerate);
+
         elements.lambdaInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 generateDistribution();
@@ -871,9 +501,11 @@
                 openTab(btn.dataset.tab);
             });
         });
+
         window.addEventListener('load', () => {
             generateDistribution();
         });
+
         window.addEventListener('resize', () => {
             if (document.getElementById('chart').classList.contains('active') && poissonData.length > 0) {
                 renderChart();
