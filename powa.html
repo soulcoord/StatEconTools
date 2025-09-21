@@ -398,7 +398,6 @@
                 tooltip.className = 'bar-tooltip';
                 tooltip.innerHTML = `k=${item.k}<br>P=${item.probStr}`;
                 bar.appendChild(tooltip);
-
                 bar.addEventListener('click', () => {
                     selectedK = item.k;
                     highlightChartBar(item.k);
