@@ -398,20 +398,21 @@
                 tooltip.className = 'bar-tooltip';
                 tooltip.innerHTML = `k=${item.k}<br>P=${item.probStr}`;
                 bar.appendChild(tooltip);
-                bar.addEventListener('click', () => {
-                    selectedK = item.k;
-                    highlightChartBar(item.k);
 
-                    const index = poissonData.findIndex(d => d.k === item.k);
-                    const page = Math.floor(index / ROWS_PER_PAGE) + 1;
-                    if (page !== currentPage) {
-                        currentPage = page;
-                        renderTable();
-                        renderPagination();
-                    }
+bar.addEventListener('click', () => {
+    selectedK = item.k;
+    highlightChartBar(item.k);
 
-                    openTab('table');
-                });
+    const index = poissonData.findIndex(d => d.k === item.k);
+    const page = Math.floor(index / ROWS_PER_PAGE) + 1;
+    if (page !== currentPage) {
+        currentPage = page;
+        renderPagination();
+    }
+    renderTable();
+
+    openTab('table');
+});
 
                 elements.barContainer.appendChild(bar);
             });
