@@ -5,868 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>常態分配標準差表</title>
 
-  
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" defer></script>
+  <link rel="stylesheet" href="assets/appendix.css">
 
-  <style>
-    :root{
-      --primary: #ff6b35;
-      --primary-hover: #ff8255;
-      --primary-dark: #e85320;
-      --primary-light: rgba(255, 107, 53, 0.1);
-      --success: #10b981;
-      --info: #3b82f6;
-      --warning: #f59e0b;
-      --bg: #0a0e1a;
-      --bg-gradient: linear-gradient(135deg, #0a0e1a 0%, #141b2d 100%);
-      --surface: #151c2e;
-      --surface-hover: #1a2238;
-      --surface-light: rgba(255, 255, 255, 0.02);
-      --border: rgba(255, 255, 255, 0.06);
-      --border-light: rgba(255, 255, 255, 0.03);
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --glass: rgba(255, 255, 255, 0.04);
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
-      --shadow-glow: 0 0 40px rgba(255, 107, 53, 0.15);
-      --radius: 16px;
-      --radius-sm: 12px;
-      --radius-xs: 8px;
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    
-    html{
-      scroll-behavior: smooth;
-    }
-    
-    body{
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans TC', sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      padding: 1.5rem;
-      line-height: 1.6;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
-                  radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
-      animation: float 20s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(-30px, -30px) rotate(120deg); }
-      66% { transform: translate(30px, -30px) rotate(240deg); }
-    }
-
-    
-    nav{
-      position: sticky;
-      top: 1rem;
-      max-width: 1280px;
-      margin: 0 auto 2rem;
-      display: flex;
-      gap: 0.5rem;
-      padding: 0.75rem;
-      background: rgba(21, 28, 46, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-light);
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      z-index: 100;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    nav a{
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: var(--radius-sm);
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    nav a::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, transparent, rgba(255, 107, 53, 0.1));
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-    }
-
-    nav a:hover::before { transform: translateX(0); }
-    
-    nav a:hover { 
-      color: var(--text);
-      background: var(--surface-light);
-      transform: translateY(-1px);
-    }
-    
-    nav a.active { 
-      background: linear-gradient(135deg, var(--primary-light), rgba(255, 107, 53, 0.05));
-      color: var(--primary);
-      font-weight: 600;
-      box-shadow: 0 0 20px rgba(255, 107, 53, 0.15);
-    }
-
-    
-    .container{
-      max-width: 1280px;
-      margin: 0 auto;
-      background: linear-gradient(180deg, rgba(21, 28, 46, 0.9), rgba(21, 28, 46, 0.7));
-      backdrop-filter: blur(10px);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-light);
-      position: relative;
-      z-index: 1;
-    }
-
-    
-    .header-section {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      position: relative;
-    }
-
-    h1{
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--text), var(--primary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.02em;
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      font-weight: 400;
-    }
-
-    
-    .control-panel{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .card{
-      background: var(--surface);
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--border-light);
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.5s ease;
-    }
-
-    .card:hover::before {
-      transform: translateX(100%);
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow), var(--shadow-glow);
-      border-color: rgba(255, 107, 53, 0.2);
-    }
-
-    .card-header{ 
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .icon{
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      box-shadow: 0 8px 24px rgba(255, 107, 53, 0.25);
-      transition: var(--transition);
-    }
-
-    .card:hover .icon {
-      transform: rotate(-5deg) scale(1.05);
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.2rem;
-    }
-
-    .card-description {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    
-    label{ 
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 0.4rem;
-    }
-
-    input[type="number"], 
-    input[type="search"]{
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius-xs);
-      border: 1px solid var(--border-light);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-      font-size: 1rem;
-      transition: var(--transition);
-    }
-
-    input[type="number"]:focus, 
-    input[type="search"]:focus{
-      outline: none;
-      border-color: var(--primary);
-      background: rgba(255, 107, 53, 0.05);
-      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-    }
-
-    input[type="number"]:hover, 
-    input[type="search"]:hover{
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    
-    .range-container {
-      position: relative;
-      margin: 1.5rem 0;
-    }
-
-    .range-track {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 6px;
-      background: rgba(255, 107, 53, 0.3);
-      border-radius: 3px;
-      pointer-events: none;
-    }
-
-    input[type="range"]{
-      -webkit-appearance: none;
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
-      outline: none;
-      position: relative;
-      z-index: 2;
-    }
-
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-      transition: var(--transition);
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover{
-      transform: scale(1.2);
-      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.5);
-    }
-
-    input[type="range"]::-moz-range-thumb{
-      width: 20px;
-      height: 20px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
-      transition: var(--transition);
-    }
-
-    
-    .btn{
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius-xs);
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: var(--transition);
-      border: none;
-      position: relative;
-      overflow: hidden;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      box-shadow: 0 4px 14px rgba(255, 107, 53, 0.25);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-    }
-
-    .btn-secondary {
-      background: var(--surface-hover);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-secondary:hover {
-      background: var(--surface-light);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    
-    .toast {
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      padding: 1rem 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      box-shadow: var(--shadow-lg);
-      opacity: 0;
-      transform: translateX(100%);
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      z-index: 1000;
-      max-width: 400px;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .toast.success {
-      border-left: 4px solid var(--success);
-    }
-
-    .toast.info {
-      border-left: 4px solid var(--info);
-    }
-
-    .toast.warning {
-      border-left: 4px solid var(--warning);
-    }
-
-    .toast-content {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .toast-icon {
-      font-size: 1.5rem;
-    }
-
-    
-    .table-container{
-      background: var(--surface);
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border-light);
-      box-shadow: var(--shadow);
-    }
-
-    .table-header {
-      padding: 1.25rem 1.5rem;
-      background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), transparent);
-      border-bottom: 1px solid var(--border-light);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .table-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .table-info {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      max-height: 600px;
-      overflow-y: auto;
-    }
-
-    
-    .table-wrapper::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    .table-wrapper::-webkit-scrollbar-track {
-      background: var(--surface);
-    }
-
-    .table-wrapper::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 4px;
-    }
-
-    .table-wrapper::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-hover);
-    }
-
-    table{
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      min-width: 100%;
-    }
-
-    thead {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    th {
-      padding: 1rem 1.5rem;
-      text-align: left;
-      background: var(--surface);
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 2px solid var(--primary-light);
-    }
-
-    td {
-      padding: 1rem 1.5rem;
-      text-align: left;
-      color: var(--text);
-      font-variant-numeric: tabular-nums;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    tbody tr {
-      transition: var(--transition);
-      cursor: pointer;
-    }
-
-    tbody tr:hover {
-      background: rgba(255, 107, 53, 0.05);
-    }
-
-    tbody tr.highlight {
-      background: rgba(255, 107, 53, 0.15);
-      animation: pulse 2s ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { background: rgba(255, 107, 53, 0.15); }
-      50% { background: rgba(255, 107, 53, 0.25); }
-    }
-
-    
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 14, 26, 0.9);
-      backdrop-filter: blur(5px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-content {
-      width: 90%;
-      max-width: 1000px;
-      max-height: 90vh;
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 2rem;
-      position: relative;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-      transform: scale(0.9);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.show .modal-content {
-      transform: scale(1);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .modal-close {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      transition: var(--transition);
-      border-radius: var(--radius-xs);
-    }
-
-    .modal-close:hover {
-      color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .chart-container {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: var(--radius-sm);
-      padding: 1rem;
-      height: 400px;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    
-    .loader-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 14, 26, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .loader-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .loader {
-      width: 60px;
-      height: 60px;
-      position: relative;
-    }
-
-    .loader-circle {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: 3px solid transparent;
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-    }
-
-    .loader-circle:nth-child(2) {
-      animation-delay: 0.2s;
-      border-top-color: var(--info);
-      transform: scale(0.8);
-    }
-
-    .loader-circle:nth-child(3) {
-      animation-delay: 0.4s;
-      border-top-color: var(--success);
-      transform: scale(0.6);
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    
-    .back-to-top {
-      position: fixed;
-      right: 2rem;
-      bottom: 2rem;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      box-shadow: var(--shadow);
-      opacity: 0;
-      transform: translateY(100px);
-      transition: all 0.3s ease;
-      z-index: 90;
-    }
-
-    .back-to-top.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .back-to-top:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    
-    .quick-actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .quick-btn {
-      padding: 0.5rem 0.75rem;
-      background: var(--surface-hover);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xs);
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .quick-btn:hover {
-      background: var(--primary-light);
-      color: var(--primary);
-      border-color: var(--primary);
-    }
-
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .stat-card {
-      background: rgba(255, 255, 255, 0.02);
-      padding: 1rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-light);
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    
-    @media (max-width: 768px) {
-      body { padding: 1rem; }
-      
-      h1 { font-size: 1.8rem; }
-      
-      .control-panel {
-        grid-template-columns: 1fr;
-      }
-      
-      .toast {
-        right: 1rem;
-        left: 1rem;
-        max-width: none;
-      }
-      
-      .modal-content {
-        width: 95%;
-        padding: 1.5rem;
-      }
-      
-      .back-to-top {
-        right: 1rem;
-        bottom: 1rem;
-      }
-      
-      nav {
-        padding: 0.5rem;
-      }
-      
-      nav a {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.9rem;
-      }
-    }
-
-    
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-in {
-      animation: slideInUp 0.5s ease forwards;
-    }
-
-    
-    .tooltip {
-      position: relative;
-    }
-
-    .tooltip::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 0.5rem 0.75rem;
-      background: var(--surface);
-      color: var(--text);
-      font-size: 0.85rem;
-      border-radius: var(--radius-xs);
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      box-shadow: var(--shadow);
-      margin-bottom: 0.5rem;
-    }
-
-    .tooltip:hover::after {
-      opacity: 1;
-    }
-
-    
-    *:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-      border-radius: var(--radius-xs);
-    }
-
-    
-    @media print {
-      body {
-        background: white;
-        color: black;
-      }
-      
-      nav, .back-to-top, .modal-overlay, .loader-overlay {
-        display: none !important;
-      }
-      
-      .container {
-        box-shadow: none;
-        border: 1px solid #ccc;
-      }
-    }
-  </style>
 </head>
 
 <body>
 
-  
+
   <div class="container" role="main">
-    
+
     <div class="header-section">
       <h1>常態分配標準差表</h1>
       <p class="subtitle">互動式統計工具 · 即時計算 · 視覺化呈現</p>
     </div>
 
-    
+
     <div class="control-panel">
-      
+
       <section class="card animate-in" style="animation-delay: 0.1s">
         <div class="card-header">
           <div class="icon">📊</div>
@@ -912,7 +69,7 @@
         </div>
       </section>
 
-      
+
       <section class="card animate-in" style="animation-delay: 0.2s">
         <div class="card-header">
           <div class="icon">🔍</div>
@@ -933,7 +90,7 @@
         </div>
 
         <div id="searchResult" style="min-height: 60px;">
-          
+
         </div>
 
         <div class="quick-actions">
@@ -944,7 +101,7 @@
         </div>
       </section>
 
-      
+
       <section class="card animate-in" style="animation-delay: 0.3s">
         <div class="card-header">
           <div class="icon">🧮</div>
@@ -970,7 +127,7 @@
         </button>
 
         <div id="intervalResult" style="margin-top: 1rem; min-height: 60px;">
-          
+
         </div>
 
         <div class="quick-actions">
@@ -981,7 +138,7 @@
       </section>
     </div>
 
-    
+
     <div class="table-container">
       <div class="table-header">
         <div>
@@ -1003,14 +160,14 @@
             </tr>
           </thead>
           <tbody id="zTableBody">
-            
+
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  
+
   <div class="modal-overlay" id="chartModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
       <div class="modal-header">
@@ -1023,7 +180,7 @@
     </div>
   </div>
 
-  
+
   <div class="loader-overlay" id="loader">
     <div class="loader">
       <div class="loader-circle"></div>
@@ -1032,10 +189,10 @@
     </div>
   </div>
 
-  
+
   <div id="toast" class="toast" role="alert" aria-live="polite"></div>
 
-  
+
   <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="回到頂部">
     ↑
   </button>
@@ -1048,13 +205,13 @@
       const a4 = -1.453152027;
       const a5 = 1.061405429;
       const p = 0.3275911;
-      
+
       const sign = x >= 0 ? 1 : -1;
       x = Math.abs(x);
-      
+
       const t = 1.0 / (1.0 + p * x);
       const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
-      
+
       return sign * y;
     }
     function cdf(z) {
@@ -1076,7 +233,7 @@
         });
       }
     }
-    
+
     const $ = id => document.getElementById(id);
     function showToast(message, type = 'info', duration = 3000) {
       const toast = $('toast');
@@ -1088,7 +245,7 @@
         </div>
       `;
       toast.classList.add('show');
-      
+
       clearTimeout(window.toastTimer);
       window.toastTimer = setTimeout(() => {
         toast.classList.remove('show');
@@ -1101,7 +258,7 @@
     function hideLoader() {
       $('loader').classList.remove('show');
     }
-    
+
     function renderTable(minZ = -4, maxZ = 4) {
       const tbody = $('zTableBody');
       const fragment = document.createDocumentFragment();
@@ -1119,18 +276,18 @@
         tr.style.cursor = 'pointer';
         fragment.appendChild(tr);
       });
-      
+
       tbody.appendChild(fragment);
       updateStats(minZ, maxZ, filteredData.length);
     }
     function updateStats(minZ, maxZ, count) {
       $('tableInfo').textContent = `顯示 ${minZ.toFixed(2)} 至 ${maxZ.toFixed(2)}`;
       $('rangeCount').textContent = count;
-      
+
       const coverage = (cdf(maxZ) - cdf(minZ)) * 100;
       $('rangeCoverage').textContent = `${coverage.toFixed(1)}%`;
     }
-    
+
     function updateRange() {
       const minZ = parseFloat($('minZ').value);
       const maxZ = parseFloat($('maxZ').value);
@@ -1151,10 +308,10 @@
       const minZ = parseFloat($('minZ').value);
       const maxZ = parseFloat($('maxZ').value);
       const track = $('rangeTrack');
-      
+
       const minPercent = ((minZ + 4) / 8) * 100;
       const maxPercent = ((maxZ + 4) / 8) * 100;
-      
+
       track.style.left = `${minPercent}%`;
       track.style.width = `${maxPercent - minPercent}%`;
     }
@@ -1167,27 +324,27 @@
       renderTable(min, max);
       showToast(`已設定範圍為 ${min} 至 ${max}`, 'success');
     }
-    
+
     function searchZValue() {
       const searchInput = $('searchValue').value.trim();
       if (!searchInput) {
         showToast('請輸入 Z 值', 'warning');
         return;
       }
-      
+
       const z = parseFloat(searchInput);
       if (isNaN(z) || z < -4 || z > 4) {
         showToast('請輸入 -4 到 4 之間的有效數值', 'warning');
         return;
       }
-      
+
       quickSearch(z);
     }
 
     function quickSearch(z) {
       const zRounded = Math.round(z * 100) / 100;
       const data = zData.find(item => Math.abs(item.z - zRounded) < 0.005);
-      
+
       if (data) {
         const resultDiv = $('searchResult');
         resultDiv.innerHTML = `
@@ -1206,7 +363,7 @@
         `;
         const currentMin = parseFloat($('minZ').value);
         const currentMax = parseFloat($('maxZ').value);
-        
+
         if (z < currentMin || z > currentMax) {
           const newMin = Math.max(-4, z - 0.5);
           const newMax = Math.min(4, z + 0.5);
@@ -1214,7 +371,7 @@
         }
         highlightTableRow(zRounded);
         showChart(zRounded);
-        
+
         showToast(`找到 Z = ${zRounded.toFixed(2)}`, 'success');
       }
     }
@@ -1230,23 +387,23 @@
         }
       });
     }
-    
+
     function calculateInterval() {
       const lower = parseFloat($('lowerZ').value);
       const upper = parseFloat($('upperZ').value);
-      
+
       if (isNaN(lower) || isNaN(upper)) {
         showToast('請輸入有效的上下界', 'warning');
         return;
       }
-      
+
       if (lower >= upper) {
         showToast('下界必須小於上界', 'warning');
         return;
       }
-      
+
       const prob = cdf(upper) - cdf(lower);
-      
+
       const resultDiv = $('intervalResult');
       resultDiv.innerHTML = `
         <div class="stat-card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));">
@@ -1256,7 +413,7 @@
         </div>
       `;
       showIntervalChart(lower, upper);
-      
+
       showToast('區間機率計算完成', 'success');
     }
 
@@ -1265,7 +422,7 @@
       $('upperZ').value = upper;
       calculateInterval();
     }
-    
+
     let chartInstance = null;
 
     function showChart(z) {
@@ -1274,7 +431,7 @@
       const xValues = [];
       const yValues = [];
       const fillValues = [];
-      
+
       for (let x = -4; x <= 4; x += 0.05) {
         xValues.push(x.toFixed(2));
         yValues.push(pdf(x));
@@ -1370,7 +527,7 @@
       const xValues = [];
       const yValues = [];
       const fillValues = [];
-      
+
       for (let x = -4; x <= 4; x += 0.05) {
         xValues.push(x.toFixed(2));
         yValues.push(pdf(x));
@@ -1463,12 +620,12 @@
     function closeChart() {
       $('chartModal').classList.remove('show');
     }
-    
+
     function exportTable() {
       const minZ = parseFloat($('minZ').value);
       const maxZ = parseFloat($('maxZ').value);
       const filteredData = zData.filter(item => item.z >= minZ && item.z <= maxZ);
-      
+
       let csv = 'Z值,累積機率,機率密度,右尾機率\n';
       filteredData.forEach(item => {
         csv += `${item.z.toFixed(2)},${item.cdf.toFixed(4)},${item.pdf.toFixed(4)},${item.rightTail.toFixed(4)}\n`;
@@ -1482,10 +639,10 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       showToast('資料已匯出', 'success');
     }
-    
+
     function scrollToTop() {
       window.scrollTo({
         top: 0,
@@ -1500,7 +657,7 @@
         backToTop.classList.remove('show');
       }
     });
-    
+
     document.addEventListener('DOMContentLoaded', () => {
       showLoader();
       generateData();
@@ -1508,12 +665,12 @@
       updateRangeTrack();
       $('minZ').addEventListener('input', updateRange);
       $('maxZ').addEventListener('input', updateRange);
-      
+
       $('minZValue').addEventListener('change', function() {
         $('minZ').value = this.value;
         updateRange();
       });
-      
+
       $('maxZValue').addEventListener('change', function() {
         $('maxZ').value = this.value;
         updateRange();
@@ -1521,11 +678,11 @@
       $('searchValue').addEventListener('keypress', e => {
         if (e.key === 'Enter') searchZValue();
       });
-      
+
       $('lowerZ').addEventListener('keypress', e => {
         if (e.key === 'Enter') calculateInterval();
       });
-      
+
       $('upperZ').addEventListener('keypress', e => {
         if (e.key === 'Enter') calculateInterval();
       });
@@ -1540,7 +697,7 @@
         showToast('資料載入完成，點擊表格行可查看圖表', 'success');
       }, 500);
     });
-    
+
     window.searchZValue = searchZValue;
     window.quickSearch = quickSearch;
     window.calculateInterval = calculateInterval;

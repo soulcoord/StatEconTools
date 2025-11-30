@@ -17,9 +17,9 @@
             margin-top: 1.25rem;
             padding: 1rem 1.1rem;
             border-radius: var(--radius-md);
-            background: rgba(56, 189, 248, 0.08);
+            background: var(--accent-soft);
             color: var(--text-secondary);
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            border: 1px solid var(--border);
             font-size: 0.95rem;
         }
         .table-hint {
@@ -36,11 +36,11 @@
             border-radius: 16px;
             border: none;
             background: var(--brand-gradient);
-            color: #050505;
+            color: #000;
             font-size: 1.2rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 12px 24px rgba(56, 189, 248, 0.28);
+            box-shadow: 0 12px 24px rgba(255, 136, 0, 0.3);
             opacity: 0;
             pointer-events: none;
             transition: transform var(--transition), opacity var(--transition), box-shadow var(--transition);
@@ -51,7 +51,7 @@
         }
         .back-to-top:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 30px rgba(56, 189, 248, 0.35);
+            box-shadow: 0 20px 30px rgba(255, 136, 0, 0.5);
         }
         .table-wrapper {
             max-height: 70vh;
