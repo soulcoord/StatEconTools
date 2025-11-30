@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>普瓦松分配表 - StatEcon Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/powa.css">
+</head>
+<body class="app-shell">
+    <header class="app-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">StatEcon Tools</a>
+            <nav class="header-nav">
+                <a href="index.html#distribution" class="active">機率分配工具</a>
+                <a href="t-distribution.html">t 分配表</a>
+                <a href="economics.html">工程經濟</a>
+            </nav>
+            <div class="header-actions">
+                <a class="back-link" href="index.html">← 返回首頁</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section poisson-hero">
+            <div class="split-layout">
+                <div>
+                    <span class="hero-label">Poisson Distribution</span>
+                    <h1>普瓦松分配表與視覺化工具</h1>
+                    <p>
+                        透過輸入 λ（平均發生率），即時計算離散事件的機率質量函數與累積機率。
+                        以高對比表格搭配互動式條狀圖呈現，協助你快速比較不同 k 值的變化。
+                    </p>
+                    <div class="hero-actions" style="justify-content: flex-start;">
+                        <button class="btn btn-primary" id="generateBtn">生成分配表</button>
+                        <a class="btn btn-outline" href="https://zh.wikipedia.org/wiki/%E6%99%AE%E7%93%A6%E6%9D%BE%E5%88%86%E4%BD%88" target="_blank" rel="noopener">了解普瓦松分配</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="card" style="margin:0;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="icon">✨</span>
+                                功能亮點
+                            </div>
+                        </div>
+                        <div class="highlight-list">
+                            <div class="highlight-item">
+                                <span>1</span>
+                                <div>
+                                    <strong>表格與圖表同步</strong>
+                                    <p class="helper-text">點選任一列即可在圖表中同步高亮，反之亦然。</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <span>2</span>
+                                <div>
+                                    <strong>分頁顯示</strong>
+                                    <p class="helper-text">依 λ 自動調整 k 的範圍，保持可讀性與流暢操作。</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <span>3</span>
+                                <div>
+                                    <strong>統計摘要</strong>
+                                    <p class="helper-text">自動計算期望值、變異數、標準差與累積總和。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--compact">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">λ</span>
+                        參數設定
+                    </div>
+                </div>
+                <p class="card-subtitle">輸入 λ（必須為大於 0 的數值），即可生成對應的普瓦松分配表。</p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="lambdaInput">λ (Lambda) 參數值</label>
+                        <div class="input-group">
+                            <input type="number" id="lambdaInput" class="input-control" placeholder="例如：2.5" step="0.1" min="0.1" value="2.5">
+                            <button class="btn btn-outline" id="quickGenerate">快速更新</button>
+                        </div>
+                        <p class="helper-text">按下 Enter 或「快速更新」即可重新計算；若輸入為小數建議保留一位以上。</p>
+                    </div>
+                </div>
+                <div id="alert" class="alert alert--danger">
+                    <span>⚠️</span>
+                    <span id="alertText">請輸入有效的 λ 值</span>
+                </div>
+                <div class="card-note">
+                    建議搭配課本或教學講義，一次比較不同 λ 下的機率分布。使用鍵盤上下鍵微調 λ，可快速觀察趨勢。
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--compact" id="statsCard" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📈</span>
+                        統計摘要
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">期望值 E(X)</div>
+                        <div id="meanValue" class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">變異數 Var(X)</div>
+                        <div id="varianceValue" class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">標準差 σ</div>
+                        <div id="stdDevValue" class="stat-value">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">累積總和</div>
+                        <div id="totalProbValue" class="stat-value">-</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--compact" id="dataCard" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        資料視覺化
+                    </div>
+                </div>
+                <p class="card-subtitle">切換分頁選擇表格或圖表。點選資料列或長條即可互相高亮並同步對應頁面。</p>
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="table">資料表格</button>
+                    <button class="tab-btn" data-tab="chart">分配圖表</button>
+                </div>
+                <div id="table" class="tab-content active">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>k 值</th>
+                                    <th>P(X = k)</th>
+                                    <th>P(X ≤ k)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+                <div id="chart" class="tab-content">
+                    <div class="chart-surface">
+                        <div class="bar-container" id="barContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="section">
+            <span>© 2024 StatEcon Tools</span>
+            <span>最後更新：以輸入參數即時計算</span>
+        </div>
+    </footer>
+
+    <script src="assets/powa.js"></script>
+</body>
+</html>

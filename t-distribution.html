@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t 分配臨界值查詢 - StatEcon Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/t-distribution.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
+</head>
+<body class="app-shell">
+    <header class="app-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">StatEcon Tools</a>
+            <nav class="header-nav">
+                <a href="index.html#distribution" class="active">機率分配工具</a>
+                <a href="powa.html">普瓦松分配</a>
+                <a href="economics.html">工程經濟</a>
+            </nav>
+            <div class="header-actions">
+                <a class="back-link" href="index.html">← 返回首頁</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section t-hero">
+            <span class="hero-label">Student's t Distribution</span>
+            <h1>t 分配臨界值查詢</h1>
+            <p>
+                針對 1 至 100 的自由度，快速查詢 t 分配在不同顯著水準下的臨界值。輸入自由度即可自動定位表格列，並以高亮顏色協助辨識。
+            </p>
+        </section>
+
+        <section class="section section--compact">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">🎯</span>
+                        自由度搜尋
+                    </div>
+                </div>
+                <p class="card-subtitle">輸入自由度 df（1-100），系統會自動定位對應列，並顯示各顯著水準的臨界值。</p>
+                <div class="search-panel">
+                    <label for="dfSearch">自由度 (df)</label>
+                    <div class="input-group">
+                        <input type="number" id="dfSearch" class="input-control" placeholder="輸入 1-100" min="1" max="100" step="1">
+                        <button class="btn btn-primary" id="searchBtn">定位自由度</button>
+                    </div>
+                </div>
+                <div id="message" class="alert alert--danger">
+                    <span>⚠️</span>
+                    <span id="messageText">請輸入有效的自由度 (1-100)</span>
+                </div>
+                <p class="card-note">提示：支援即時搜尋，輸入時若數值有效會自動捲動到表格中對應的位置。</p>
+            </div>
+        </section>
+
+        <section class="section section--compact">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📋</span>
+                        t 分配臨界值表
+                    </div>
+                </div>
+                <p class="card-subtitle">臨界值以雙尾檢定為例，顯著水準 α 由 0.1 至 0.005。向下滾動可瀏覽更多自由度。</p>
+                <div class="table-wrapper">
+                    <table id="tTable">
+                        <thead>
+                            <tr>
+                                <th>df</th>
+                                <th>α = 0.1</th>
+                                <th>α = 0.05</th>
+                                <th>α = 0.025</th>
+                                <th>α = 0.01</th>
+                                <th>α = 0.005</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tTableBody"></tbody>
+                    </table>
+                </div>
+                <p class="table-hint">臨界值計算使用 jStat 庫，精度至小數點第三位。若需要更高自由度，建議採用常態近似。</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" aria-label="返回頂部">↑</button>
+
+    <footer class="footer">
+        <div class="section">
+            <span>© 2024 StatEcon Tools</span>
+            <span>資料來源：Student's t 分配臨界值計算</span>
+        </div>
+    </footer>
+
+    <script src="assets/t-distribution.js"></script>
+</body>
+</html>
