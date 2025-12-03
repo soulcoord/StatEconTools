@@ -190,6 +190,13 @@
         const n = document.getElementById('selectedN').value;
         const factor = document.getElementById('selectedFactor').value;
         const rows = document.querySelector('.factor-table').rows;
+
+        // Update Formula Display
+        updateFormulaDisplay(factor);
+
+        // Draw Diagram
+        drawCashFlow(factor, parseInt(n));
+
         for (let i = 1; i < rows.length; i++) {
           if (rows[i].cells[0].textContent === n) {
             const headerCells = document.querySelectorAll('.factor-table thead th');
@@ -205,6 +212,217 @@
             }
             break;
           }
+        }
+      }
+
+      function updateFormulaDisplay(factor) {
+        const el = document.getElementById('formulaDisplay');
+        let formula = '';
+        switch(factor) {
+          case 'F/P': formula = 'F = P(1 + i)<sup>n</sup>'; break;
+          case 'P/F': formula = 'P = F(1 + i)<sup>-n</sup>'; break;
+          case 'A/P': formula = 'A = P [i(1+i)<sup>n</sup> / ((1+i)<sup>n</sup> - 1)]'; break;
+          case 'P/A': formula = 'P = A [((1+i)<sup>n</sup> - 1) / i(1+i)<sup>n</sup>]'; break;
+          case 'F/A': formula = 'F = A [((1+i)<sup>n</sup> - 1) / i]'; break;
+          case 'A/F': formula = 'A = F [i / ((1+i)<sup>n</sup> - 1)]'; break;
+          case 'P/G': formula = 'P = G [(1+i)<sup>n</sup> - in - 1] / [i<sup>2</sup>(1+i)<sup>n</sup>]'; break;
+          case 'A/G': formula = 'A = G [1/i - n/((1+i)<sup>n</sup> - 1)]'; break;
+          default: formula = '';
+        }
+        el.innerHTML = formula;
+      }
+
+      function drawCashFlow(factor, n) {
+        const canvas = document.getElementById('cashFlowCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, w, h);
+
+        // Settings
+        const padding = 40;
+        const axisY = h / 2;
+        const startX = padding;
+        const endX = w - padding;
+        const width = endX - startX;
+
+        // Colors
+        const colorAxis = '#666';
+        const colorKnown = '#ffffff';
+        const colorUnknown = '#ff8800'; // Accent color
+        const colorText = '#cccccc';
+
+        // Draw Axis
+        ctx.beginPath();
+        ctx.strokeStyle = colorAxis;
+        ctx.lineWidth = 2;
+        ctx.moveTo(startX, axisY);
+        ctx.lineTo(endX, axisY);
+        ctx.stroke();
+
+        // Draw Ticks (0 and N)
+        ctx.font = '14px sans-serif';
+        ctx.fillStyle = colorText;
+        ctx.textAlign = 'center';
+
+        // 0 Tick
+        ctx.beginPath();
+        ctx.moveTo(startX, axisY - 5);
+        ctx.lineTo(startX, axisY + 5);
+        ctx.stroke();
+        ctx.fillText('0', startX, axisY + 20);
+
+        // N Tick
+        ctx.beginPath();
+        ctx.moveTo(endX, axisY - 5);
+        ctx.lineTo(endX, axisY + 5);
+        ctx.stroke();
+        ctx.fillText('N=' + n, endX, axisY + 20);
+
+        // Break line if N > 2 to imply distance
+        if (n > 2) {
+             // Optional: Draw squiggle or dots
+        }
+
+        // Helper to draw Arrow
+        function drawArrow(x, direction, label, isUnknown, isSeries = false) {
+            const length = 40;
+            const headSize = 8;
+            const yStart = axisY;
+            const yEnd = direction === 'up' ? axisY - length : axisY + length;
+
+            ctx.beginPath();
+            ctx.strokeStyle = isUnknown ? colorUnknown : colorKnown;
+            ctx.lineWidth = 2;
+
+            if (isUnknown) {
+                ctx.setLineDash([5, 3]);
+            } else {
+                ctx.setLineDash([]);
+            }
+
+            if (isSeries) {
+                // For series, we assume x is start, we draw multiple small arrows
+                // But for this simplified diagram, let's just draw one at a representative spot or multiple
+            } else {
+                ctx.moveTo(x, yStart);
+                ctx.lineTo(x, yEnd);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Arrow Head
+                ctx.beginPath();
+                ctx.fillStyle = isUnknown ? colorUnknown : colorKnown;
+                if (direction === 'up') {
+                    ctx.moveTo(x, yEnd);
+                    ctx.lineTo(x - headSize/2, yEnd + headSize);
+                    ctx.lineTo(x + headSize/2, yEnd + headSize);
+                } else {
+                    ctx.moveTo(x, yEnd);
+                    ctx.lineTo(x - headSize/2, yEnd - headSize);
+                    ctx.lineTo(x + headSize/2, yEnd - headSize);
+                }
+                ctx.fill();
+
+                // Label
+                ctx.fillStyle = isUnknown ? colorUnknown : colorKnown;
+                const textY = direction === 'up' ? yEnd - 10 : yEnd + 20;
+                ctx.fillText(label, x, textY);
+            }
+        }
+
+        function drawSeries(start, end, direction, label, isUnknown) {
+             const step = (end - start) / 5; // Draw a few representative arrows
+             const arrowLen = 25;
+             const yEnd = direction === 'up' ? axisY - arrowLen : axisY + arrowLen;
+
+             ctx.strokeStyle = isUnknown ? colorUnknown : colorKnown;
+             ctx.fillStyle = isUnknown ? colorUnknown : colorKnown;
+             if (isUnknown) ctx.setLineDash([3, 2]); else ctx.setLineDash([]);
+
+             // Draw horizontal connector line for series
+             ctx.beginPath();
+             ctx.moveTo(start, yEnd);
+             ctx.lineTo(end, yEnd);
+             ctx.stroke();
+
+             // Draw arrows
+             for (let i = 0; i <= 5; i++) {
+                 let x = start + (step * i);
+                 // Only draw if x is within bounds
+                 ctx.beginPath();
+                 ctx.moveTo(x, axisY);
+                 ctx.lineTo(x, yEnd);
+                 ctx.stroke();
+             }
+             ctx.setLineDash([]);
+             ctx.fillText(label, (start+end)/2, direction === 'up' ? yEnd - 10 : yEnd + 20);
+        }
+
+        // Logic based on Factor
+        // Convention: Given is DOWN (Investment), Find is UP (Return) usually,
+        // OR standard P/F diagram: P at 0, F at N.
+        // Let's stick to standard Abstract Diagram:
+        // P is usually at 0. F is at N. A is 1..N. G is 2..N.
+
+        // P/F: Find P given F.
+        // F/P: Find F given P.
+
+        switch(factor) {
+            case 'F/P': // Given P, Find F
+                drawArrow(startX, 'down', 'P', false);
+                drawArrow(endX, 'up', 'F', true);
+                break;
+            case 'P/F': // Given F, Find P
+                drawArrow(endX, 'up', 'F', false);
+                drawArrow(startX, 'down', 'P', true);
+                break;
+            case 'A/P': // Given P, Find A
+                drawArrow(startX, 'down', 'P', false);
+                drawSeries(startX + (width/n), endX, 'up', 'A', true);
+                break;
+            case 'P/A': // Given A, Find P
+                drawSeries(startX + (width/n), endX, 'up', 'A', false);
+                drawArrow(startX, 'down', 'P', true);
+                break;
+            case 'F/A': // Given A, Find F
+                drawSeries(startX + (width/n), endX, 'down', 'A', false);
+                drawArrow(endX, 'up', 'F', true);
+                break;
+            case 'A/F': // Given F, Find A
+                drawArrow(endX, 'up', 'F', false);
+                drawSeries(startX + (width/n), endX, 'down', 'A', true);
+                break;
+            case 'P/G': // Given G, Find P
+                // Gradient is hard to draw perfectly generic, approximate triangle
+                drawArrow(startX, 'down', 'P', true);
+                // Draw gradient triangle representation
+                ctx.beginPath();
+                ctx.moveTo(startX + (width/n), axisY);
+                ctx.lineTo(endX, axisY - 40);
+                ctx.lineTo(endX, axisY);
+                ctx.strokeStyle = colorKnown;
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                ctx.fill();
+                ctx.fillStyle = colorKnown;
+                ctx.fillText('G', endX - 20, axisY - 20);
+                break;
+            case 'A/G': // Given G, Find A
+                 // Draw gradient
+                ctx.beginPath();
+                ctx.moveTo(startX + (width/n), axisY);
+                ctx.lineTo(endX, axisY - 40);
+                ctx.lineTo(endX, axisY);
+                ctx.strokeStyle = colorKnown;
+                ctx.stroke();
+                ctx.fillText('G', endX - 20, axisY - 20);
+
+                drawSeries(startX + (width/n), endX, 'up', 'A', true);
+                break;
         }
       }
       function performCalculation() {
@@ -497,10 +715,21 @@
         el.style.transform = `translate(calc(-50% + ${xPos}px), calc(-50% + ${yPos}px))`;
       }
 
+      function copyResultToClipboard() {
+        const result = document.getElementById('calculationResult').value;
+        if (!result) return;
+        navigator.clipboard.writeText(result).then(() => {
+          showNotification('結果已複製到剪貼簿', 'success');
+        }).catch(err => {
+          showNotification('複製失敗', 'warning');
+        });
+      }
+
       function showCalculatorWindow() {
           const windowEl = document.getElementById('calculatorWindow');
           windowEl.style.display = 'block';
-          // Reset position if needed or keep last position
+          // Force diagram update when opening
+          updateFactorValue();
       }
 
       function hideCalculatorWindow() {
@@ -618,6 +847,7 @@
 
         // Window events
         document.getElementById('closeCalculatorBtn').addEventListener('click', hideCalculatorWindow);
+        document.getElementById('copyResultBtn').addEventListener('click', copyResultToClipboard);
 
         // Drag events
         const dragHandle = document.getElementById('dragHandle');
