@@ -253,3 +253,34 @@
     content: ' ▼';
     font-size: 0.8em;
 }
+
+/* Canvas Styles */
+.canvas-wrapper {
+  margin-bottom: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+}
+
+#cashFlowCanvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Formula Display Styles */
+.formula-display {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--surface-strong);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-align: center;
+  color: var(--text-primary);
+}
