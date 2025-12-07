@@ -556,3 +556,33 @@ tbody tr.highlight { background: rgba(255, 136, 0, 0.2); }
   .modal-content { width: 95%; padding: 1.5rem; }
   .back-to-top { right: 1rem; bottom: 1rem; }
 }
+
+/* Mobile Responsiveness for Appendix Page */
+@media (max-width: 768px) {
+  .control-panel {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  /* Make modal content scrollable if it exceeds screen height on mobile */
+  .modal-content {
+      width: 95%;
+      max-height: 90vh;
+      overflow-y: auto;
+  }
+
+  nav {
+      justify-content: flex-start;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 0.5rem;
+  }
+}
