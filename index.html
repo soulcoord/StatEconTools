@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatEcon Tools 分配表工具</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="app-shell">
+    <header class="app-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">StatEcon Tools</a>
+            <nav class="header-nav">
+                <a href="#distribution" class="active">機率分配工具</a>
+                <a href="#economics">工程經濟</a>
+                <a href="#references">參考資料</a>
+            </nav>
+            <div class="header-actions">
+                <a class="back-link" href="https://github.com/soulcoord/StatEconTools" target="_blank" rel="noopener">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="section hero" id="top">
+            <span class="hero-label">統計與工程必備工具包</span>
+            <h1>快速查詢常用分配表與工程經濟係數</h1>
+            <p>
+                專為統計學與工程經濟課程打造，整合 Poisson、t 分配等常見機率分配表與工程經濟因子速查表。
+                介面以視覺化卡片呈現，讓搜尋與比較更加直覺、快速。
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#distribution">探索工具</a>
+                <a class="btn btn-outline" href="powa.html">直接前往 Poisson 表</a>
+            </div>
+        </section>
+
+        <section class="section" id="distribution">
+            <div class="card" style="margin-bottom: var(--spacing-md);">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        機率分配工具組
+                    </div>
+                </div>
+                <p class="card-subtitle">
+                    專注在最常用的機率分配。透過即時輸入與視覺化輔助，協助你掌握每項參數對結果的影響。
+                </p>
+                <div class="grid-cards">
+                    <a class="card" href="powa.html">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="icon">λ</span>
+                                普瓦松分配表
+                            </div>
+                        </div>
+                        <p class="card-subtitle">
+                            以動態表格與條狀圖呈現，快速查詢不同 λ 參數下的機率值與累積分配。
+                        </p>
+                        <div class="tag-list">
+                            <span class="tag">即時計算</span>
+                            <span class="tag">視覺化</span>
+                        </div>
+                    </a>
+                    <a class="card" href="t-distribution.html">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="icon">t</span>
+                                t 分配臨界值查詢
+                            </div>
+                        </div>
+                        <p class="card-subtitle">
+                            依自由度與顯著水準即時定位表格，並以明亮提示凸顯對應的臨界值。
+                        </p>
+                        <div class="tag-list">
+                            <span class="tag">t 檢定</span>
+                            <span class="tag">高對比</span>
+                        </div>
+                    </a>
+                    <a class="card" href="Appendix.html">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="icon">Σ</span>
+                                標準常態參考
+                            </div>
+                        </div>
+                        <p class="card-subtitle">
+                            完整收錄常態分配與相關參考資訊，方便課堂快速查閱。
+                        </p>
+                        <div class="tag-list">
+                            <span class="tag">Z 表</span>
+                            <span class="tag">補充教材</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="economics">
+            <div class="card" style="margin-bottom: var(--spacing-md);">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">💡</span>
+                        工程經濟速查
+                    </div>
+                </div>
+                <p class="card-subtitle">
+                    對應課堂常見的資金時間價值計算，支援多種利率與期間設定，並提供圖表化結果。
+                </p>
+                <div class="grid-cards">
+                    <a class="card" href="economics.html">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span class="icon">ƒ</span>
+                                工程經濟因子
+                            </div>
+                        </div>
+                        <p class="card-subtitle">
+                            含現值、終值、年值等多種系數表格，整合情境說明與互動輸入。
+                        </p>
+                        <div class="tag-list">
+                            <span class="tag">現金流</span>
+                            <span class="tag">敏感度</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="references">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">🧭</span>
+                        使用提示與參考
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">最佳瀏覽</div>
+                        <div class="stat-value" style="font-size: 1.3rem;">桌機或平板模式</div>
+                        <p class="helper-text">所有工具皆支援手機版面，建議橫向瀏覽以一次查看完整表格。</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">資料更新</div>
+                        <div class="stat-value" style="font-size: 1.3rem;">持續維護</div>
+                        <p class="helper-text">依據課程需求滾動更新，歡迎於 GitHub 提出建議或 issue。</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">常見問題</div>
+                        <div class="stat-value" style="font-size: 1.3rem;">輸入格式</div>
+                        <p class="helper-text">若遇到無法計算，請確認參數是否為正數並保留適當小數。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

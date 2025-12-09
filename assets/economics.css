@@ -1,0 +1,302 @@
+
+/* Floating Window Styles */
+.floating-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px rgba(255, 136, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+}
+
+.floating-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--surface-strong);
+    border-bottom: 1px solid var(--border);
+    cursor: grab;
+    user-select: none;
+}
+
+.floating-header:active {
+    cursor: grabbing;
+}
+
+.floating-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+}
+
+.btn-close-window {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.btn-close-window:hover {
+    color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.floating-body {
+    padding: 1.5rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.floating-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface-strong);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+.divider {
+    height: 1px;
+    background: var(--divider);
+    margin: 1.5rem 0;
+}
+
+.calculator-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.highlight-result {
+    color: var(--accent);
+    background: rgba(255, 136, 0, 0.1);
+    border-color: var(--accent);
+}
+
+/* Sidebar Styles (Existing but updated) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    max-width: 90vw;
+    height: 100vh;
+    background: var(--surface-strong);
+    border-left: 1px solid var(--border);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.active {
+    transform: translateX(-400px);
+}
+
+.sidebar-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.history-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+.history-item:hover {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.05);
+}
+
+.history-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.history-detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.history-detail-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.history-detail-value {
+    font-weight: 600;
+}
+
+.history-flow {
+    font-family: monospace;
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.3);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.flow-operator {
+    color: var(--text-muted);
+}
+
+.result-highlight {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.history-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.search-container {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-container input {
+    padding-left: 2.5rem;
+}
+
+.no-history {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 3rem 1rem;
+}
+
+/* Factor Table Styles */
+.factor-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+}
+
+.factor-table thead th:hover {
+    background: var(--accent-soft);
+    color: var(--text-primary);
+}
+
+.factor-table td.highlight-cell {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+}
+
+.sort-asc::after {
+    content: ' ▲';
+    font-size: 0.8em;
+}
+
+.sort-desc::after {
+    content: ' ▼';
+    font-size: 0.8em;
+}
+
+/* Formula Display Styles */
+.formula-display {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--surface-strong);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* Mobile Responsiveness for Economics Page */
+@media (max-width: 768px) {
+  .floating-window {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    right: -100%;
+  }
+
+  .sidebar.active {
+    transform: translateX(-100%);
+  }
+
+  .form-grid--two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  .header-nav {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      white-space: nowrap;
+  }
+}

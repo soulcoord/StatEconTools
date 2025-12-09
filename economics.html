@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工程經濟因子速查表 - StatEcon Tools</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/economics.css">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body class="app-shell">
+  <header class="app-header">
+    <div class="header-inner">
+        <a class="brand" href="index.html">StatEcon Tools</a>
+        <nav class="header-nav">
+            <a href="index.html#distribution">機率分配工具</a>
+            <a href="powa.html">普瓦松分配</a>
+            <a href="t-distribution.html">t 分配表</a>
+            <a href="#economics" class="active">工程經濟</a>
+        </nav>
+        <div class="header-actions">
+          <button class="btn btn-outline" id="sidebarToggle" aria-label="開啟歷史記錄">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+              <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.956 7.956 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+              <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+              <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+            <span style="margin-left: .5rem">歷史記錄</span>
+          </button>
+        </div>
+    </div>
+  </header>
+  
+  
+  <main class="app-main">
+    <section class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">ƒ</span>
+            工程經濟因子速查表
+          </div>
+        </div>
+        <p class="card-subtitle">點選表格中的數值可快速進行計算，並自動儲存至歷史記錄。</p>
+        <div class="form-grid form-grid--two-column">
+          <div class="form-group">
+            <label for="factorType">選擇因子類型</label>
+            <select id="factorType" class="input-control">
+              <option value="F/P">終值因子 (F/P)</option>
+              <option value="P/F">現值因子 (P/F)</option>
+              <option value="A/P">資本回收因子 (A/P)</option>
+              <option value="P/A">現值年金因子 (P/A)</option>
+              <option value="F/A">終值年金因子 (F/A)</option>
+              <option value="A/F">償債基金因子 (A/F)</option>
+              <option value="P/G">梯度現值因子 (P/G)</option>
+              <option value="A/G">梯度年金因子 (A/G)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="searchN">輸入查詢期數</label>
+            <div class="input-group">
+              <input type="number" id="searchN" class="input-control" placeholder="1-60" min="1" max="60">
+              <button class="btn btn-primary" id="searchFactorBtn" aria-label="查詢因子">查詢</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="interestRate">設定利率 (%)</label>
+            <div class="input-group">
+              <input type="number" id="interestRate" class="input-control" step="0.25" placeholder="輸入利率">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    
+    <section class="section section--compact">
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="factor-table">
+            <caption>工程經濟因子速查表</caption>
+            <thead>
+              <tr>
+                <th>N</th>
+                <th>F/P</th>
+                <th>P/F</th>
+                <th>A/P</th>
+                <th>P/A</th>
+                <th>F/A</th>
+                <th>A/F</th>
+                <th>P/G</th>
+                <th>A/G</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  
+  <aside class="sidebar" id="historySidebar" aria-label="計算歷史記錄">
+    <div class="sidebar-header">
+      <h5 class="sidebar-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+          <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.956 7.956 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+          <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+          <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+        </svg>
+        計算歷史
+      </h5>
+      <div>
+        <button class="btn btn-sm btn-danger me-2" id="clearHistoryBtn" title="清空所有歷史記錄">清空</button>
+        <button class="btn btn-sm btn-secondary" id="closeSidebarBtn" aria-label="關閉歷史記錄">關閉</button>
+      </div>
+    </div>
+    <div class="search-container">
+      <div class="search-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+      </div>
+      <input type="text" id="historySearch" class="input-control" placeholder="搜索利率、期數或因子">
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </aside>
+  
+  
+  <div class="floating-window" id="calculatorWindow" style="display: none;">
+    <div class="floating-header" id="dragHandle">
+      <div class="floating-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calculator" viewBox="0 0 16 16">
+          <path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z"/>
+          <path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-4z"/>
+        </svg>
+        快速計算器
+      </div>
+      <button type="button" class="btn-close-window" id="closeCalculatorBtn" aria-label="關閉">×</button>
+    </div>
+    <div class="floating-body">
+      <div class="form-grid form-grid--two-column">
+        <div class="form-group">
+          <label for="selectedFactor" class="calculator-label">因子類型</label>
+          <select id="selectedFactor" class="input-control">
+            <option value="F/P">終值因子 (F/P)</option>
+            <option value="P/F">現值因子 (P/F)</option>
+            <option value="A/P">資本回收因子 (A/P)</option>
+            <option value="P/A">現值年金因子 (P/A)</option>
+            <option value="F/A">終值年金因子 (F/A)</option>
+            <option value="A/F">償債基金因子 (A/F)</option>
+            <option value="P/G">梯度現值因子 (P/G)</option>
+            <option value="A/G">梯度年金因子 (A/G)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="selectedN" class="calculator-label">期數 (N)</label>
+          <select id="selectedN" class="input-control"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="selectedValue" class="calculator-label">因子值</label>
+        <input type="text" id="selectedValue" class="input-control" readonly>
+      </div>
+
+      <div class="formula-display" id="formulaDisplay">
+        <!-- Formula will be inserted here -->
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="form-group">
+        <label for="inputAmount" class="calculator-label">輸入金額</label>
+        <div class="input-group">
+          <input type="number" id="inputAmount" class="input-control" placeholder="請輸入金額" step="100">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="compoundFactor" class="calculator-label">複合因子（可選）</label>
+        <select id="compoundFactor" class="input-control">
+          <option value="">無</option>
+          <option value="F/P">終值因子 (F/P)</option>
+          <option value="P/F">現值因子 (P/F)</option>
+          <option value="A/P">資本回收因子 (A/P)</option>
+          <option value="P/A">現值年金因子 (P/A)</option>
+          <option value="F/A">終值年金因子 (F/A)</option>
+          <option value="A/F">償債基金因子 (A/F)</option>
+          <option value="P/G">梯度現值因子 (P/G)</option>
+          <option value="A/G">梯度年金因子 (A/G)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="calculationResult" class="calculator-label">計算結果</label>
+        <div class="input-group">
+          <input type="text" id="calculationResult" class="input-control highlight-result" readonly>
+          <button class="btn btn-outline" id="copyResultBtn" title="複製結果">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="calculation-flow" id="calculationFlow">
+        <div>請輸入金額並計算</div>
+      </div>
+
+      <div class="floating-footer">
+        <button type="button" class="btn btn-primary btn-block" id="calculateBtn">立即計算</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <script src="assets/economics.js"></script>
+</body>
+</html>

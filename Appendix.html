@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>常態分配標準差表</title>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" defer></script>
+  <link rel="stylesheet" href="assets/appendix.css">
+
+</head>
+
+<body>
+
+
+  <div class="container" role="main">
+
+    <div class="header-section">
+      <h1>常態分配標準差表</h1>
+      <p class="subtitle">互動式統計工具 · 即時計算 · 視覺化呈現</p>
+    </div>
+
+
+    <div class="control-panel">
+
+      <section class="card animate-in" style="animation-delay: 0.1s">
+        <div class="card-header">
+          <div class="icon">📊</div>
+          <div>
+            <h2 class="card-title">資料範圍設定</h2>
+            <p class="card-description">調整 Z 值顯示範圍</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label for="minZValue">最小值</label>
+            <input type="number" id="minZValue" step="0.01" value="-4.00" min="-4" max="4" />
+          </div>
+          <div>
+            <label for="maxZValue">最大值</label>
+            <input type="number" id="maxZValue" step="0.01" value="4.00" min="-4" max="4" />
+          </div>
+        </div>
+
+        <div class="range-container">
+          <div class="range-track" id="rangeTrack"></div>
+          <input type="range" id="minZ" min="-4" max="4" step="0.01" value="-4" />
+          <input type="range" id="maxZ" min="-4" max="4" step="0.01" value="4" />
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-btn" onclick="setPresetRange(-1, 1)">±1σ</button>
+          <button class="quick-btn" onclick="setPresetRange(-2, 2)">±2σ</button>
+          <button class="quick-btn" onclick="setPresetRange(-3, 3)">±3σ</button>
+          <button class="quick-btn" onclick="setPresetRange(-4, 4)">全部</button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="rangeCount">801</div>
+            <div class="stat-label">資料筆數</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="rangeCoverage">100%</div>
+            <div class="stat-label">涵蓋範圍</div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="card animate-in" style="animation-delay: 0.2s">
+        <div class="card-header">
+          <div class="icon">🔍</div>
+          <div>
+            <h2 class="card-title">快速查詢</h2>
+            <p class="card-description">精確定位 Z 值</p>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label for="searchValue">輸入 Z 值</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input id="searchValue" type="search" placeholder="例如：1.96" />
+            <button class="btn btn-primary" onclick="searchZValue()">
+              <span>搜尋</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="searchResult" style="min-height: 60px;">
+
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-btn tooltip" data-tooltip="95% 信賴區間" onclick="quickSearch(1.96)">1.96</button>
+          <button class="quick-btn tooltip" data-tooltip="99% 信賴區間" onclick="quickSearch(2.58)">2.58</button>
+          <button class="quick-btn tooltip" data-tooltip="90% 信賴區間" onclick="quickSearch(1.64)">1.64</button>
+          <button class="quick-btn tooltip" data-tooltip="平均值" onclick="quickSearch(0)">0.00</button>
+        </div>
+      </section>
+
+
+      <section class="card animate-in" style="animation-delay: 0.3s">
+        <div class="card-header">
+          <div class="icon">🧮</div>
+          <div>
+            <h2 class="card-title">機率計算器</h2>
+            <p class="card-description">計算區間機率</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label for="lowerZ">下界 Z 值</label>
+            <input id="lowerZ" type="number" step="0.01" placeholder="-1.96" />
+          </div>
+          <div>
+            <label for="upperZ">上界 Z 值</label>
+            <input id="upperZ" type="number" step="0.01" placeholder="1.96" />
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="calculateInterval()">
+          計算區間機率
+        </button>
+
+        <div id="intervalResult" style="margin-top: 1rem; min-height: 60px;">
+
+        </div>
+
+        <div class="quick-actions">
+          <button class="quick-btn" onclick="setIntervalPreset(-1.96, 1.96)">95% CI</button>
+          <button class="quick-btn" onclick="setIntervalPreset(-2.58, 2.58)">99% CI</button>
+          <button class="quick-btn" onclick="setIntervalPreset(-1.64, 1.64)">90% CI</button>
+        </div>
+      </section>
+    </div>
+
+
+    <div class="table-container">
+      <div class="table-header">
+        <div>
+          <span class="table-title">Z 值對照表</span>
+          <span class="table-info" id="tableInfo">顯示 -4.00 至 4.00</span>
+        </div>
+        <button class="btn btn-secondary" onclick="exportTable()">
+          匯出 CSV
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table role="table">
+          <thead>
+            <tr>
+              <th scope="col">Z 值</th>
+              <th scope="col">累積機率 Φ(Z)</th>
+              <th scope="col">密度函數 φ(Z)</th>
+              <th scope="col">右尾機率 1-Φ(Z)</th>
+            </tr>
+          </thead>
+          <tbody id="zTableBody">
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-overlay" id="chartModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">常態分配視覺化</h3>
+        <button class="modal-close" onclick="closeChart()" aria-label="關閉">×</button>
+      </div>
+      <div class="chart-container">
+        <canvas id="zChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="loader-overlay" id="loader">
+    <div class="loader">
+      <div class="loader-circle"></div>
+      <div class="loader-circle"></div>
+      <div class="loader-circle"></div>
+    </div>
+  </div>
+
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="回到頂部">
+    ↑
+  </button>
+
+  <script>
+    function erf(x) {
+      const a1 = 0.254829592;
+      const a2 = -0.284496736;
+      const a3 = 1.421413741;
+      const a4 = -1.453152027;
+      const a5 = 1.061405429;
+      const p = 0.3275911;
+
+      const sign = x >= 0 ? 1 : -1;
+      x = Math.abs(x);
+
+      const t = 1.0 / (1.0 + p * x);
+      const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+      return sign * y;
+    }
+    function cdf(z) {
+      return 0.5 * (1 + erf(z / Math.sqrt(2)));
+    }
+    function pdf(z) {
+      return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+    }
+    const zData = [];
+    function generateData() {
+      zData.length = 0;
+      for (let z = -4.00; z <= 4.0001; z += 0.01) {
+        const zRounded = Math.round(z * 100) / 100;
+        zData.push({
+          z: zRounded,
+          cdf: cdf(zRounded),
+          pdf: pdf(zRounded),
+          rightTail: 1 - cdf(zRounded)
+        });
+      }
+    }
+
+    const $ = id => document.getElementById(id);
+    function showToast(message, type = 'info', duration = 3000) {
+      const toast = $('toast');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="toast-content">
+          <span class="toast-icon">${type === 'success' ? '✓' : type === 'warning' ? '⚠' : 'ℹ'}</span>
+          <span>${message}</span>
+        </div>
+      `;
+      toast.classList.add('show');
+
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+    function showLoader() {
+      $('loader').classList.add('show');
+    }
+
+    function hideLoader() {
+      $('loader').classList.remove('show');
+    }
+
+    function renderTable(minZ = -4, maxZ = 4) {
+      const tbody = $('zTableBody');
+      const fragment = document.createDocumentFragment();
+      tbody.innerHTML = '';
+      const filteredData = zData.filter(item => item.z >= minZ && item.z <= maxZ);
+      filteredData.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${item.z.toFixed(2)}</strong></td>
+          <td>${item.cdf.toFixed(4)}</td>
+          <td>${item.pdf.toFixed(4)}</td>
+          <td>${item.rightTail.toFixed(4)}</td>
+        `;
+        tr.onclick = () => showChart(item.z);
+        tr.style.cursor = 'pointer';
+        fragment.appendChild(tr);
+      });
+
+      tbody.appendChild(fragment);
+      updateStats(minZ, maxZ, filteredData.length);
+    }
+    function updateStats(minZ, maxZ, count) {
+      $('tableInfo').textContent = `顯示 ${minZ.toFixed(2)} 至 ${maxZ.toFixed(2)}`;
+      $('rangeCount').textContent = count;
+
+      const coverage = (cdf(maxZ) - cdf(minZ)) * 100;
+      $('rangeCoverage').textContent = `${coverage.toFixed(1)}%`;
+    }
+
+    function updateRange() {
+      const minZ = parseFloat($('minZ').value);
+      const maxZ = parseFloat($('maxZ').value);
+      if (minZ > maxZ) {
+        $('minZ').value = maxZ;
+        $('maxZ').value = minZ;
+      }
+      $('minZValue').value = $('minZ').value;
+      $('maxZValue').value = $('maxZ').value;
+      updateRangeTrack();
+      clearTimeout(window.rangeTimer);
+      window.rangeTimer = setTimeout(() => {
+        renderTable(parseFloat($('minZ').value), parseFloat($('maxZ').value));
+      }, 100);
+    }
+
+    function updateRangeTrack() {
+      const minZ = parseFloat($('minZ').value);
+      const maxZ = parseFloat($('maxZ').value);
+      const track = $('rangeTrack');
+
+      const minPercent = ((minZ + 4) / 8) * 100;
+      const maxPercent = ((maxZ + 4) / 8) * 100;
+
+      track.style.left = `${minPercent}%`;
+      track.style.width = `${maxPercent - minPercent}%`;
+    }
+    function setPresetRange(min, max) {
+      $('minZ').value = min;
+      $('maxZ').value = max;
+      $('minZValue').value = min;
+      $('maxZValue').value = max;
+      updateRangeTrack();
+      renderTable(min, max);
+      showToast(`已設定範圍為 ${min} 至 ${max}`, 'success');
+    }
+
+    function searchZValue() {
+      const searchInput = $('searchValue').value.trim();
+      if (!searchInput) {
+        showToast('請輸入 Z 值', 'warning');
+        return;
+      }
+
+      const z = parseFloat(searchInput);
+      if (isNaN(z) || z < -4 || z > 4) {
+        showToast('請輸入 -4 到 4 之間的有效數值', 'warning');
+        return;
+      }
+
+      quickSearch(z);
+    }
+
+    function quickSearch(z) {
+      const zRounded = Math.round(z * 100) / 100;
+      const data = zData.find(item => Math.abs(item.z - zRounded) < 0.005);
+
+      if (data) {
+        const resultDiv = $('searchResult');
+        resultDiv.innerHTML = `
+          <div class="stat-card" style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; text-align: left;">
+              <div>
+                <div class="stat-label">Z 值</div>
+                <div class="stat-value" style="font-size: 1.2rem;">${data.z.toFixed(2)}</div>
+              </div>
+              <div>
+                <div class="stat-label">累積機率</div>
+                <div class="stat-value" style="font-size: 1.2rem;">${data.cdf.toFixed(4)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        const currentMin = parseFloat($('minZ').value);
+        const currentMax = parseFloat($('maxZ').value);
+
+        if (z < currentMin || z > currentMax) {
+          const newMin = Math.max(-4, z - 0.5);
+          const newMax = Math.min(4, z + 0.5);
+          setPresetRange(newMin, newMax);
+        }
+        highlightTableRow(zRounded);
+        showChart(zRounded);
+
+        showToast(`找到 Z = ${zRounded.toFixed(2)}`, 'success');
+      }
+    }
+
+    function highlightTableRow(z) {
+      const rows = document.querySelectorAll('#zTableBody tr');
+      rows.forEach(row => {
+        row.classList.remove('highlight');
+        const cellValue = parseFloat(row.cells[0].textContent);
+        if (Math.abs(cellValue - z) < 0.005) {
+          row.classList.add('highlight');
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+
+    function calculateInterval() {
+      const lower = parseFloat($('lowerZ').value);
+      const upper = parseFloat($('upperZ').value);
+
+      if (isNaN(lower) || isNaN(upper)) {
+        showToast('請輸入有效的上下界', 'warning');
+        return;
+      }
+
+      if (lower >= upper) {
+        showToast('下界必須小於上界', 'warning');
+        return;
+      }
+
+      const prob = cdf(upper) - cdf(lower);
+
+      const resultDiv = $('intervalResult');
+      resultDiv.innerHTML = `
+        <div class="stat-card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));">
+          <div class="stat-label">P(${lower.toFixed(2)} < Z < ${upper.toFixed(2)})</div>
+          <div class="stat-value" style="color: var(--info);">${(prob * 100).toFixed(2)}%</div>
+          <div class="stat-label" style="margin-top: 0.5rem;">機率值：${prob.toFixed(4)}</div>
+        </div>
+      `;
+      showIntervalChart(lower, upper);
+
+      showToast('區間機率計算完成', 'success');
+    }
+
+    function setIntervalPreset(lower, upper) {
+      $('lowerZ').value = lower;
+      $('upperZ').value = upper;
+      calculateInterval();
+    }
+
+    let chartInstance = null;
+
+    function showChart(z) {
+      const modal = $('chartModal');
+      const ctx = $('zChart').getContext('2d');
+      const xValues = [];
+      const yValues = [];
+      const fillValues = [];
+
+      for (let x = -4; x <= 4; x += 0.05) {
+        xValues.push(x.toFixed(2));
+        yValues.push(pdf(x));
+        fillValues.push(x <= z ? pdf(x) : 0);
+      }
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: xValues,
+          datasets: [
+            {
+              label: '機率密度函數',
+              data: yValues,
+              borderColor: 'rgba(255, 107, 53, 0.8)',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.4
+            },
+            {
+              label: `P(Z ≤ ${z.toFixed(2)}) = ${cdf(z).toFixed(4)}`,
+              data: fillValues,
+              borderColor: 'transparent',
+              backgroundColor: 'rgba(255, 107, 53, 0.3)',
+              fill: true,
+              pointRadius: 0,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: '#f1f5f9',
+                font: {
+                  size: 12
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: `標準常態分配 (Z = ${z.toFixed(2)})`,
+              color: '#f1f5f9',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Z 值',
+                color: '#94a3b8'
+              },
+              ticks: {
+                color: '#94a3b8'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: '機率密度',
+                color: '#94a3b8'
+              },
+              ticks: {
+                color: '#94a3b8'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              }
+            }
+          }
+        }
+      });
+      modal.classList.add('show');
+    }
+
+    function showIntervalChart(lower, upper) {
+      const modal = $('chartModal');
+      const ctx = $('zChart').getContext('2d');
+      const xValues = [];
+      const yValues = [];
+      const fillValues = [];
+
+      for (let x = -4; x <= 4; x += 0.05) {
+        xValues.push(x.toFixed(2));
+        yValues.push(pdf(x));
+        fillValues.push(x >= lower && x <= upper ? pdf(x) : 0);
+      }
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: xValues,
+          datasets: [
+            {
+              label: '機率密度函數',
+              data: yValues,
+              borderColor: 'rgba(255, 107, 53, 0.8)',
+              backgroundColor: 'transparent',
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.4
+            },
+            {
+              label: `P(${lower.toFixed(2)} < Z < ${upper.toFixed(2)}) = ${(cdf(upper) - cdf(lower)).toFixed(4)}`,
+              data: fillValues,
+              borderColor: 'transparent',
+              backgroundColor: 'rgba(59, 130, 246, 0.3)',
+              fill: true,
+              pointRadius: 0,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: '#f1f5f9',
+                font: {
+                  size: 12
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: `區間機率分配`,
+              color: '#f1f5f9',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Z 值',
+                color: '#94a3b8'
+              },
+              ticks: {
+                color: '#94a3b8'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: '機率密度',
+                color: '#94a3b8'
+              },
+              ticks: {
+                color: '#94a3b8'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              }
+            }
+          }
+        }
+      });
+      modal.classList.add('show');
+    }
+
+    function closeChart() {
+      $('chartModal').classList.remove('show');
+    }
+
+    function exportTable() {
+      const minZ = parseFloat($('minZ').value);
+      const maxZ = parseFloat($('maxZ').value);
+      const filteredData = zData.filter(item => item.z >= minZ && item.z <= maxZ);
+
+      let csv = 'Z值,累積機率,機率密度,右尾機率\n';
+      filteredData.forEach(item => {
+        csv += `${item.z.toFixed(2)},${item.cdf.toFixed(4)},${item.pdf.toFixed(4)},${item.rightTail.toFixed(4)}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `normal_distribution_z_${minZ.toFixed(2)}_to_${maxZ.toFixed(2)}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('資料已匯出', 'success');
+    }
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    window.addEventListener('scroll', () => {
+      const backToTop = $('backToTop');
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('show');
+      } else {
+        backToTop.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showLoader();
+      generateData();
+      renderTable();
+      updateRangeTrack();
+      $('minZ').addEventListener('input', updateRange);
+      $('maxZ').addEventListener('input', updateRange);
+
+      $('minZValue').addEventListener('change', function() {
+        $('minZ').value = this.value;
+        updateRange();
+      });
+
+      $('maxZValue').addEventListener('change', function() {
+        $('maxZ').value = this.value;
+        updateRange();
+      });
+      $('searchValue').addEventListener('keypress', e => {
+        if (e.key === 'Enter') searchZValue();
+      });
+
+      $('lowerZ').addEventListener('keypress', e => {
+        if (e.key === 'Enter') calculateInterval();
+      });
+
+      $('upperZ').addEventListener('keypress', e => {
+        if (e.key === 'Enter') calculateInterval();
+      });
+      $('chartModal').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeChart();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeChart();
+      });
+      setTimeout(() => {
+        hideLoader();
+        showToast('資料載入完成，點擊表格行可查看圖表', 'success');
+      }, 500);
+    });
+
+    window.searchZValue = searchZValue;
+    window.quickSearch = quickSearch;
+    window.calculateInterval = calculateInterval;
+    window.setIntervalPreset = setIntervalPreset;
+    window.setPresetRange = setPresetRange;
+    window.showChart = showChart;
+    window.closeChart = closeChart;
+    window.exportTable = exportTable;
+    window.scrollToTop = scrollToTop;
+  </script>
+</body>
+</html>
