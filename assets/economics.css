@@ -114,6 +114,15 @@
     transform: translateX(-400px);
 }
 
+.sidebar-wide {
+    width: 600px;
+    right: -600px;
+}
+
+.sidebar-wide.active {
+    transform: translateX(-600px);
+}
+
 .sidebar-header {
     padding: 1.25rem;
     border-bottom: 1px solid var(--border);
@@ -198,6 +207,7 @@
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
+    margin-top: 0.5rem;
 }
 
 .search-container {
@@ -268,6 +278,148 @@
   color: var(--text-primary);
 }
 
+/* Diagram Styles */
+.diagram-container-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1rem;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(30, 30, 30, 0.8) 0%, rgba(10, 10, 10, 0.95) 100%);
+}
+
+.year-slot {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--border);
+    position: relative;
+}
+
+.year-slot:last-child {
+    border-bottom: none;
+}
+
+.year-label {
+    width: 60px;
+    font-weight: bold;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding-top: 0.5rem;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 1rem;
+    border-right: 2px solid var(--border);
+}
+
+.year-content {
+    flex: 1;
+    min-height: 60px;
+    padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.year-content.drag-over {
+    background: rgba(255, 136, 0, 0.1);
+    border-radius: var(--radius-sm);
+}
+
+.cf-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    cursor: grab;
+    user-select: none;
+    transition: var(--transition);
+    border-left: 3px solid var(--text-muted);
+    position: relative;
+}
+
+.cf-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.cf-card.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.cf-card.income {
+    border-left-color: var(--success);
+}
+
+.cf-card.expense {
+    border-left-color: var(--danger);
+}
+
+.cf-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.cf-type {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.cf-amount {
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+.cf-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.cf-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cf-toggle-btn:hover {
+    background: var(--surface-strong);
+    color: var(--text-primary);
+}
+
+.cf-toggle-btn.active-income {
+    background: var(--success-soft);
+    color: var(--success);
+    border-color: var(--success);
+}
+
+.cf-toggle-btn.active-expense {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.cf-delete-btn {
+    margin-left: auto;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.cf-delete-btn:hover {
+    color: var(--danger);
+}
+
 /* Mobile Responsiveness for Economics Page */
 @media (max-width: 768px) {
   .floating-window {
@@ -282,6 +434,15 @@
 
   .sidebar.active {
     transform: translateX(-100%);
+  }
+
+  .sidebar-wide {
+      width: 100%;
+      right: -100%;
+  }
+
+  .sidebar-wide.active {
+      transform: translateX(-100%);
   }
 
   .form-grid--two-column {

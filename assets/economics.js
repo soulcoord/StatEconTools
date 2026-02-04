@@ -2,10 +2,11 @@
     (function(){
       let currentHighlight = null;
       let historyRecords = JSON.parse(localStorage.getItem('calcHistory')) || [];
+      let diagramItems = JSON.parse(localStorage.getItem('diagramItems')) || [];
       let editingIndex = -1;
       let tooltipList = [];
 
-      // Drag functionality variables
+      // Drag functionality variables (Calculator Window)
       let isDragging = false;
       let currentX;
       let currentY;
@@ -402,6 +403,12 @@
             </div>
 
             <div class="history-actions">
+              <button class="btn btn-sm btn-outline-success history-add-diagram-btn" data-index="${index}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                </svg>
+                加入本題
+              </button>
               <button class="btn btn-sm btn-outline-primary history-edit-btn" data-index="${index}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
@@ -418,6 +425,9 @@
             </div>
           `;
           historyList.appendChild(item);
+          item.querySelector('.history-add-diagram-btn').addEventListener('click', function() {
+              addToDiagram(this.getAttribute('data-index'));
+          });
           item.querySelector('.history-edit-btn').addEventListener('click', function() {
             editRecord(this.getAttribute('data-index'));
           });
@@ -484,6 +494,233 @@
       function toggleSidebar() {
         const sidebar = document.getElementById('historySidebar');
         sidebar.classList.toggle('active');
+        if (sidebar.classList.contains('active')) {
+             document.getElementById('diagramSidebar').classList.remove('active');
+        }
+      }
+
+      function toggleDiagramSidebar() {
+        const sidebar = document.getElementById('diagramSidebar');
+        const mobileWarning = document.getElementById('diagramMobileWarning');
+        sidebar.classList.toggle('active');
+
+        if (sidebar.classList.contains('active')) {
+            document.getElementById('historySidebar').classList.remove('active');
+            renderDiagram();
+
+            // Check mobile
+            if (window.innerWidth <= 768) {
+                mobileWarning.style.display = 'block';
+            } else {
+                mobileWarning.style.display = 'none';
+            }
+        }
+      }
+
+      function addToDiagram(index) {
+          const record = historyRecords[index];
+          // Create a deep copy or new object for the diagram item
+          // Default year is sequential: 0, 1, 2... based on current count
+          // OR Requirements say: "1st -> Year 0, 2nd -> Year 1..."
+
+          const newDiagramItem = {
+              id: Date.now() + Math.random(), // Unique ID for diagram item
+              recordId: record.id,
+              originalRecord: record,
+              year: diagramItems.length, // Default sequential year
+              type: 'income' // Default to income, user can change
+          };
+
+          diagramItems.push(newDiagramItem);
+          saveDiagramItems();
+
+          showNotification('已加入現金流量圖 (本題)', 'success');
+
+          // Open the diagram sidebar if not open?
+          // Requirement: "User adds... added record appears in drawer".
+          // It doesn't explicitly say "auto open", but it's good UX or at least update it if open.
+          const sidebar = document.getElementById('diagramSidebar');
+          if (sidebar.classList.contains('active')) {
+              renderDiagram();
+          } else {
+             // Maybe show a hint or auto open? Let's just notify for now.
+             // toggleDiagramSidebar(); // Optional: Auto open
+          }
+      }
+
+      function saveDiagramItems() {
+          localStorage.setItem('diagramItems', JSON.stringify(diagramItems));
+      }
+
+      function renderDiagram() {
+          const container = document.getElementById('diagramContent');
+          container.innerHTML = '';
+
+          if (diagramItems.length === 0) {
+              container.innerHTML = `
+                <div class="text-center text-muted py-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-graph-up-arrow mb-3" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
+                    </svg>
+                    <p>本題尚無現金流資料</p>
+                    <p class="small">請從歷史記錄中點擊「加入本題」</p>
+                </div>
+              `;
+              return;
+          }
+
+          // Determine max year needed
+          let maxYear = 0;
+          diagramItems.forEach(item => {
+              if (item.year > maxYear) maxYear = item.year;
+              // Also consider N from the record if we want to show full range?
+              // But requirements say "X axis is years 0..max(N)".
+              // Wait, dragging adjusts "occurrence year".
+              // Let's ensure we have enough slots.
+              // Let's use max(current item years) + 1 buffer, or at least some reasonable number.
+              // Also check the record's N.
+              const n = parseInt(item.originalRecord.n);
+              if (n > maxYear) maxYear = n;
+          });
+
+          // Ensure at least year 0 to maxYear
+          // Generate Year Slots
+          for (let y = 0; y <= maxYear + 1; y++) {
+              const yearSlot = document.createElement('div');
+              yearSlot.className = 'year-slot';
+              yearSlot.setAttribute('data-year', y);
+
+              // Year Label
+              const label = document.createElement('div');
+              label.className = 'year-label';
+              label.textContent = `Year ${y}`;
+              yearSlot.appendChild(label);
+
+              // Year Content (Drop Zone)
+              const content = document.createElement('div');
+              content.className = 'year-content';
+              content.setAttribute('data-year', y);
+
+              // Add Drag/Drop events to the Drop Zone
+              content.addEventListener('dragover', handleDragOver);
+              content.addEventListener('dragleave', handleDragLeave);
+              content.addEventListener('drop', handleDrop);
+
+              // Find items for this year
+              const itemsInYear = diagramItems.filter(item => item.year === y);
+              itemsInYear.forEach(item => {
+                  const card = createCardElement(item);
+                  content.appendChild(card);
+              });
+
+              yearSlot.appendChild(content);
+              container.appendChild(yearSlot);
+          }
+      }
+
+      function createCardElement(item) {
+          const card = document.createElement('div');
+          card.className = `cf-card ${item.type}`; // income or expense
+          card.setAttribute('draggable', 'true');
+          card.setAttribute('data-id', item.id);
+
+          // Drag Start
+          card.addEventListener('dragstart', handleCardDragStart);
+          card.addEventListener('dragend', handleCardDragEnd);
+
+          const record = item.originalRecord;
+          const formattedAmount = record.amount.toLocaleString('zh-Hant');
+
+          card.innerHTML = `
+            <div class="cf-card-header">
+                <span class="cf-type">${record.factor} (N=${record.n})</span>
+                <button class="cf-delete-btn" title="從本題移除" onclick="removeFromDiagram(${item.id})">×</button>
+            </div>
+            <div class="cf-amount">
+                ${item.type === 'expense' ? '-' : ''}${formattedAmount}
+            </div>
+            <div class="cf-controls">
+                <button class="cf-toggle-btn ${item.type === 'income' ? 'active-income' : ''}"
+                    onclick="updateItemType(${item.id}, 'income')">收入 (+)</button>
+                <button class="cf-toggle-btn ${item.type === 'expense' ? 'active-expense' : ''}"
+                    onclick="updateItemType(${item.id}, 'expense')">支出 (-)</button>
+            </div>
+          `;
+
+          // Tooltip for Interest Rate
+          card.setAttribute('data-bs-toggle', 'tooltip');
+          card.setAttribute('title', `利率: ${record.rate.toFixed(2)}%, 結果: ${record.result}`);
+
+          return card;
+      }
+
+      // Global functions for inline onclicks needs to be attached to window or handled differently.
+      // Since this is inside an IIFE, I need to expose them or add event listeners differently.
+      // I will attach them to window for simplicity in this context, or use event delegation.
+      // Using window for helper functions called from HTML string.
+      window.removeFromDiagram = function(id) {
+          diagramItems = diagramItems.filter(i => i.id !== id);
+          saveDiagramItems();
+          renderDiagram();
+      };
+
+      window.updateItemType = function(id, type) {
+          const item = diagramItems.find(i => i.id === id);
+          if (item) {
+              item.type = type;
+              saveDiagramItems();
+              renderDiagram();
+          }
+      };
+
+      function confirmClearDiagram() {
+          if (confirm('確定要清空本題所有現金流資料嗎？')) {
+              diagramItems = [];
+              saveDiagramItems();
+              renderDiagram();
+              showNotification('本題資料已清空', 'success');
+          }
+      }
+
+      // Drag and Drop Logic for Diagram
+      let draggedItem = null;
+
+      function handleCardDragStart(e) {
+          draggedItem = this;
+          this.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', this.getAttribute('data-id'));
+      }
+
+      function handleCardDragEnd(e) {
+          this.classList.remove('dragging');
+          draggedItem = null;
+          document.querySelectorAll('.year-content').forEach(el => el.classList.remove('drag-over'));
+      }
+
+      function handleDragOver(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          this.classList.add('drag-over');
+      }
+
+      function handleDragLeave(e) {
+          this.classList.remove('drag-over');
+      }
+
+      function handleDrop(e) {
+          e.preventDefault();
+          this.classList.remove('drag-over');
+
+          const id = parseFloat(e.dataTransfer.getData('text/plain'));
+          const targetYear = parseInt(this.getAttribute('data-year'));
+
+          const item = diagramItems.find(i => i.id === id);
+          if (item) {
+              item.year = targetYear;
+              saveDiagramItems();
+              renderDiagram();
+          }
       }
 
       // Dragging logic
@@ -648,6 +885,11 @@
         document.getElementById('closeSidebarBtn').addEventListener('click', toggleSidebar);
         document.getElementById('clearHistoryBtn').addEventListener('click', confirmClearHistory);
         document.getElementById('historySearch').addEventListener('input', filterHistory);
+
+        // Diagram Events
+        document.getElementById('diagramToggle').addEventListener('click', toggleDiagramSidebar);
+        document.getElementById('closeDiagramBtn').addEventListener('click', toggleDiagramSidebar);
+        document.getElementById('clearDiagramBtn').addEventListener('click', confirmClearDiagram);
 
         // Window events
         document.getElementById('closeCalculatorBtn').addEventListener('click', hideCalculatorWindow);
